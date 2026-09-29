@@ -172,12 +172,31 @@ const sweepReveals = () => {
 };
 
 let sweepQueued = false;
+
+/* The paper plane's flight is bound to scroll progress, not a trigger: --fly
+   goes 0 -> 1 while the doodle crosses the lower ~55% of the viewport, and CSS
+   derives its transform/opacity from it, so the plane glides into its parked
+   position under the user's thumb (and eases back when they scroll up). */
+const flyEl = document.querySelector('.page-one__doodle');
+const updateFly = () => {
+  if (!flyEl || !document.documentElement.classList.contains('has-motion')) return;
+  const rect = flyEl.getBoundingClientRect();
+  /* Start as the plane enters the viewport, land once it climbs to 70% of the
+     viewport height. The window is deliberately short so the flight completes
+     even on tall phones where Page 1 only scrolls a couple hundred pixels. */
+  const start = window.innerHeight;
+  const end = window.innerHeight * 0.7;
+  const progress = Math.min(1, Math.max(0, (start - rect.top) / (start - end)));
+  flyEl.style.setProperty('--fly', progress.toFixed(4));
+};
+
 const queueSweep = () => {
   if (sweepQueued) return;
   sweepQueued = true;
   window.requestAnimationFrame(() => {
     sweepQueued = false;
     sweepReveals();
+    updateFly();
   });
 };
 
@@ -191,10 +210,23 @@ const observeReveals = () => {
       entry.target.classList.add('is-revealed');
       revealObserver.unobserve(entry.target);
     });
-  }, { rootMargin: '0px 0px 4% 0px', threshold: 0 });
+  }, {
+    /* Deep trigger: the element must clear the bottom 12% of the viewport and
+       15% of it must be visible before its reveal starts, so the animation is
+       still in motion while the guest watches instead of finishing the moment
+       the element peeks in. The sweep above is the safety net for anything
+       this margin can never satisfy (bottom-of-page elements). */
+    rootMargin: '0px 0px -12% 0px',
+    threshold: 0.15,
+  });
 
   document.querySelectorAll('[data-reveal]:not(.is-revealed)').forEach((el) => revealObserver.observe(el));
-  sweepReveals();
+  /* No synchronous sweep here: at click time the entrance zoom is mid-flight
+     (canvas scaled 0.94), so element rects sit higher than at rest and the
+     sweep would prematurely reveal below-the-fold elements. The observer
+     covers the first viewport; the 2600ms sweep in openPageOne catches
+     anything the deep margin can never satisfy. */
+  updateFly();
 };
 
 window.addEventListener('scroll', queueSweep, { passive: true });
@@ -243,7 +275,11 @@ const openPageOne = () => {
     document.body.dataset.state = 'open';
   }, HANDOVER_MS);
 
-  [120, 400, 900, 1600].forEach((ms) => window.setTimeout(sweepReveals, ms));
+  /* Only sweep once the entrance zoom has fully settled (2400ms): while the
+     canvas is still scaled, every child's rect sits higher than at rest and
+     the sweep would prematurely reveal below-the-fold elements. The observer
+     handles the first viewport during the animation. */
+  [2600].forEach((ms) => window.setTimeout(sweepReveals, ms));
 };
 
 openButton?.addEventListener('click', openPageOne);

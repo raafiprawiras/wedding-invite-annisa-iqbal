@@ -1,4 +1,4 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="id">
 
 <head>
@@ -46,7 +46,7 @@
 
             <section class="page-one__countdown" aria-label="Hitung mundur menuju 27 November 2026">
                 <div class="page-one__countdown-values" role="timer" aria-label="Waktu tersisa">
-                    <div class="page-one__cd-item page-one__cd-item--1" data-reveal style="--reveal-delay: 90ms">
+                    <div class="page-one__cd-item page-one__cd-item--1" data-reveal style="--reveal-delay: 120ms">
                         <div class="page-one__cd-card">
                             <div class="page-one__cd-flip" data-countdown="days">
                                 <span class="page-one__cd-half page-one__cd-half--top"><span
@@ -65,7 +65,7 @@
                         <p class="page-one__cd-label">Hari</p>
                     </div>
 
-                    <div class="page-one__cd-item page-one__cd-item--2" data-reveal style="--reveal-delay: 180ms">
+                    <div class="page-one__cd-item page-one__cd-item--2" data-reveal style="--reveal-delay: 240ms">
                         <div class="page-one__cd-card">
                             <div class="page-one__cd-flip" data-countdown="hours">
                                 <span class="page-one__cd-half page-one__cd-half--top"><span
@@ -84,7 +84,7 @@
                         <p class="page-one__cd-label">Jam</p>
                     </div>
 
-                    <div class="page-one__cd-item page-one__cd-item--3" data-reveal style="--reveal-delay: 270ms">
+                    <div class="page-one__cd-item page-one__cd-item--3" data-reveal style="--reveal-delay: 360ms">
                         <div class="page-one__cd-card">
                             <div class="page-one__cd-flip" data-countdown="minutes">
                                 <span class="page-one__cd-half page-one__cd-half--top"><span
@@ -103,7 +103,7 @@
                         <p class="page-one__cd-label">Menit</p>
                     </div>
 
-                    <div class="page-one__cd-item page-one__cd-item--4" data-reveal style="--reveal-delay: 360ms">
+                    <div class="page-one__cd-item page-one__cd-item--4" data-reveal style="--reveal-delay: 480ms">
                         <div class="page-one__cd-card">
                             <div class="page-one__cd-flip" data-countdown="seconds">
                                 <span class="page-one__cd-half page-one__cd-half--top"><span
@@ -125,11 +125,11 @@
             </section>
 
             <section class="page-one__story" aria-label="Kutipan Al-Quran">
-                <div class="page-one__drift page-one__drift--couple" data-reveal style="--reveal-delay: 0ms">
+                <div class="page-one__drift page-one__drift--couple" data-reveal="pop" style="--reveal-delay: 150ms">
                     <img class="page-one__couple" src="./assets/assets_page1/Wedd Icon 1.png" alt="" aria-hidden="true"
                         width="398" height="294" />
                 </div>
-                <div class="page-one__drift page-one__drift--arrow" data-reveal style="--reveal-delay: 120ms">
+                <div class="page-one__drift page-one__drift--arrow" data-reveal="right" style="--reveal-delay: 250ms">
                     <img class="page-one__arrow page-one__arrow--top" src="./assets/assets_page1/Fly 1.png" alt=""
                         aria-hidden="true" width="498" height="533" />
                 </div>
@@ -145,14 +145,16 @@
                             class="page-one__quote-line">(kebesaran Allah) bagi kaum yang berpikir."</span></p>
                 </blockquote>
 
-                <cite class="page-one__quote-ref" data-reveal style="--reveal-delay: 620ms">QS. Ar - Rum 21</cite>
+                <cite class="page-one__quote-ref" data-reveal="left" style="--reveal-delay: 200ms">QS. Ar - Rum 21</cite>
             </section>
 
-            <!-- Paper-plane doodle (Fly 2) — ref ink x 70-600, y 3205-3650 -->
-            <img class="page-one__doodle" data-reveal style="--reveal-delay: 680ms"
+            <!-- Paper-plane doodle (Fly 2) — ref ink x 70-600, y 3205-3650.
+                 Deliberately WITHOUT data-reveal: main.js drives its flight from
+                 scroll progress via the --fly custom property. -->
+            <img class="page-one__doodle"
                 src="./assets/assets_page1/Fly 2.png" alt="" aria-hidden="true" width="436" height="436" />
 
-            <figure class="page-one__music" data-reveal style="--reveal-delay: 0ms">
+            <figure class="page-one__music" data-reveal style="--reveal-delay: 100ms">
                 <img src="./assets/assets_page1/Music Play.png" alt="and i love her - The Beatles" width="1416"
                     height="451" />
             </figure>
