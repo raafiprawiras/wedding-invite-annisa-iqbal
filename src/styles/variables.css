@@ -1,0 +1,35 @@
+:root {
+  /* Colors */
+  --color-burgundy: #3a1a1e;
+  --color-burgundy-deep: #2b1114;
+  --color-cream: #f7f1e3;
+  --color-ink: #2b1114;
+
+  /* Typography */
+  --font-mono: 'Space Mono', ui-monospace, monospace;
+  --font-design: 'Intel One Mono', 'Space Mono', ui-monospace, monospace;
+  --text-greeting: clamp(0.8125rem, 3.4vw, 1.0625rem);
+  --text-guest-name: clamp(1rem, 4.2vw, 1.375rem);
+  --text-button: clamp(0.9375rem, 3.8vw, 1.125rem);
+  --tracking-guest: 0.08em;
+  --leading-guest: 1.6;
+
+  /* Layout */
+  --content-max-width: 30rem;
+  --page-pad-x: clamp(1.25rem, 6vw, 2.5rem);
+  --photo-width: min(76vw, 26rem);
+
+  /* Button */
+  --button-height: 3.25rem;
+  --button-radius: 999px;
+
+  /* Sections */
+  --section-pad-y: clamp(3.5rem, 10vh, 6rem);
+  --section-gap: clamp(1.5rem, 4vh, 2.5rem);
+  --text-body: clamp(0.875rem, 3.6vw, 1rem);
+  --text-title: clamp(1.375rem, 6vw, 1.875rem);
+  --text-eyebrow: clamp(0.75rem, 3.2vw, 0.875rem);
+  --text-small: clamp(0.75rem, 3.2vw, 0.875rem);
+  --radius-card: 1.25rem;
+  --border-soft: 1px solid rgb(247 241 227 / 0.18);
+}

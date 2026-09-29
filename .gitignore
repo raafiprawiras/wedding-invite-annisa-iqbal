@@ -1,0 +1,19 @@
+# dependencies
+node_modules
+
+# build output
+dist
+
+# environment / secrets
+.env
+.env.*
+*.local
+
+# working artifacts (QA & tooling, bukan bagian situs)
+.media
+figma-tokens.json
+.vercel
+
+# OS
+.DS_Store
+Thumbs.db
