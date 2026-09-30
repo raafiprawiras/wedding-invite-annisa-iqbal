@@ -669,6 +669,73 @@ body[data-state='open'] .music-fab {
   height: auto;
 }
 
+/* ------------------------------------------------------------
+   Page 2 — Bride & Groom (ref: Page 2.png, 1126 x 2502)
+   Same fixed-proportion canvas pattern as Page 1: children are
+   placed against the canvas in %; every measurement below was
+   taken from the artwork by matching each composited block's ink
+   box (the three content blocks share the design's 0.665 scale).
+   ------------------------------------------------------------ */
+.page-two {
+  position: relative;
+  width: min(100%, 540px);
+  margin-inline: auto;
+  aspect-ratio: 1126 / 2502;
+  overflow: hidden;
+  container-type: inline-size;
+  color: #faf6ea;
+  font-family: var(--font-design);
+  /* PROVISIONAL backdrop — the design's dark felt texture has not been
+     exported as an asset yet. Swap this block for
+     `background: url('...BG 2.png') top center / 100% auto no-repeat;`
+     once it lands in assets_page2/. */
+  background-color: #321815;
+  background-image:
+    radial-gradient(130% 60% at 50% 0%, rgba(255, 226, 205, 0.07), transparent 62%),
+    linear-gradient(180deg, #3a1d1b 0%, #341a17 45%, #241110 100%);
+}
+
+.page-two > img {
+  position: absolute;
+  display: block;
+  height: auto;
+}
+
+/* Judul + invite paragraph — ink match: title w 987px at scale 0.6646 */
+.page-two__judul {
+  left: 6.4%;
+  top: 2.13%;
+  width: 88.06%;
+}
+
+/* Bride block (photo + name + parents) — name ink w 671px at scale 0.665 */
+.page-two__bride {
+  left: 16.29%;
+  top: 23%;
+  width: 67.51%;
+}
+
+/* Ampersand — 1:1 (63px ink on both) */
+.page-two__amp {
+  left: 47.25%;
+  top: 56.23%;
+  width: 5.77%;
+}
+
+/* Groom block — name ink w 873px at scale 0.6669 */
+.page-two__groom {
+  left: 10.95%;
+  top: 63.22%;
+  width: 78%;
+}
+
+/* Swoosh divider — placed 1:1, sweeps to the bottom edge */
+.page-two__line {
+  left: 0;
+  top: 88.81%;
+  width: 100%;
+}
+
 body[data-state='open'] .opening-page {
   display: none;
 }
@@ -1525,7 +1592,8 @@ body[data-state='closing'] .open-invitation {
       linear-gradient(180deg, #2b1114, #3a1a1e 55%, #2b1114);
   }
 
-  .page-one {
+  .page-one,
+  .page-two {
     width: min(100%, 620px);
     border-radius: 28px;
     box-shadow:
@@ -1544,7 +1612,8 @@ body[data-state='closing'] .open-invitation {
     padding-block: clamp(32px, 6vh, 88px);
   }
 
-  .page-one {
+  .page-one,
+  .page-two {
     width: min(100%, 660px);
     border-radius: 32px;
     box-shadow:

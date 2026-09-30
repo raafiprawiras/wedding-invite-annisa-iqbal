@@ -164,7 +164,11 @@ let revealObserver = null;
 const sweepReveals = () => {
   document.querySelectorAll('[data-reveal]:not(.is-revealed)').forEach((el) => {
     const rect = el.getBoundingClientRect();
-    if (rect.top < window.innerHeight && rect.bottom > 0) {
+    /* At or above the lower viewport edge — on screen, or already scrolled
+       past. A fast flick or anchor jump can carry an element from below the
+       viewport to above it between two observer ticks, so the deep-margin
+       observer never sees it intersect; anything that high up must be shown. */
+    if (rect.top < window.innerHeight) {
       el.classList.add('is-revealed');
       revealObserver?.unobserve(el);
     }
