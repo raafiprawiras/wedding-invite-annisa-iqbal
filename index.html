@@ -260,6 +260,73 @@
                 sit amet, consectetur adipiscing elit.</p>
         </section>
 
+        <!-- Page 5 — Amplop Digital & Ucapan dan Do'a. Two states share one
+             canvas: closed (design 1689x4986) and open (Page 5 On Click,
+             1126x4954 ≈ 1689x7437). Each flattened design itself is the
+             background — they crossfade while the canvas max-height grows and
+             the Ucapan panel rides a sliding wrapper (+2456 design px). Only
+             the interactive parts are rebuilt as live elements pinned over the
+             baked artwork: the Klik Disini opener, the two Copy pills and the
+             Lihat Lokasi link on the open-state cards, and the whole guestbook
+             (name, message, attendance, list, live counters). -->
+        <div class="page-five-frame">
+        <section class="page-five" aria-labelledby="page-five-title">
+            <h2 id="page-five-title" class="visually-hidden">
+                Amplop Digital &amp; Ucapan dan Do&#8217;a &#8212; Annisa &amp; Iqbal
+            </h2>
+
+            <div class="page-five__bg page-five__bg--closed" aria-hidden="true"></div>
+            <div class="page-five__bg page-five__bg--open" aria-hidden="true"></div>
+
+            <button class="page-five__toggle" type="button" aria-expanded="false"
+                aria-controls="page-five-ucapan" data-reveal="pop" style="--reveal-delay: 100ms">
+                <img src="./assets/assets_page5/Button Click.png" alt="" aria-hidden="true"
+                    width="420" height="111" />
+                <span class="visually-hidden">Buka amplop digital</span>
+            </button>
+
+            <button class="page-five__copy page-five__copy--iqbal" type="button"
+                data-copy="597601017949536"
+                aria-label="Salin nomor rekening BRI a.n. M. Iqbal Fachrezi"></button>
+            <button class="page-five__copy page-five__copy--nisa" type="button"
+                data-copy="009619676401"
+                aria-label="Salin nomor rekening Blu a.n. Annisa Setianingsih"></button>
+            <a class="page-five__maps"
+                href="https://www.google.com/maps/search/?api=1&amp;query=Jl.%20Sapen%20Raya%2C%20Penggaron%20Kidul%20RT%207%2FRW%203%2C%20Pedurungan%2C%20Kota%20Semarang"
+                target="_blank" rel="noopener"
+                aria-label="Lihat lokasi kirim hadiah &#8212; buka di Google Maps"></a>
+
+            <div class="page-five__ucapan" id="page-five-ucapan">
+                <input class="page-five__input" type="text" maxlength="50" placeholder="Nama Tamu"
+                    aria-label="Nama tamu" autocomplete="name" data-reveal style="--reveal-delay: 120ms" />
+                <textarea class="page-five__textarea" maxlength="500"
+                    placeholder="Berikan Ucapan dan Do&#8217;a" aria-label="Ucapan dan do&#8217;a"
+                    data-reveal style="--reveal-delay: 200ms"></textarea>
+                <p class="page-five__label" id="page-five-konfirmasi" data-reveal
+                    style="--reveal-delay: 280ms">Konfirmasi Kehadiran ?</p>
+                <div class="page-five__choice" role="group" aria-labelledby="page-five-konfirmasi"
+                    data-reveal style="--reveal-delay: 360ms">
+                    <button class="page-five__pill page-five__pill--hadir" type="button">Hadir</button>
+                    <button class="page-five__pill page-five__pill--tidak" type="button">Tidak Hadir</button>
+                </div>
+                <div class="page-five__cover" aria-hidden="true"></div>
+                <ul class="page-five__list"></ul>
+                <div class="page-five__counters" data-reveal style="--reveal-delay: 300ms">
+                    <p class="page-five__chip page-five__chip--hadir">
+                        <span class="page-five__chip-num" data-counter="hadir">0</span>
+                        <span class="page-five__chip-label">Hadir</span>
+                    </p>
+                    <p class="page-five__chip page-five__chip--tidak">
+                        <span class="page-five__chip-num" data-counter="tidak">0</span>
+                        <span class="page-five__chip-label">Tidak Hadir</span>
+                    </p>
+                </div>
+            </div>
+
+            <p class="page-five__toast" role="status" hidden></p>
+        </section>
+        </div>
+
         <!-- Floating music toggle. Fixed to the viewport so it follows the
              scroll from Page 1 onward (and every page after). Hidden while the
              opening page is up; audio wiring lands with the audio asset. -->

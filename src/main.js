@@ -358,3 +358,218 @@ if (galleryPhotos.length && lightbox) {
     else if (e.key === 'ArrowRight') lbShow(lbIndex + 1);
   });
 }
+
+/* ============================================================
+   PAGE 5 — Amplop Digital & Ucapan dan Do'a
+   ============================================================
+
+   - "Klik Disini" grows the canvas: the two flattened design
+     backgrounds crossfade, the amplop cards appear and the
+     Ucapan panel slides down (+2456 design px).
+   - The guestbook name syncs with the invitation link (?nama=,
+     the same param that fills the Page Awal greeting).
+   - Clicking Hadir / Tidak Hadir submits the message with a
+     real-time timestamp, prepends it to the list and updates
+     the Hadir / Tidak Hadir counters.
+   - Storage: with VITE_GUESTBOOK_URL + VITE_GUESTBOOK_KEY set
+     (Supabase REST), entries are permanent and shared across
+     all visitors; without them it falls back to localStorage,
+     a per-device demo mode. */
+
+const pageFive = document.querySelector('.page-five');
+
+if (pageFive) {
+  const GUESTBOOK_URL = (import.meta.env.VITE_GUESTBOOK_URL ?? '').replace(/\/+$/, '');
+  const GUESTBOOK_KEY = import.meta.env.VITE_GUESTBOOK_KEY ?? '';
+  const LS_KEY = 'wedding-guestbook-v1';
+
+  const p5Input = pageFive.querySelector('.page-five__input');
+  const p5Textarea = pageFive.querySelector('.page-five__textarea');
+  const p5List = pageFive.querySelector('.page-five__list');
+  const p5CounterHadir = pageFive.querySelector('[data-counter="hadir"]');
+  const p5CounterTidak = pageFive.querySelector('[data-counter="tidak"]');
+  const p5Toast = pageFive.querySelector('.page-five__toast');
+
+  /* Sync the guest name with the Page Awal greeting (?nama= link param). */
+  if (p5Input && rawName) p5Input.value = rawName;
+
+  /* --- state toggle ------------------------------------------ */
+
+  const p5Toggle = pageFive.querySelector('.page-five__toggle');
+  p5Toggle.addEventListener('click', () => {
+    const open = pageFive.classList.toggle('is-open');
+    p5Toggle.setAttribute('aria-expanded', String(open));
+  });
+
+  /* --- toast --------------------------------------------------- */
+
+  let p5ToastTimer;
+  const p5ShowToast = (message) => {
+    p5Toast.textContent = message;
+    p5Toast.hidden = false;
+    p5Toast.classList.add('is-show');
+    clearTimeout(p5ToastTimer);
+    p5ToastTimer = setTimeout(() => p5Toast.classList.remove('is-show'), 1800);
+  };
+
+  /* --- copy rekening ------------------------------------------ */
+
+  pageFive.querySelectorAll('[data-copy]').forEach((btn) => {
+    btn.addEventListener('click', async () => {
+      const number = btn.dataset.copy;
+      try {
+        await navigator.clipboard.writeText(number);
+      } catch {
+        /* Clipboard API can be unavailable (http / older webview):
+           fall back to a hidden textarea + execCommand. */
+        const helper = document.createElement('textarea');
+        helper.value = number;
+        helper.setAttribute('readonly', '');
+        helper.style.position = 'fixed';
+        helper.style.opacity = '0';
+        document.body.appendChild(helper);
+        helper.select();
+        document.execCommand('copy');
+        helper.remove();
+      }
+      p5ShowToast('Nomor rekening tersalin');
+    });
+  });
+
+  /* --- guestbook storage --------------------------------------- */
+
+  const GB_HEADERS = { apikey: GUESTBOOK_KEY, Authorization: `Bearer ${GUESTBOOK_KEY}` };
+
+  const seedEntries = () => {
+    const seeds = [
+      { name: 'Keluarga Besar Mempelai Pria', message: 'Selamat menempuh hidup baru, semoga menjadi keluarga sakinah, mawaddah, warahmah.', attendance: 'hadir' },
+      { name: 'Sahabat Kost Kedoya', message: 'Samawa kak!! Semoga langgeng selamanya.', attendance: 'hadir' },
+      { name: 'Rekan Kerja Annisa', message: 'Maaf belum bisa hadir, doa terbaik untuk kalian berdua.', attendance: 'tidak' },
+    ];
+    const now = Date.now();
+    return seeds.map((s, i) => ({ ...s, created_at: new Date(now - (i + 1) * 86400000).toISOString() }));
+  };
+
+  const gbLoad = async () => {
+    if (GUESTBOOK_URL) {
+      const res = await fetch(
+        `${GUESTBOOK_URL}/rest/v1/guestbook?select=*&order=created_at.desc&limit=100`,
+        { headers: GB_HEADERS },
+      );
+      if (!res.ok) throw new Error('guestbook load failed');
+      return res.json();
+    }
+    const local = JSON.parse(localStorage.getItem(LS_KEY) ?? 'null');
+    if (Array.isArray(local)) return local;
+    const seeded = seedEntries();
+    localStorage.setItem(LS_KEY, JSON.stringify(seeded));
+    return seeded;
+  };
+
+  const gbSave = async (entry) => {
+    if (GUESTBOOK_URL) {
+      const res = await fetch(`${GUESTBOOK_URL}/rest/v1/guestbook`, {
+        method: 'POST',
+        headers: { ...GB_HEADERS, 'Content-Type': 'application/json', Prefer: 'return=minimal' },
+        body: JSON.stringify(entry),
+      });
+      if (!res.ok) throw new Error('guestbook save failed');
+      return;
+    }
+    const all = JSON.parse(localStorage.getItem(LS_KEY) ?? '[]');
+    all.unshift(entry);
+    localStorage.setItem(LS_KEY, JSON.stringify(all));
+  };
+
+  /* --- rendering ------------------------------------------------ */
+
+  const AVATAR_SVG = `
+    <svg viewBox="0 0 48 48" fill="none" stroke="#f5eddc" stroke-width="3.4"
+      stroke-linecap="round" aria-hidden="true" focusable="false">
+      <circle cx="24" cy="24" r="21" />
+      <circle cx="24" cy="18.5" r="6.4" />
+      <path d="M11.5 39.5c2.4-6.2 7-9.4 12.5-9.4s10.1 3.2 12.5 9.4" />
+    </svg>`;
+
+  const p5FormatTime = (iso) => {
+    const d = new Date(iso);
+    const p = (n) => String(n).padStart(2, '0');
+    return `${p(d.getDate())}-${p(d.getMonth() + 1)}-${d.getFullYear()} ${p(d.getHours())}.${p(d.getMinutes())}`;
+  };
+
+  const p5RenderEntry = (entry) => {
+    const li = document.createElement('li');
+    li.className = 'page-five__entry';
+    li.innerHTML = `
+      <span class="page-five__avatar">${AVATAR_SVG}</span>
+      <div>
+        <p class="page-five__entry-name"></p>
+        <time class="page-five__entry-time" datetime="${entry.created_at}"></time>
+        <p class="page-five__entry-msg"></p>
+      </div>`;
+    li.querySelector('.page-five__entry-name').textContent = entry.name;
+    li.querySelector('.page-five__entry-time').textContent = p5FormatTime(entry.created_at);
+    li.querySelector('.page-five__entry-msg').textContent = entry.message;
+    return li;
+  };
+
+  const p5RenderAll = (entries) => {
+    p5List.innerHTML = '';
+    if (!entries.length) {
+      const li = document.createElement('li');
+      li.className = 'page-five__empty';
+      li.textContent = 'Jadilah yang pertama memberikan ucapan dan do\u2019a.';
+      p5List.appendChild(li);
+    } else {
+      entries.forEach((entry) => p5List.appendChild(p5RenderEntry(entry)));
+    }
+    p5CounterHadir.textContent = entries.filter((e) => e.attendance === 'hadir').length;
+    p5CounterTidak.textContent = entries.filter((e) => e.attendance === 'tidak').length;
+  };
+
+  /* --- submit on attendance click -------------------------------- */
+
+  const p5Pills = pageFive.querySelectorAll('.page-five__pill');
+  let p5Busy = false;
+
+  p5Pills.forEach((pill) => {
+    pill.addEventListener('click', async () => {
+      if (p5Busy) return;
+      const message = p5Textarea.value.trim();
+      if (!message) {
+        p5Textarea.classList.remove('is-shake');
+        void p5Textarea.offsetWidth; /* restart the animation */
+        p5Textarea.classList.add('is-shake');
+        p5Textarea.focus();
+        return;
+      }
+      p5Busy = true;
+      const attendance = pill.classList.contains('page-five__pill--hadir') ? 'hadir' : 'tidak';
+      const entry = {
+        name: p5Input.value.trim().slice(0, 50) || 'Tamu',
+        message: message.slice(0, 500),
+        attendance,
+        created_at: new Date().toISOString(),
+      };
+      try {
+        await gbSave(entry);
+        const current = await gbLoad();
+        p5RenderAll(current);
+        p5Textarea.value = '';
+        p5ShowToast('Ucapan dan do\u2019a terkirim');
+        pill.classList.add('is-sent');
+        setTimeout(() => pill.classList.remove('is-sent'), 1200);
+      } catch {
+        p5ShowToast('Gagal mengirim, coba lagi');
+      } finally {
+        p5Busy = false;
+      }
+    });
+  });
+
+  /* --- initial load ------------------------------------------------ */
+
+  gbLoad()
+    .then(p5RenderAll)
+    .catch(() => p5RenderAll([]));
+}

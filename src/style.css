@@ -1821,6 +1821,448 @@ body[data-state='closing'] .open-invitation {
   }
 }
 
+/* ============================================================
+   PAGE 5 — Amplop Digital & Ucapan dan Do'a
+   ============================================================
+
+   Two states on one canvas. The flattened designs are the
+   backgrounds (closed: Page 5.png 1689x4986; open: Page 5 On
+   Click.png 1126x4954 ≈ 1689x7437) and crossfade while the
+   canvas max-height grows. The Ucapan panel is rebuilt as live
+   elements pinned over the baked artwork inside a wrapper that
+   slides down by +2456 design px (= 145.41cqw) when the amplop
+   opens. All coordinates: design px / 16.89 → cqw. */
+
+/* The frame owns container-type so the section's own max-height can be
+   expressed in cqw against it — cqw on a container element itself would
+   resolve against the viewport, not the canvas. */
+
+.page-five-frame {
+  width: min(100%, 540px);
+  margin-inline: auto;
+  container-type: inline-size;
+}
+
+.page-five {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1689 / 7431;
+  max-height: 295.2cqw; /* closed design height: 4986/1689 */
+  overflow: hidden;
+  container-type: inline-size;
+  background: #cfc5bc;
+  transition: max-height 950ms cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.page-five.is-open {
+  max-height: 440cqw; /* open design height: 7431/1689 */
+}
+
+/* --- Background crossfade ------------------------------------ */
+
+.page-five__bg {
+  position: absolute;
+  inset: 0;
+  background-repeat: no-repeat;
+  background-position: top center;
+  background-size: 100% auto;
+  transition: opacity 950ms cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.page-five__bg--closed {
+  background-image: url('/assets/assets_page5/Page 5.png');
+}
+
+.page-five__bg--open {
+  background-image: url('/assets/assets_page5/Page 5 On Click.png');
+  opacity: 0;
+}
+
+.page-five.is-open .page-five__bg--open {
+  opacity: 1;
+}
+
+.page-five.is-open .page-five__bg--closed {
+  opacity: 0;
+}
+
+/* --- Klik Disini opener (real button riding the baked pill) -- */
+
+.page-five__toggle {
+  position: absolute;
+  left: 37.24cqw;
+  top: 54.53cqw;
+  width: 24.87cqw;
+  padding: 0;
+  border: 0;
+  background: none;
+  transition: left 950ms cubic-bezier(0.19, 1, 0.22, 1),
+    top 950ms cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.page-five__toggle img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.page-five.is-open .page-five__toggle {
+  left: 37.48cqw;
+  top: 57.84cqw;
+  width: 24.69cqw;
+}
+
+.page-five__toggle:focus-visible {
+  outline: 2px solid #faf6ea;
+  outline-offset: 4px;
+  border-radius: 999px;
+}
+
+/* --- Copy pills + Lihat Lokasi (open state only) -------------- */
+/* Transparent hit areas pinned exactly over the baked pills on
+   the three cards. Card element: 1189.3 x 757.3 (scale 0.9861),
+   left 249.3; tops 1191.3 / 1961.3 / 2736.3 design px. */
+
+.page-five__copy,
+.page-five__maps {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+  padding: 0;
+  border: 0;
+  background: none;
+  transition: opacity 950ms cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.page-five.is-open .page-five__copy,
+.page-five.is-open .page-five__maps {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.page-five__copy--iqbal {
+  left: 61.65cqw;
+  top: 105cqw;
+  width: 16.81cqw;
+  height: 5.66cqw;
+}
+
+.page-five__copy--nisa {
+  left: 61.65cqw;
+  top: 150.57cqw;
+  width: 16.81cqw;
+  height: 5.66cqw;
+}
+
+.page-five__copy:focus-visible,
+.page-five__maps:focus-visible {
+  outline: 2px solid #3a2013;
+  outline-offset: -4px;
+  border-radius: 999px;
+}
+
+.page-five__maps {
+  left: 39.11cqw;
+  top: 196.99cqw;
+  width: 20.6cqw;
+  height: 5.13cqw;
+}
+
+/* --- Ucapan panel wrapper (slides +2456 design px when open) -- */
+
+.page-five__ucapan {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 0;
+  transform: translateY(0);
+  transition: transform 950ms cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.page-five.is-open .page-five__ucapan {
+  transform: translateY(145.41cqw);
+}
+
+/* --- Form ------------------------------------------------------ */
+
+.page-five__input,
+.page-five__textarea {
+  position: absolute;
+  left: 9.83cqw;
+  width: 79.93cqw;
+  border: 0;
+  border-radius: 1.42cqw;
+  background: #faf6ea;
+  color: #2b2018;
+  font-family: var(--font-mono);
+  font-size: clamp(14px, 3.32cqw, 22px);
+  padding-inline: 1.78cqw;
+}
+
+.page-five__input {
+  top: 107.34cqw;
+  height: 10.12cqw;
+  font-weight: 700;
+}
+
+.page-five__input::placeholder {
+  color: #2b2018;
+  font-weight: 700;
+  opacity: 1;
+}
+
+.page-five__textarea {
+  top: 119.78cqw;
+  height: 39.97cqw;
+  padding-block: 1.9cqw;
+  font-weight: 400;
+  line-height: 1.5;
+  resize: none;
+}
+
+.page-five__textarea::placeholder {
+  color: #b3ada2;
+  opacity: 1;
+}
+
+.page-five__input:focus-visible,
+.page-five__textarea:focus-visible {
+  outline: 0.35cqw solid #96693f;
+  outline-offset: -0.35cqw;
+}
+
+.page-five__label {
+  position: absolute;
+  left: 9.95cqw;
+  top: 162.2cqw;
+  margin: 0;
+  color: #faf6ea;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: clamp(13px, 3.43cqw, 24px);
+  line-height: 1.2;
+}
+
+.page-five__choice {
+  position: absolute;
+  left: 9.83cqw;
+  top: 168.62cqw;
+  width: 79.93cqw;
+  height: 7.99cqw;
+  display: flex;
+  gap: 4.26cqw;
+}
+
+.page-five__pill {
+  flex: 1;
+  border: 0;
+  border-radius: 999px;
+  background: #faf6ea;
+  color: #2f2016;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: clamp(13px, 4.7cqw, 30px);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+}
+
+.page-five__pill:focus-visible {
+  outline: 0.35cqw solid #96693f;
+  outline-offset: 0.3cqw;
+}
+
+/* Brief confirmation flash right after a message is sent */
+.page-five__pill.is-sent {
+  background: linear-gradient(168deg, #97693e, #3a2013);
+  color: #faf6ea;
+}
+
+/* Nudge when trying to send an empty message */
+.page-five__textarea.is-shake {
+  animation: page5-shake 420ms cubic-bezier(0.36, 0.07, 0.19, 0.97);
+}
+
+@keyframes page5-shake {
+  20% { translate: -1.2cqw 0; }
+  40% { translate: 1.2cqw 0; }
+  60% { translate: -0.8cqw 0; }
+  80% { translate: 0.8cqw 0; }
+}
+
+/* --- Message list cover + live list ---------------------------- */
+/* The baked lorem entries and counters are hidden under a patch
+   of the panel felt; the live list and counters render on top. */
+
+.page-five__cover {
+  position: absolute;
+  left: 8.88cqw;
+  top: 180.58cqw;
+  width: 82.3cqw;
+  height: 92.96cqw;
+  border-radius: 1.2cqw;
+  background:
+    radial-gradient(120% 90% at 50% 0%, rgb(255 255 255 / 0.02), transparent 60%),
+    #341717;
+}
+
+.page-five__list {
+  position: absolute;
+  left: 13.5cqw;
+  top: 181.76cqw;
+  width: 60.03cqw;
+  height: 77.56cqw;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  row-gap: 4.2cqw;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+
+.page-five__list::-webkit-scrollbar {
+  display: none;
+}
+
+.page-five__entry {
+  display: flex;
+  gap: 3.67cqw;
+}
+
+.page-five__avatar {
+  flex: none;
+  width: 7.04cqw;
+  height: 7.04cqw;
+  margin-top: 0.3cqw;
+}
+
+.page-five__avatar svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.page-five__entry-name {
+  margin: 0;
+  color: #f7f1e3;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: clamp(12px, 2.37cqw, 17px);
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+
+.page-five__entry-time {
+  margin: 0.35cqw 0 0;
+  color: rgb(247 241 227 / 0.72);
+  font-family: var(--font-mono);
+  font-size: clamp(10px, 1.66cqw, 13px);
+  line-height: 1.3;
+}
+
+.page-five__entry-msg {
+  margin: 1cqw 0 0;
+  color: #f3ebda;
+  font-family: var(--font-mono);
+  font-size: clamp(11px, 1.78cqw, 14px);
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+.page-five__empty {
+  margin: 2cqw 0 0;
+  color: rgb(247 241 227 / 0.6);
+  font-family: var(--font-mono);
+  font-size: clamp(11px, 1.9cqw, 15px);
+}
+
+/* --- Attendance counters (live) -------------------------------- */
+
+.page-five__counters {
+  position: absolute;
+  left: 28.42cqw;
+  top: 260.45cqw;
+  width: 43.16cqw;
+  height: 10.9cqw;
+  display: flex;
+  gap: 1.78cqw;
+}
+
+.page-five__chip {
+  margin: 0;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  text-align: center;
+  border: 0.24cqw solid #faf6ea;
+  border-radius: 1.54cqw;
+  background: linear-gradient(168deg, #97693e 0%, #6b4526 48%, #3a2013 100%);
+  color: #faf6ea;
+  font-family: var(--font-mono);
+}
+
+.page-five__chip--hadir {
+  flex: 0 0 19.84cqw;
+}
+
+.page-five__chip--tidak {
+  flex: 0 0 20.55cqw;
+}
+
+.page-five__chip-num {
+  display: block;
+  font-weight: 700;
+  font-size: clamp(18px, 5.09cqw, 36px);
+  line-height: 1.05;
+}
+
+.page-five__chip-label {
+  display: block;
+  font-weight: 700;
+  font-size: clamp(10px, 2.01cqw, 15px);
+  line-height: 1.2;
+}
+
+/* --- Toast ------------------------------------------------------ */
+
+.page-five__toast {
+  position: fixed;
+  left: 50%;
+  bottom: calc(96px + env(safe-area-inset-bottom, 24px));
+  translate: -50% 8px;
+  z-index: 60;
+  margin: 0;
+  padding: 10px 20px;
+  border-radius: 999px;
+  background: #faf6ea;
+  color: #2b2018;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: clamp(12px, 3vw, 15px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 300ms ease, translate 300ms ease;
+}
+
+.page-five__toast.is-show {
+  opacity: 1;
+  translate: -50% 0;
+}
+
+/* --- Reduced motion: states snap instead of animating ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .page-five,
+  .page-five__bg,
+  .page-five__ucapan,
+  .page-five__toggle {
+    transition: none;
+  }
+}
+
 /* ---------- Responsive ---------- */
 
 @media (min-width: 768px) {
@@ -1847,8 +2289,17 @@ body[data-state='closing'] .open-invitation {
   .page-one,
   .page-two,
   .page-three,
-  .page-four {
+  .page-four,
+  .page-five-frame {
     width: min(100%, 620px);
+    border-radius: 28px;
+    box-shadow:
+      0 24px 64px rgba(20, 8, 8, 0.55),
+      0 4px 16px rgba(20, 8, 8, 0.4);
+    outline: 1px solid rgba(250, 246, 234, 0.14);
+  }
+
+  .page-five {
     border-radius: 28px;
     box-shadow:
       0 24px 64px rgba(20, 8, 8, 0.55),
@@ -1869,8 +2320,16 @@ body[data-state='closing'] .open-invitation {
   .page-one,
   .page-two,
   .page-three,
-  .page-four {
+  .page-four,
+  .page-five-frame {
     width: min(100%, 660px);
+    border-radius: 32px;
+    box-shadow:
+      0 32px 80px rgba(20, 8, 8, 0.6),
+      0 6px 20px rgba(20, 8, 8, 0.45);
+  }
+
+  .page-five {
     border-radius: 32px;
     box-shadow:
       0 32px 80px rgba(20, 8, 8, 0.6),
