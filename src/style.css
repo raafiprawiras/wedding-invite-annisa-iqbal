@@ -755,21 +755,27 @@ body[data-state='open'] .music-fab {
 .page-three__judul {
   position: absolute;
   display: block;
-  left: 8.76%;
-  top: 13.27%;
+  /* Horizontally centred per request: (1689 - 1380) / 2 = 154.5.
+     Vertically at the correlation-true position against the design
+     (best match at top 423 — the old bright-run estimate of 498 was
+     ~75px off because the photo's top region is dark hair). */
+  left: 9.15%;
+  top: 11.27%;
   width: 81.7%;
   height: auto;
 }
 
 /* Real link pinned over the baked Lokasi pill. Measured on the ASSET
-   (Judul Tengah.png), not on Page 3 New.png — the composite ships the pill
-   ~75px lower than the design ref (asset canvas x580-1120, y3183-3298). */
+   (Judul Tengah.png): pill sits at asset x432-972, y2685-2800 — i.e.
+   12px right of the asset's centre, so centring the block would leave
+   it off-centre. The button is centred on the canvas and widened just
+   enough (565 vs 540) to keep the baked pill fully covered. */
 .page-three__lokasi {
   position: absolute;
-  left: 34.34%;
-  top: 84.79%;
-  width: 31.97%;
-  aspect-ratio: 540 / 115;
+  left: 33.27%;
+  top: 82.81%;
+  width: 33.45%;
+  aspect-ratio: 565 / 115;
   display: flex;
   align-items: center;
   justify-content: center;
