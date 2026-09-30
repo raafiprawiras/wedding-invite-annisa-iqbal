@@ -732,6 +732,74 @@ body[data-state='open'] .music-fab {
   width: 100%;
 }
 
+/* ------------------------------------------------------------
+   Page 3 — Akad & Resepsi (ref: Page 3 New.png, 1689 x 3754)
+   Same canvas pattern; BG Page 3.png matches the canvas ratio
+   exactly, so it fills the full scroll height 1:1. The center
+   block's arch measured 1378px in the design = its native ink
+   width, i.e. scale 1.0 at left 148 / top 498.
+   ------------------------------------------------------------ */
+.page-three {
+  position: relative;
+  width: min(100%, 540px);
+  margin-inline: auto;
+  aspect-ratio: 1689 / 3754;
+  overflow: hidden;
+  container-type: inline-size;
+  color: #faf6ea;
+  font-family: var(--font-design);
+  /* Solid colour is only a fallback while the PNG loads. */
+  background: #2d1511 url('/assets/assets_page3/BG Page 3.png') top center / 100% auto no-repeat;
+}
+
+.page-three__judul {
+  position: absolute;
+  display: block;
+  left: 8.76%;
+  top: 13.27%;
+  width: 81.7%;
+  height: auto;
+}
+
+/* Real link pinned over the baked Lokasi pill. Measured on the ASSET
+   (Judul Tengah.png), not on Page 3 New.png — the composite ships the pill
+   ~75px lower than the design ref (asset canvas x580-1120, y3183-3298). */
+.page-three__lokasi {
+  position: absolute;
+  left: 34.34%;
+  top: 84.79%;
+  width: 31.97%;
+  aspect-ratio: 540 / 115;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7%;
+  border-radius: 999px;
+  background: #331304;
+  color: #faf6ea;
+  font-family: var(--font-mono);
+  font-size: 2.55cqw;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.page-three__lokasi svg {
+  width: 15%;
+  height: auto;
+  fill: currentColor;
+}
+
+.page-three__lokasi:hover,
+.page-three__lokasi:focus-visible {
+  filter: brightness(1.18);
+}
+
+.page-three__lokasi:active {
+  filter: brightness(0.92);
+}
+
 body[data-state='open'] .opening-page {
   display: none;
 }
@@ -1589,7 +1657,8 @@ body[data-state='closing'] .open-invitation {
   }
 
   .page-one,
-  .page-two {
+  .page-two,
+  .page-three {
     width: min(100%, 620px);
     border-radius: 28px;
     box-shadow:
@@ -1609,7 +1678,8 @@ body[data-state='closing'] .open-invitation {
   }
 
   .page-one,
-  .page-two {
+  .page-two,
+  .page-three {
     width: min(100%, 660px);
     border-radius: 32px;
     box-shadow:

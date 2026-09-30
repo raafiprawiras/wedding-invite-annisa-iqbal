@@ -192,6 +192,31 @@
                 src="./assets/assets_page1/Vector 2.png" alt="" aria-hidden="true" width="1126" height="278" />
         </section>
 
+        <!-- Page 3 — Akad & Resepsi (canvas 1689 x 3754). The center block is a
+             pre-composited artwork (arched photo + title + schedule), so its full
+             text doubles as alt text; the Lokasi pill is rebuilt as a real link
+             pinned exactly over the baked one. -->
+        <section class="page-three" aria-labelledby="page-three-title">
+            <h2 id="page-three-title" class="visually-hidden">
+                Akad &amp; Resepsi — Jum&#8217;at, 27 November 2026 — Jl. Sapen Raya, Penggaron Kidul,
+                Pedurungan, Kota Semarang
+            </h2>
+
+            <img class="page-three__judul" data-reveal style="--reveal-delay: 0ms"
+                src="./assets/assets_page3/Judul Tengah.png"
+                alt="Akad &amp; Resepsi. Akad Nikah: Jum&#8217;at, 27 November 2026, pukul 09.00&#8211;11.00 WIB. Resepsi: Jum&#8217;at, 27 November 2026, pukul 14.00 WIB&#8211;selesai. Tempat: Jl. Sapen Raya, Penggaron Kidul RT 7/RW 3, Pedurungan, Kota Semarang."
+                width="1380" height="3048" />
+
+            <a class="page-three__lokasi" data-reveal="pop" style="--reveal-delay: 450ms"
+                href="https://www.google.com/maps/search/?api=1&amp;query=Jl.%20Sapen%20Raya%2C%20Penggaron%20Kidul%20RT%207%2FRW%203%2C%20Pedurungan%2C%20Kota%20Semarang"
+                target="_blank" rel="noopener">
+                Lokasi
+                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                    <path d="M3.4 20.6 21 12 3.4 3.4l.02 6.7L15 12 3.42 13.9z" />
+                </svg>
+            </a>
+        </section>
+
         <!-- Floating music toggle. Fixed to the viewport so it follows the
              scroll from Page 1 onward (and every page after). Hidden while the
              opening page is up; audio wiring lands with the audio asset. -->
