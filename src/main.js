@@ -300,3 +300,61 @@ musicFab?.addEventListener('click', () => {
 
 updateCountdown();
 window.setInterval(updateCountdown, 1000);
+
+/* Gallery lightbox. Any Page 4 photo opens the viewer at its own index;
+   Prev/Next cycle with wrap-around; Esc, the ✕ button and the backdrop
+   all close. Arrow keys navigate while open. */
+const galleryPhotos = [...document.querySelectorAll('.page-four__ph')];
+const lightbox = document.querySelector('.lightbox');
+
+if (galleryPhotos.length && lightbox) {
+  const lbImg = lightbox.querySelector('.lightbox__img');
+  const btnPrev = lightbox.querySelector('.lightbox__nav--prev');
+  const btnNext = lightbox.querySelector('.lightbox__nav--next');
+  let lbIndex = 0;
+  let lbLastFocus = null;
+
+  const lbShow = (i) => {
+    lbIndex = (i + galleryPhotos.length) % galleryPhotos.length;
+    const src = galleryPhotos[lbIndex];
+    lbImg.src = src.currentSrc || src.src;
+    lbImg.alt = src.alt;
+  };
+
+  const lbOpen = (i) => {
+    lbLastFocus = document.activeElement;
+    lbShow(i);
+    lightbox.hidden = false;
+    document.body.classList.add('lightbox-lock');
+    requestAnimationFrame(() => lightbox.classList.add('is-open'));
+    lightbox.querySelector('.lightbox__close').focus();
+  };
+
+  const lbClose = () => {
+    lightbox.classList.remove('is-open');
+    document.body.classList.remove('lightbox-lock');
+    window.setTimeout(() => { lightbox.hidden = true; }, 230);
+    lbLastFocus?.focus?.();
+  };
+
+  galleryPhotos.forEach((img, i) => {
+    img.addEventListener('click', () => lbOpen(i));
+    img.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        lbOpen(i);
+      }
+    });
+  });
+
+  btnPrev.addEventListener('click', () => lbShow(lbIndex - 1));
+  btnNext.addEventListener('click', () => lbShow(lbIndex + 1));
+  lightbox.querySelectorAll('[data-lightbox-close]').forEach((el) => el.addEventListener('click', lbClose));
+
+  document.addEventListener('keydown', (e) => {
+    if (lightbox.hidden) return;
+    if (e.key === 'Escape') lbClose();
+    else if (e.key === 'ArrowLeft') lbShow(lbIndex - 1);
+    else if (e.key === 'ArrowRight') lbShow(lbIndex + 1);
+  });
+}

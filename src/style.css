@@ -827,16 +827,124 @@ body[data-state='open'] .music-fab {
 .page-four__ph--8 { left: 12.67%; top: 62.11%; width: 32.86%; }
 .page-four__ph--5 { left: 46.54%; top: 67.73%; width: 32.92%; }
 
-/* Caption — 7 lines at x806, y3240, pitch 42px (~26px mono, lh 1.6) */
+/* Caption — enlarged per revision, pulled closer to the photo above
+   (Foto 5 ends at y3078; caption starts y3165 — ~86px design gap) */
 .page-four__caption {
   position: absolute;
   left: 47.72%;
-  top: 86.25%;
+  top: 84.31%;
   width: 32.2%;
   margin: 0;
-  font-size: 1.54cqw;
-  line-height: 1.6;
+  font-size: 1.9cqw;
+  line-height: 1.55;
   letter-spacing: 0.01em;
+}
+
+/* Photos are clickable: open the lightbox */
+.page-four__ph {
+  cursor: zoom-in;
+}
+
+.page-four__ph:focus-visible {
+  outline: 2px solid #faf6ea;
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+/* ------------------------------------------------------------
+   Lightbox — full-screen photo viewer for the Page 4 gallery.
+   Sits above the music FAB (z 50) but below the opening overlay.
+   ------------------------------------------------------------ */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.22s ease;
+}
+
+.lightbox.is-open {
+  opacity: 1;
+}
+
+.lightbox__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(20, 8, 8, 0.88);
+  -webkit-backdrop-filter: blur(5px);
+  backdrop-filter: blur(5px);
+}
+
+.lightbox__img {
+  position: relative;
+  max-width: min(88vw, 620px);
+  max-height: 76vh;
+  border-radius: 14px;
+  box-shadow:
+    0 24px 64px rgba(10, 4, 4, 0.65),
+    0 4px 16px rgba(10, 4, 4, 0.5);
+  transform: scale(0.94);
+  transition: transform 0.24s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.lightbox.is-open .lightbox__img {
+  transform: none;
+}
+
+.lightbox__nav,
+.lightbox__close {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  padding: 0;
+  border: 1px solid rgba(250, 246, 234, 0.28);
+  border-radius: 50%;
+  background: rgba(250, 246, 234, 0.12);
+  color: #faf6ea;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background 0.15s ease;
+}
+
+.lightbox__nav:hover,
+.lightbox__close:hover,
+.lightbox__nav:focus-visible,
+.lightbox__close:focus-visible {
+  background: rgba(250, 246, 234, 0.26);
+}
+
+.lightbox__nav svg,
+.lightbox__close svg {
+  width: 22px;
+  height: 22px;
+}
+
+.lightbox__nav--prev {
+  left: max(12px, env(safe-area-inset-left, 12px));
+  top: 50%;
+  translate: 0 -50%;
+}
+
+.lightbox__nav--next {
+  right: max(12px, env(safe-area-inset-right, 12px));
+  top: 50%;
+  translate: 0 -50%;
+}
+
+.lightbox__close {
+  top: max(14px, env(safe-area-inset-top, 14px));
+  right: max(14px, env(safe-area-inset-right, 14px));
+}
+
+/* Freeze page scroll while the lightbox is open */
+body.lightbox-lock {
+  overflow: hidden;
 }
 
 body[data-state='open'] .opening-page {
