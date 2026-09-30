@@ -2294,30 +2294,80 @@ body[data-state='closing'] .open-invitation {
    stagger comes from each element's --reveal-delay as usual. */
 
 .has-motion .page-five [data-reveal] {
-  transform: translateY(5.5cqw);
-  transition-duration: 1600ms, 1900ms;
+  transition:
+    opacity 1600ms cubic-bezier(0.19, 1, 0.22, 1),
+    transform 1900ms cubic-bezier(0.19, 1, 0.22, 1),
+    filter 1600ms cubic-bezier(0.19, 1, 0.22, 1);
+  transition-delay:
+    var(--reveal-delay, 0ms),
+    var(--reveal-delay, 0ms),
+    var(--reveal-delay, 0ms);
 }
 
-.has-motion .page-five [data-reveal='pop'] {
+/* Hidden state only — an unconditional transform here would out-rank
+   `.is-revealed { transform: none }` (same specificity, later in source)
+   and strand every element 5.5cqw low. Text enters from a soft blur. */
+.has-motion .page-five [data-reveal]:not(.is-revealed) {
+  transform: translateY(5.5cqw);
+  filter: blur(7px);
+}
+
+.has-motion .page-five [data-reveal='pop']:not(.is-revealed) {
   transform: translateY(2.4cqw) scale(0.82);
 }
 
-/* The toggle both reveals (opacity/transform) and slides between the
-   closed/open pill positions (left/top). Declare every transition in
-   one list so neither system clobbers the other; only the reveal pair
-   gets the stagger delay. Declared after the rule above so it wins
+/* The cream card fields (Nama, Ucapan) and the attendance group settle
+   from a slightly smaller card, so the "card" reads as landing. Scale the
+   choice GROUP (which carries data-reveal), never the bare pills — a pill
+   has no data-reveal, so it would never gain .is-revealed and stay stuck.
+   Placed after the generic hidden rule (equal specificity, later wins). */
+.has-motion .page-five .page-five__input:not(.is-revealed),
+.has-motion .page-five .page-five__textarea:not(.is-revealed),
+.has-motion .page-five .page-five__choice:not(.is-revealed) {
+  transform: translateY(5.5cqw) scale(0.96);
+}
+
+.has-motion .page-five [data-reveal].is-revealed {
+  filter: none;
+}
+
+/* The toggle both reveals (opacity/transform/filter) and slides between
+   the closed/open pill positions (left/top). Declare every transition in
+   one list so neither system clobbers the other; only the reveal trio
+   gets the stagger delay. Declared after the rules above so it wins
    the equal-specificity cascade. */
 .has-motion .page-five .page-five__toggle {
   transition:
     opacity 1600ms cubic-bezier(0.19, 1, 0.22, 1),
     transform 1900ms cubic-bezier(0.19, 1, 0.22, 1),
+    filter 1600ms cubic-bezier(0.19, 1, 0.22, 1),
     left 950ms cubic-bezier(0.19, 1, 0.22, 1),
     top 950ms cubic-bezier(0.19, 1, 0.22, 1);
   transition-delay:
     var(--reveal-delay, 0ms),
     var(--reveal-delay, 0ms),
+    var(--reveal-delay, 0ms),
     0ms,
     0ms;
+}
+
+/* Guest messages animate in as they land — both the initial list and
+   every newly submitted one (the keyframes play on DOM insertion). */
+@keyframes page5-entry-in {
+  from {
+    opacity: 0;
+    transform: translateY(3cqw);
+    filter: blur(4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}
+
+.has-motion .page-five__entry {
+  animation: page5-entry-in 1100ms cubic-bezier(0.19, 1, 0.22, 1) both;
 }
 
 /* --- Reduced motion: states snap instead of animating ---------- */
