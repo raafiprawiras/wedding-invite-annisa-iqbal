@@ -155,6 +155,11 @@ if (!reduceMotion.matches && 'IntersectionObserver' in window) {
 }
 
 let revealObserver = null;
+/* Page 5 gets its own observer with a much deeper margin: its panels and
+   fields only start revealing once they reach the vertical middle of the
+   screen, never at the bottom edge (the staggered entrance would otherwise
+   pop while the card is still half out of view). */
+let centerObserver = null;
 
 /* Safety net. The observer alone once stranded `.page-one__music`: bottom-of-page
    elements can sit where a negative bottom root-margin is never satisfied once
@@ -162,15 +167,24 @@ let revealObserver = null;
    invisible. Anything whose box is on screen is therefore also revealed by a
    cheap rect test, so a missed intersection can never hide content. */
 const sweepReveals = () => {
+  /* Page 5 clears a higher bar (the midline) so its panels never pop at the
+     screen edge; at the very end of the page anything still on screen shows
+     regardless, or it would strand below the midline with no scroll left. */
+  const atEnd = window.innerHeight + window.scrollY >=
+    document.documentElement.scrollHeight - 2;
   document.querySelectorAll('[data-reveal]:not(.is-revealed)').forEach((el) => {
+    const line = el.closest('.page-five')
+      ? window.innerHeight * 0.55
+      : window.innerHeight;
     const rect = el.getBoundingClientRect();
-    /* At or above the lower viewport edge — on screen, or already scrolled
-       past. A fast flick or anchor jump can carry an element from below the
-       viewport to above it between two observer ticks, so the deep-margin
-       observer never sees it intersect; anything that high up must be shown. */
-    if (rect.top < window.innerHeight) {
+    /* At or above the reveal line — on screen, or already scrolled past. A
+       fast flick or anchor jump can carry an element from below the viewport
+       to above it between two observer ticks, so the deep-margin observer
+       never sees it intersect; anything that high up must be shown. */
+    if (rect.top < line || (atEnd && rect.top < window.innerHeight)) {
       el.classList.add('is-revealed');
       revealObserver?.unobserve(el);
+      centerObserver?.unobserve(el);
     }
   });
 };
@@ -207,14 +221,18 @@ const queueSweep = () => {
 const observeReveals = () => {
   if (!document.documentElement.classList.contains('has-motion')) return;
 
-  revealObserver?.disconnect();
-  revealObserver = new IntersectionObserver((entries) => {
+  const onEntries = (entries) => {
     entries.forEach((entry) => {
       if (!entry.isIntersecting) return;
       entry.target.classList.add('is-revealed');
-      revealObserver.unobserve(entry.target);
+      revealObserver?.unobserve(entry.target);
+      centerObserver?.unobserve(entry.target);
     });
-  }, {
+  };
+
+  revealObserver?.disconnect();
+  centerObserver?.disconnect();
+  revealObserver = new IntersectionObserver(onEntries, {
     /* Deep trigger: the element must clear the bottom 12% of the viewport and
        15% of it must be visible before its reveal starts, so the animation is
        still in motion while the guest watches instead of finishing the moment
@@ -223,8 +241,17 @@ const observeReveals = () => {
     rootMargin: '0px 0px -12% 0px',
     threshold: 0.15,
   });
+  centerObserver = new IntersectionObserver(onEntries, {
+    /* Page 5 midline trigger: the element only starts revealing once it
+       reaches ~55% of the viewport height, so the amplop card is already
+       sitting in the middle of the screen when its entrance begins. */
+    rootMargin: '0px 0px -45% 0px',
+    threshold: 0.15,
+  });
 
-  document.querySelectorAll('[data-reveal]:not(.is-revealed)').forEach((el) => revealObserver.observe(el));
+  document.querySelectorAll('[data-reveal]:not(.is-revealed)').forEach((el) => {
+    (el.closest('.page-five') ? centerObserver : revealObserver).observe(el);
+  });
   /* No synchronous sweep here: at click time the entrance zoom is mid-flight
      (canvas scaled 0.94), so element rects sit higher than at rest and the
      sweep would prematurely reveal below-the-fold elements. The observer
