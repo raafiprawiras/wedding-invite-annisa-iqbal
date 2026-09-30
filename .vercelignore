@@ -1,0 +1,9 @@
+.git
+.media
+node_modules
+dist
+.env
+.env.*
+.env.local
+playwright-report
+test-results
