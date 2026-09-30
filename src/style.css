@@ -828,27 +828,68 @@ body[data-state='open'] .music-fab {
 .page-four__ph--5 { left: 46.54%; top: 67.73%; width: 32.92%; }
 
 /* Caption — enlarged per revision, pulled closer to the photo above
-   (Foto 5 ends at y3078; caption starts y3165 — ~86px design gap) */
+   (Foto 5 ends at y3078; caption starts y3165 — ~86px design gap).
+   Font is decoupled from the canvas scale: 1.9cqw would be ~7px on a
+   390px phone, so this clamps to a real, readable size instead. */
 .page-four__caption {
   position: absolute;
   left: 47.72%;
   top: 84.31%;
-  width: 32.2%;
+  /* Right edge stops at ~81.7% so the last lines clear the fixed
+     music FAB that hovers over the page's bottom-right corner. */
+  width: 34%;
   margin: 0;
-  font-size: 1.9cqw;
-  line-height: 1.55;
+  font-size: clamp(12.5px, 3.2cqw, 22px);
+  line-height: 1.5;
   letter-spacing: 0.01em;
 }
 
-/* Photos are clickable: open the lightbox */
+/* Photos respond to hover with a soft lift + warm glow. The effect uses
+   the individual `translate` property so the scroll-reveal's `transform`
+   transition (and its stagger delay) stays untouched; the cursor stays
+   the platform default per revision. */
 .page-four__ph {
-  cursor: zoom-in;
+  /* role="button" would get cursor:pointer from Tailwind's preflight —
+     the revision asks for the platform default cursor instead. */
+  cursor: auto;
+  transition:
+    translate 450ms cubic-bezier(0.19, 1, 0.22, 1),
+    filter 350ms ease,
+    box-shadow 350ms ease;
+}
+
+@media (hover: hover) {
+  .page-four__ph:hover,
+  .page-four__ph:focus-visible {
+    translate: 0 -8px;
+    filter: brightness(1.05) saturate(1.05);
+    box-shadow:
+      0 14px 34px rgba(40, 18, 8, 0.32),
+      0 4px 12px rgba(40, 18, 8, 0.22);
+  }
 }
 
 .page-four__ph:focus-visible {
   outline: 2px solid #faf6ea;
   outline-offset: 3px;
   border-radius: 6px;
+}
+
+/* Keep the reveal's slow expo timing and its per-photo stagger delay
+   while adding the hover transitions above to the same list. */
+.has-motion .page-four__ph {
+  transition:
+    opacity 1100ms cubic-bezier(0.19, 1, 0.22, 1),
+    transform 1350ms cubic-bezier(0.19, 1, 0.22, 1),
+    translate 450ms cubic-bezier(0.19, 1, 0.22, 1),
+    filter 350ms ease,
+    box-shadow 350ms ease;
+  transition-delay:
+    var(--reveal-delay, 0ms),
+    var(--reveal-delay, 0ms),
+    0ms,
+    0ms,
+    0ms;
 }
 
 /* ------------------------------------------------------------
