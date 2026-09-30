@@ -1866,7 +1866,9 @@ body[data-state='closing'] .open-invitation {
   background-repeat: no-repeat;
   background-position: top center;
   background-size: 100% auto;
-  transition: opacity 950ms cubic-bezier(0.19, 1, 0.22, 1);
+  transition: opacity 950ms cubic-bezier(0.19, 1, 0.22, 1),
+    transform 1150ms cubic-bezier(0.19, 1, 0.22, 1);
+  transform-origin: top center;
 }
 
 .page-five__bg--closed {
@@ -1884,6 +1886,81 @@ body[data-state='closing'] .open-invitation {
 
 .page-five.is-open .page-five__bg--closed {
   opacity: 0;
+}
+
+/* Envelope relax: as the amplop opens, the closed face eases back a
+   fraction while it fades - a quiet "flap released" read. Only under
+   has-motion; the open layer itself never transforms (the live overlays
+   must stay pinned to its baked art). */
+.has-motion .page-five.is-open .page-five__bg--closed {
+  transform: scale(0.995);
+}
+
+/* --- Cards: live copies that slide out of the amplop ----------- */
+/* The open design bakes the three cards. Seamless felt patches (the
+   same BG Page 5.png sheet, offset so the texture stays pixel-continu-
+   ous with the layer beneath) hide the baked twins the moment the
+   state opens, while the live copies - the raw assets in the exact
+   measured box (1189.3x757.3, left 249.3; tops 1191.3 / 1961.3 /
+   2736.3 design px) - slide up out of the amplop, staggered. Pure
+   transform/opacity only: layout and design stay untouched. */
+
+.page-five__card-cover {
+  position: absolute;
+  left: 13.4cqw;
+  width: 73.2cqw;
+  height: 47.5cqw;
+  background-image: url('/assets/assets_page5/BG Page 5.png');
+  background-size: 100% auto;
+  background-repeat: no-repeat;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.page-five__card-cover--1 { top: 69.2cqw;  background-position: center -69.2cqw; }
+.page-five__card-cover--2 { top: 114.9cqw; background-position: center -114.9cqw; }
+.page-five__card-cover--3 { top: 160.6cqw; background-position: center -160.6cqw; }
+
+/* The patch is the very same felt, so it may snap in with no transition
+   - a crossfade would only let the baked card ghost through mid-fade. */
+.page-five.is-open .page-five__card-cover {
+  opacity: 1;
+}
+
+.page-five__card {
+  position: absolute;
+  left: 14.76cqw;
+  width: 70.42cqw;
+  height: 44.84cqw;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.page-five__card--iqbal { top: 70.53cqw; }
+.page-five__card--nisa  { top: 116.13cqw; }
+.page-five__card--kado  { top: 162cqw; }
+
+.page-five.is-open .page-five__card {
+  opacity: 1;
+}
+
+.has-motion .page-five__card {
+  transform: translateY(6.5cqw);
+  transition:
+    opacity 1000ms cubic-bezier(0.19, 1, 0.22, 1),
+    transform 1000ms cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.has-motion .page-five.is-open .page-five__card {
+  transform: none;
+}
+
+.has-motion .page-five.is-open .page-five__card--nisa {
+  transition-delay: 150ms, 150ms;
+}
+
+.has-motion .page-five.is-open .page-five__card--kado {
+  transition-delay: 300ms, 300ms;
 }
 
 /* --- Klik Disini opener (real button riding the baked pill) -- */
@@ -2293,11 +2370,27 @@ body[data-state='closing'] .open-invitation {
    longer travel so Page 5's arrival reads long and smooth. The
    stagger comes from each element's --reveal-delay as usual. */
 
+/* Section entrance: the whole Page 5 canvas (amplop + ucapan) enters
+   the viewport with a soft fade + scale + rise (0.975 -> 1 over 1.15s);
+   the fields then stagger inside it. No blur here - the layer is huge
+   and the brief calls for restraint. Rules sit beside (never inside)
+   the descendant field rules below, which do not match the section. */
+.has-motion .page-five[data-reveal] {
+  transition:
+    opacity 1150ms cubic-bezier(0.19, 1, 0.22, 1),
+    transform 1150ms cubic-bezier(0.19, 1, 0.22, 1);
+  transition-delay: 0ms, 0ms;
+}
+
+.has-motion .page-five[data-reveal]:not(.is-revealed) {
+  transform: translateY(2.5cqw) scale(0.975);
+}
+
 .has-motion .page-five [data-reveal] {
   transition:
-    opacity 1600ms cubic-bezier(0.19, 1, 0.22, 1),
-    transform 1900ms cubic-bezier(0.19, 1, 0.22, 1),
-    filter 1600ms cubic-bezier(0.19, 1, 0.22, 1);
+    opacity 1150ms cubic-bezier(0.19, 1, 0.22, 1),
+    transform 1200ms cubic-bezier(0.19, 1, 0.22, 1),
+    filter 1150ms cubic-bezier(0.19, 1, 0.22, 1);
   transition-delay:
     var(--reveal-delay, 0ms),
     var(--reveal-delay, 0ms),
@@ -2338,9 +2431,9 @@ body[data-state='closing'] .open-invitation {
    the equal-specificity cascade. */
 .has-motion .page-five .page-five__toggle {
   transition:
-    opacity 1600ms cubic-bezier(0.19, 1, 0.22, 1),
-    transform 1900ms cubic-bezier(0.19, 1, 0.22, 1),
-    filter 1600ms cubic-bezier(0.19, 1, 0.22, 1),
+    opacity 1150ms cubic-bezier(0.19, 1, 0.22, 1),
+    transform 1200ms cubic-bezier(0.19, 1, 0.22, 1),
+    filter 1150ms cubic-bezier(0.19, 1, 0.22, 1),
     left 950ms cubic-bezier(0.19, 1, 0.22, 1),
     top 950ms cubic-bezier(0.19, 1, 0.22, 1);
   transition-delay:
