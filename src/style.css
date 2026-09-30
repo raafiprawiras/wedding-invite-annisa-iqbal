@@ -685,14 +685,10 @@ body[data-state='open'] .music-fab {
   container-type: inline-size;
   color: #faf6ea;
   font-family: var(--font-design);
-  /* PROVISIONAL backdrop — the design's dark felt texture has not been
-     exported as an asset yet. Swap this block for
-     `background: url('...BG 2.png') top center / 100% auto no-repeat;`
-     once it lands in assets_page2/. */
-  background-color: #321815;
-  background-image:
-    radial-gradient(130% 60% at 50% 0%, rgba(255, 226, 205, 0.07), transparent 62%),
-    linear-gradient(180deg, #3a1d1b 0%, #341a17 45%, #241110 100%);
+  /* BG Mahogany.jpg (720x1600, ratio 0.45) matches the canvas ratio exactly,
+     so it fills the full Page 2 scroll height 1:1, scrolling with the page.
+     The solid colour is only a fallback while the JPG loads. */
+  background: #321815 url('/assets/assets_page2/BG Mahogany.jpg') top center / 100% auto no-repeat;
 }
 
 .page-two > img {
