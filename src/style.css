@@ -755,46 +755,32 @@ body[data-state='open'] .music-fab {
 .page-three__judul {
   position: absolute;
   display: block;
-  /* Horizontally centred per request: (1689 - 1380) / 2 = 154.5.
-     Vertically at the correlation-true position against the design
-     (best match at top 423 — the old bright-run estimate of 498 was
-     ~75px off because the photo's top region is dark hair). */
-  left: 9.15%;
-  top: 11.27%;
+  /* Correlation against Page 3 Fix.png locks this exact asset at
+     (153, 354) with a near-zero score — the sample's own placement.
+     Canvas centre is 154.5, so the sample is 1.5px off true centre. */
+  left: 9.06%;
+  top: 9.43%;
   width: 81.7%;
   height: auto;
 }
 
-/* Real link pinned over the baked Lokasi pill. Re-measured on Judul
-   Tengah Fix.png: pill at asset x~429-967, y2686-2804 — with the block
-   centred (left 154.5 / top 423) that lands at canvas x584-1121,
-   y3109-3227. The button is centred on the canvas and widened just
-   enough (556 vs 537) to keep the baked pill fully covered. */
+/* Real link using the Location.png pill asset, pinned exactly over the
+   pill baked into Judul Tengah Fix.png: asset pill x429.5-966.5 renders
+   at canvas x582.5-1119.5 with the block at (153, 354) — centre x851,
+   exactly where Page 3 Fix.png puts it. */
 .page-three__lokasi {
   position: absolute;
-  left: 33.54%;
-  top: 82.81%;
-  width: 32.92%;
-  aspect-ratio: 556 / 118;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 7%;
-  border-radius: 999px;
-  background: #331304;
-  color: #faf6ea;
-  font-family: var(--font-mono);
-  font-size: 2.55cqw;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-decoration: none;
+  left: 34.49%;
+  top: 80.98%;
+  width: 31.79%;
   -webkit-tap-highlight-color: transparent;
+  text-decoration: none;
 }
 
-.page-three__lokasi svg {
-  width: 15%;
+.page-three__lokasi img {
+  display: block;
+  width: 100%;
   height: auto;
-  fill: currentColor;
 }
 
 .page-three__lokasi:hover,
