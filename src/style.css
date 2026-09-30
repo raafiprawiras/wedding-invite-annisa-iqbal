@@ -2035,13 +2035,28 @@ body[data-state='closing'] .open-invitation {
 .page-five__label {
   position: absolute;
   left: 9.95cqw;
-  top: 162.2cqw;
+  top: 161.9cqw;
   margin: 0;
   color: #faf6ea;
   font-family: var(--font-mono);
   font-weight: 700;
-  font-size: clamp(13px, 3.43cqw, 24px);
-  line-height: 1.2;
+  font-size: clamp(0.875rem, 3.8cqw, 1rem);
+  line-height: 1.35;
+  letter-spacing: 0.015em;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* The supplied flattened artwork already contains this label. Mask that
+   baked copy first so only this crisp, responsive live text is visible. */
+.page-five__label-cover {
+  position: absolute;
+  left: 9.2cqw;
+  top: 161.2cqw;
+  width: 52cqw;
+  height: 6cqw;
+  border-radius: 0.5cqw;
+  background: #341717;
 }
 
 .page-five__choice {
@@ -2062,10 +2077,14 @@ body[data-state='closing'] .open-invitation {
   color: #2f2016;
   font-family: var(--font-mono);
   font-weight: 700;
-  font-size: clamp(13px, 4.7cqw, 30px);
+  font-size: clamp(0.8125rem, 3.2cqw, 0.9375rem);
+  line-height: 1.2;
   display: grid;
   place-items: center;
   cursor: pointer;
+  transition:
+    background 220ms ease,
+    box-shadow 220ms ease;
 }
 
 .page-five__pill:focus-visible {
@@ -2073,10 +2092,26 @@ body[data-state='closing'] .open-invitation {
   outline-offset: 0.3cqw;
 }
 
+@media (hover: hover) {
+  .page-five__pill:not(.is-sent):hover,
+  .page-five__pill:not(.is-sent):focus-visible {
+    background: linear-gradient(145deg, #faf6ea 0%, #ead7b8 54%, #c69b68 100%);
+    box-shadow:
+      0 0.7cqw 1.7cqw rgb(20 8 8 / 0.2),
+      inset 0 0 0 1px rgb(255 255 255 / 0.6);
+  }
+}
+
 /* Brief confirmation flash right after a message is sent */
 .page-five__pill.is-sent {
   background: linear-gradient(168deg, #97693e, #3a2013);
   color: #faf6ea;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-five__pill {
+    transition: none;
+  }
 }
 
 /* Nudge when trying to send an empty message */
@@ -2250,6 +2285,39 @@ body[data-state='closing'] .open-invitation {
 .page-five__toast.is-show {
   opacity: 1;
   translate: -50% 0;
+}
+
+/* --- Entrance choreography ------------------------------------ */
+/* Same data-reveal entrance as the pages above — hidden until the
+   guest scrolls the area into view — but tuned slower and with a
+   longer travel so Page 5's arrival reads long and smooth. The
+   stagger comes from each element's --reveal-delay as usual. */
+
+.has-motion .page-five [data-reveal] {
+  transform: translateY(5.5cqw);
+  transition-duration: 1600ms, 1900ms;
+}
+
+.has-motion .page-five [data-reveal='pop'] {
+  transform: translateY(2.4cqw) scale(0.82);
+}
+
+/* The toggle both reveals (opacity/transform) and slides between the
+   closed/open pill positions (left/top). Declare every transition in
+   one list so neither system clobbers the other; only the reveal pair
+   gets the stagger delay. Declared after the rule above so it wins
+   the equal-specificity cascade. */
+.has-motion .page-five .page-five__toggle {
+  transition:
+    opacity 1600ms cubic-bezier(0.19, 1, 0.22, 1),
+    transform 1900ms cubic-bezier(0.19, 1, 0.22, 1),
+    left 950ms cubic-bezier(0.19, 1, 0.22, 1),
+    top 950ms cubic-bezier(0.19, 1, 0.22, 1);
+  transition-delay:
+    var(--reveal-delay, 0ms),
+    var(--reveal-delay, 0ms),
+    0ms,
+    0ms;
 }
 
 /* --- Reduced motion: states snap instead of animating ---------- */
