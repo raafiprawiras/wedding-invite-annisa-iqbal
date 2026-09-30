@@ -371,16 +371,21 @@ if (galleryPhotos.length && lightbox) {
    - Clicking Hadir / Tidak Hadir submits the message with a
      real-time timestamp, prepends it to the list and updates
      the Hadir / Tidak Hadir counters.
-   - Storage: with VITE_GUESTBOOK_URL + VITE_GUESTBOOK_KEY set
-     (Supabase REST), entries are permanent and shared across
-     all visitors; without them it falls back to localStorage,
-     a per-device demo mode. */
+   - Storage: with VITE_GUESTBOOK_URL + VITE_GUESTBOOK_KEY set, entries
+     are permanent and shared across all visitors — either a Google
+     Apps Script Web App backed by a Google Sheet (provider "sheet",
+     auto-detected from the URL) or Supabase REST; without them it
+     falls back to localStorage, a per-device demo mode. */
 
 const pageFive = document.querySelector('.page-five');
 
 if (pageFive) {
   const GUESTBOOK_URL = (import.meta.env.VITE_GUESTBOOK_URL ?? '').replace(/\/+$/, '');
   const GUESTBOOK_KEY = import.meta.env.VITE_GUESTBOOK_KEY ?? '';
+  /* Provider is picked automatically: a Google Apps Script Web App URL
+     (Google Sheets backend) or a Supabase REST base; empty = local demo. */
+  const GB_PROVIDER = import.meta.env.VITE_GUESTBOOK_PROVIDER
+    ?? (/script\.google\.com/.test(GUESTBOOK_URL) ? 'sheet' : GUESTBOOK_URL ? 'supabase' : 'local');
   const LS_KEY = 'wedding-guestbook-v1';
 
   const p5Input = pageFive.querySelector('.page-five__input');
@@ -451,7 +456,21 @@ if (pageFive) {
   };
 
   const gbLoad = async () => {
-    if (GUESTBOOK_URL) {
+    if (GB_PROVIDER === 'sheet') {
+      /* GET without custom headers → no CORS preflight, which Apps Script
+         cannot answer. The secret rides as a query parameter. */
+      const res = await fetch(`${GUESTBOOK_URL}?secret=${encodeURIComponent(GUESTBOOK_KEY)}`);
+      if (!res.ok) throw new Error('guestbook load failed');
+      const data = await res.json();
+      if (!data.ok) throw new Error('guestbook load error');
+      return data.entries.map((e) => ({
+        name: e.name,
+        message: e.message,
+        attendance: e.attendance,
+        created_at: e.created_at,
+      }));
+    }
+    if (GB_PROVIDER === 'supabase') {
       const res = await fetch(
         `${GUESTBOOK_URL}/rest/v1/guestbook?select=*&order=created_at.desc&limit=100`,
         { headers: GB_HEADERS },
@@ -467,7 +486,20 @@ if (pageFive) {
   };
 
   const gbSave = async (entry) => {
-    if (GUESTBOOK_URL) {
+    if (GB_PROVIDER === 'sheet') {
+      /* text/plain content-type avoids the CORS preflight Apps Script
+         cannot answer; Google's redirect chain delivers the JSON reply. */
+      const res = await fetch(GUESTBOOK_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ secret: GUESTBOOK_KEY, ...entry }),
+      });
+      if (!res.ok) throw new Error('guestbook save failed');
+      const data = await res.json().catch(() => ({ ok: false }));
+      if (!data.ok) throw new Error('guestbook save error');
+      return;
+    }
+    if (GB_PROVIDER === 'supabase') {
       const res = await fetch(`${GUESTBOOK_URL}/rest/v1/guestbook`, {
         method: 'POST',
         headers: { ...GB_HEADERS, 'Content-Type': 'application/json', Prefer: 'return=minimal' },
@@ -553,8 +585,12 @@ if (pageFive) {
       };
       try {
         await gbSave(entry);
-        const current = await gbLoad();
-        p5RenderAll(current);
+        /* Optimistic update — render immediately instead of re-reading:
+           Google Sheets can lag a few seconds between append and read. */
+        p5List.querySelector('.page-five__empty')?.remove();
+        p5List.prepend(p5RenderEntry(entry));
+        (attendance === 'hadir' ? p5CounterHadir : p5CounterTidak).textContent =
+          String(Number((attendance === 'hadir' ? p5CounterHadir : p5CounterTidak).textContent) + 1);
         p5Textarea.value = '';
         p5ShowToast('Ucapan dan do\u2019a terkirim');
         pill.classList.add('is-sent');
