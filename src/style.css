@@ -800,6 +800,53 @@ body[data-state='open'] .music-fab {
   filter: brightness(0.92);
 }
 
+/* ------------------------------------------------------------
+   Page 4 — Gallery (ref: Page 4 New.png, 1689 x 3754)
+   Photos keep their baked frames. Every rect below comes from
+   connected-component matching (see index.html note): scale 1.0,
+   grid offset (126, 549.5) into the canvas.
+   ------------------------------------------------------------ */
+.page-four {
+  position: relative;
+  width: min(100%, 540px);
+  margin-inline: auto;
+  aspect-ratio: 1689 / 3754;
+  overflow: hidden;
+  container-type: inline-size;
+  color: #000;
+  font-family: var(--font-mono);
+  /* Solid colour is only a fallback while the PNG loads. */
+  background: #cfc5bc url('/assets/assets_page4/Bg Pg 4.png') top center / 100% auto no-repeat;
+}
+
+.page-four__ph {
+  position: absolute;
+  display: block;
+  height: auto;
+}
+
+/* slot rects, in % of the 1689 x 3754 canvas */
+.page-four__ph--4 { left: 24.69%; top: 14.64%; width: 49.2%; }
+.page-four__ph--2 { left: 13.79%; top: 27.66%; width: 31.73%; }
+.page-four__ph--3 { left: 46.6%;  top: 27.63%; width: 37.06%; }
+.page-four__ph--6 { left: 46.54%; top: 42.12%; width: 32.33%; }
+.page-four__ph--7 { left: 7.46%;  top: 51.56%; width: 38.07%; }
+.page-four__ph--1 { left: 46.54%; top: 54.64%; width: 46%; }
+.page-four__ph--8 { left: 12.67%; top: 62.11%; width: 32.86%; }
+.page-four__ph--5 { left: 46.54%; top: 67.73%; width: 32.92%; }
+
+/* Caption — 7 lines at x806, y3240, pitch 42px (~26px mono, lh 1.6) */
+.page-four__caption {
+  position: absolute;
+  left: 47.72%;
+  top: 86.25%;
+  width: 32.2%;
+  margin: 0;
+  font-size: 1.54cqw;
+  line-height: 1.6;
+  letter-spacing: 0.01em;
+}
+
 body[data-state='open'] .opening-page {
   display: none;
 }
@@ -1658,7 +1705,8 @@ body[data-state='closing'] .open-invitation {
 
   .page-one,
   .page-two,
-  .page-three {
+  .page-three,
+  .page-four {
     width: min(100%, 620px);
     border-radius: 28px;
     box-shadow:
@@ -1679,7 +1727,8 @@ body[data-state='closing'] .open-invitation {
 
   .page-one,
   .page-two,
-  .page-three {
+  .page-three,
+  .page-four {
     width: min(100%, 660px);
     border-radius: 32px;
     box-shadow:
