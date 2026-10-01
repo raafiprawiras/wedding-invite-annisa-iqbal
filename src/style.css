@@ -312,6 +312,20 @@ body[data-state='open'] .music-fab {
   display: initial;
 }
 
+/* Playing: one slow, continuous turn of the glyph - transform only, no
+   pulse, no glow, no bounce. Paused: the rotation simply stops (the class
+   drops, the animation never restarts mid-state) and the play glyph is
+   back. Gated under .has-motion so reduced motion never spins. */
+.has-motion .music-fab.is-playing .music-fab__icon {
+  animation: music-fab-spin 7s linear infinite;
+}
+
+@keyframes music-fab-spin {
+  to {
+    transform: rotate(1turn);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .music-fab,
   body[data-state='open'] .music-fab {

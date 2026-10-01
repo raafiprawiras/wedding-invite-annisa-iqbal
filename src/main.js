@@ -351,6 +351,20 @@ const openPageOne = () => {
   window.scrollTo(0, 0);
   observeReveals();
 
+  /* Start the music inside this very click - the user gesture browsers
+     require. The song begins at 0 on this first open, then loops across
+     every page; a rejected promise (blocked/failed load) is swallowed so
+     the opening animation is never disturbed. */
+  if (music) {
+    try {
+      music.currentTime = 0;
+      const p = music.play();
+      if (p && typeof p.catch === 'function') p.catch(() => {});
+    } catch {
+      /* no-op: the invitation opens regardless */
+    }
+  }
+
   window.setTimeout(() => {
     document.body.dataset.state = 'open';
   }, HANDOVER_MS);
@@ -364,15 +378,43 @@ const openPageOne = () => {
 
 openButton?.addEventListener('click', openPageOne);
 
-/* Floating music toggle. No audio asset exists yet, so the button only flips
-   its pressed state (play/pause glyphs); wiring an <audio> element later is a
-   matter of playing/pausing inside this handler. */
+/* ---------- Global music controller ---------- */
+/* ONE native HTML5 Audio instance serves the whole invitation: it starts
+   inside the "Buka Undangan" click (the user gesture browsers require),
+   loops forever, and keeps playing across every page and scroll position -
+   nothing here ever touches currentTime again, so the song never restarts
+   mid-visit. The FAB only toggles play/pause; resuming continues from the
+   current position because pause() preserves it. The audio element is the
+   single source of truth: its play/pause events drive the FAB state, so
+   the UI can never drift from what is actually sounding. */
+const music = document.querySelector('#wedding-music');
 const musicFab = document.querySelector('.music-fab');
-musicFab?.addEventListener('click', () => {
-  const playing = musicFab.getAttribute('aria-pressed') === 'true';
-  musicFab.setAttribute('aria-pressed', String(!playing));
-  musicFab.setAttribute('aria-label', playing ? 'Putar musik' : 'Jeda musik');
-});
+
+const syncMusicFab = () => {
+  if (!music || !musicFab) return;
+  const playing = !music.paused && !music.ended;
+  musicFab.classList.toggle('is-playing', playing);
+  musicFab.setAttribute('aria-pressed', String(playing));
+  musicFab.setAttribute('aria-label', playing ? 'Jeda musik' : 'Putar musik');
+};
+
+if (music && musicFab) {
+  music.addEventListener('play', syncMusicFab);
+  music.addEventListener('pause', syncMusicFab);
+  /* A missing/failed file must never break the invitation: the promise
+     rejections are caught where play() is called, and this keeps the FAB
+     honest about the (non-)playback state. No retry loops anywhere. */
+  music.addEventListener('error', syncMusicFab);
+
+  musicFab.addEventListener('click', () => {
+    if (music.paused) {
+      const p = music.play();
+      if (p && typeof p.catch === 'function') p.catch(() => syncMusicFab());
+    } else {
+      music.pause();
+    }
+  });
+}
 
 updateCountdown();
 window.setInterval(updateCountdown, 1000);

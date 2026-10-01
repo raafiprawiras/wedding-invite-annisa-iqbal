@@ -370,6 +370,13 @@
             </section>
         </div>
 
+        <!-- Global music: ONE native HTML5 Audio instance for the whole
+             invitation. It starts on the "Buka Undangan" click (the user
+             gesture), loops, and keeps playing across every page - the
+             FAB below only plays/pauses, resuming from the same position. -->
+        <audio id="wedding-music" src="/assets/backsound/The%20Beatles%20-%20And%20I%20Love%20Her.mp3"
+            loop preload="auto"></audio>
+
         <!-- Floating music toggle. Fixed to the viewport so it follows the
              scroll from Page 1 onward (and every page after). Hidden while the
              opening page is up; audio wiring lands with the audio asset. -->
