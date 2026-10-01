@@ -2070,31 +2070,64 @@ body[data-state='closing'] .open-invitation {
   transition: opacity 350ms cubic-bezier(0.19, 1, 0.22, 1);
 }
 
-/* --- The LONG card: the open state, grown from the short one ---- */
-/* Klik Amplop.png is the full open card (title + pill + the three
-   cards, all baked, 1527x3390 at the same anchor as the short face).
-   It always sits at full size under the short card - whose top 933px
-   it continues - and on open its clip expands downward, so the short
-   card reads as smoothly growing its long tail. Synced with the
-   canvas max-height and the wrapper slide (950ms, same easing). */
+/* --- The LONG card's tail: three bands, revealed one by one ----- */
+/* Klik Amplop.png bakes the whole open card; its tail (below the
+   933px face) is shown as THREE bands of the same image - each one
+   baked card (Iqbal / Nisa / Kirim Hadiah) is its own element, so
+   after the click they float in one by one while the canvas itself
+   opens. Band boundaries sit in the empty maroon rows between cards
+   (asset rows 1700 and 2470) with a 2px overlap, so the seams are
+   invisible once all bands are up. Layout is untouched: absolute
+   divs inside the overflow-hidden canvas, transform/opacity only. */
 
-.page-five__panel-long {
+.page-five__tail {
   position: absolute;
-  left: 4.62cqw;
-  top: 14.8cqw;
-  width: 90.41cqw;
-  height: auto;
+  left: 4.62cqw;   /* 78 */
+  width: 90.41cqw; /* 1527 */
+  background-image: url('/assets/assets_page5/Klik Amplop.png');
+  background-repeat: no-repeat;
+  background-size: 90.41cqw auto;
+  opacity: 0;
   pointer-events: none;
-  clip-path: inset(0 0 calc(100% - 55.24cqw) 0);
+  /* Hidden pose: a whisper of drop, so each card "lands" into place. */
+  transform: translateY(2.5cqw) scale(0.985);
 }
 
-.page-five.is-open .page-five__panel-long {
-  clip-path: inset(0 0 0 0);
+/* Band 1: asset rows 933-1702 (Card Iqbal). */
+.page-five__tail--1 {
+  top: 70.04cqw;
+  height: 45.53cqw;
+  background-position: 0 -55.24cqw;
+}
+/* Band 2: asset rows 1700-2472 (Card Nisa). */
+.page-five__tail--2 {
+  top: 115.45cqw;
+  height: 45.71cqw;
+  background-position: 0 -100.65cqw;
+}
+/* Band 3: asset rows 2470-3390 (Kirim Hadiah + Lihat Lokasi). */
+.page-five__tail--3 {
+  top: 161.04cqw;
+  height: 54.47cqw;
+  background-position: 0 -146.24cqw;
 }
 
-.has-motion .page-five__panel-long {
-  transition: clip-path 950ms cubic-bezier(0.19, 1, 0.22, 1);
+.has-motion .page-five__tail {
+  transition:
+    opacity 850ms cubic-bezier(0.19, 1, 0.22, 1),
+    transform 950ms cubic-bezier(0.19, 1, 0.22, 1);
 }
+
+/* Open: the cards appear in reading order, 180ms apart, after the
+   container has begun opening (canvas growth leads, cards follow). */
+.page-five.is-open .page-five__tail {
+  opacity: 1;
+  transform: none;
+}
+
+.has-motion .page-five.is-open .page-five__tail--1 { transition-delay: 140ms, 140ms; }
+.has-motion .page-five.is-open .page-five__tail--2 { transition-delay: 320ms, 320ms; }
+.has-motion .page-five.is-open .page-five__tail--3 { transition-delay: 500ms, 500ms; }
 
 /* --- Klik Disini opener (real button riding the baked pill) -- */
 
@@ -2292,9 +2325,13 @@ body[data-state='closing'] .open-invitation {
   display: grid;
   place-items: center;
   cursor: pointer;
+  /* One consistent list, one curve, one duration: hover-in and
+     hover-out take exactly the same path, so nothing lingers,
+     bounces or overshoots when the cursor leaves. */
   transition:
-    background 220ms ease,
-    box-shadow 220ms ease;
+    transform 250ms ease,
+    background 250ms ease,
+    box-shadow 250ms ease;
 }
 
 .page-five__pill:focus-visible {
@@ -2305,10 +2342,10 @@ body[data-state='closing'] .open-invitation {
 @media (hover: hover) {
   .page-five__pill:not(.is-sent):hover,
   .page-five__pill:not(.is-sent):focus-visible {
-    background: linear-gradient(145deg, #faf6ea 0%, #ead7b8 54%, #c69b68 100%);
-    box-shadow:
-      0 0.7cqw 1.7cqw rgb(20 8 8 / 0.2),
-      inset 0 0 0 1px rgb(255 255 255 / 0.6);
+    /* A quiet lift + a whisper of gradient - never neon, never bouncy. */
+    transform: translateY(-2px) scale(1.02);
+    background: linear-gradient(150deg, #fbf3e4 0%, #ecd9ba 55%, #cfa878 100%);
+    box-shadow: 0 0.5cqw 1.2cqw rgb(20 8 8 / 0.16);
   }
 }
 
@@ -2398,6 +2435,51 @@ body[data-state='closing'] .open-invitation {
   font-size: clamp(12px, 2.37cqw, 17px);
   line-height: 1.25;
   overflow-wrap: anywhere;
+}
+
+/* Name row: guest name left, a small attendance badge right. */
+.page-five__entry-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 2cqw;
+}
+
+.page-five__entry-head .page-five__entry-name {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+/* Small, subtle, in the panel's own palette - a quiet marker that
+   never competes with the guest's name for attention. */
+.page-five__entry-status {
+  flex: none;
+  margin-top: 0.2cqw;
+  padding: 0.55cqw 1.6cqw;
+  border-radius: 999px;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: clamp(9px, 1.55cqw, 12px);
+  line-height: 1.3;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+.page-five__entry-status::before {
+  content: '\2022';
+  margin-right: 0.7cqw;
+}
+
+.page-five__entry-status[data-status='hadir'] {
+  color: #ecd5ab;
+  background: rgb(151 105 62 / 0.22);
+  border: 1px solid rgb(236 213 171 / 0.4);
+}
+
+.page-five__entry-status[data-status='tidak'] {
+  color: rgb(247 241 227 / 0.65);
+  background: rgb(247 241 227 / 0.05);
+  border: 1px solid rgb(247 241 227 / 0.2);
 }
 
 .page-five__entry-time {
@@ -2538,6 +2620,12 @@ body[data-state='closing'] .open-invitation {
   transform: translateY(5.5cqw) scale(0.96);
 }
 
+/* The counters settle with a touch of scale, so they read as one
+   quiet unit arriving - no bounce, no counting theatrics. */
+.has-motion .page-five .page-five__counters:not(.is-visible) {
+  transform: translateY(5.5cqw) scale(0.96);
+}
+
 .has-motion .page-five [data-reveal].is-visible {
   filter: none;
 }
@@ -2581,7 +2669,9 @@ body[data-state='closing'] .open-invitation {
   .page-five,
   .page-five__bg,
   .page-five__ucapan,
-  .page-five__toggle {
+  .page-five__toggle,
+  .page-five__tail,
+  .page-five__pill {
     transition: none;
   }
 }

@@ -600,19 +600,32 @@ if (pageFive) {
     return `${p(d.getDate())}-${p(d.getMonth() + 1)}-${d.getFullYear()} ${p(d.getHours())}.${p(d.getMinutes())}`;
   };
 
-  const p5RenderEntry = (entry) => {
+  const p5RenderEntry = (entry, index = 0) => {
     const li = document.createElement('li');
     li.className = 'page-five__entry';
     li.innerHTML = `
       <span class="page-five__avatar">${AVATAR_SVG}</span>
       <div>
-        <p class="page-five__entry-name"></p>
+        <div class="page-five__entry-head">
+          <p class="page-five__entry-name"></p>
+          <span class="page-five__entry-status" hidden></span>
+        </div>
         <time class="page-five__entry-time" datetime="${entry.created_at}"></time>
         <p class="page-five__entry-msg"></p>
       </div>`;
     li.querySelector('.page-five__entry-name').textContent = entry.name;
     li.querySelector('.page-five__entry-time').textContent = p5FormatTime(entry.created_at);
     li.querySelector('.page-five__entry-msg').textContent = entry.message;
+    const status = li.querySelector('.page-five__entry-status');
+    if (entry.attendance === 'hadir' || entry.attendance === 'tidak') {
+      status.hidden = false;
+      status.dataset.status = entry.attendance;
+      status.textContent = entry.attendance === 'hadir' ? 'Hadir' : 'Tidak Hadir';
+    }
+    /* Stagger the initial list (90ms per entry, capped so a long list
+       never makes the guest wait); freshly submitted entries land
+       immediately with no delay. */
+    if (index > 0) li.style.animationDelay = `${Math.min(index, 7) * 90}ms`;
     return li;
   };
 
@@ -624,7 +637,7 @@ if (pageFive) {
       li.textContent = 'Jadilah yang pertama memberikan ucapan dan do\u2019a.';
       p5List.appendChild(li);
     } else {
-      entries.forEach((entry) => p5List.appendChild(p5RenderEntry(entry)));
+      entries.forEach((entry, i) => p5List.appendChild(p5RenderEntry(entry, i)));
     }
     p5CounterHadir.textContent = entries.filter((e) => e.attendance === 'hadir').length;
     p5CounterTidak.textContent = entries.filter((e) => e.attendance === 'tidak').length;

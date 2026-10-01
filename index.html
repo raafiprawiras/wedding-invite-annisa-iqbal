@@ -307,14 +307,14 @@
                  moving parts are the panels, the wrapper and the pill. -->
             <div class="page-five__bg" aria-hidden="true"></div>
 
-            <!-- The open state's LONG card (raw asset, exact design):
-                 title + subtitle + pill + the three cards, all baked. It sits
-                 under the short face and grows downward on open via clip-path;
-                 its top 933px stays hidden behind the short card, whose art it
-                 continues. The baked Copy / Lihat Lokasi pills align with the
-                 transparent hit areas further down. -->
-            <img class="page-five__panel-long" src="./assets/assets_page5/Klik Amplop.png"
-                alt="" aria-hidden="true" width="1527" height="3390" loading="lazy" />
+            <!-- The open state's LONG card is shown as THREE tail bands -
+                 the same raw asset (Klik Amplop.png), background-position
+                 offsets - so each baked card (Iqbal, Nisa, Kirim Hadiah)
+                 is an independent element that can reveal on its own after
+                 the click. The top 933px face stays the short panel. -->
+            <div class="page-five__tail page-five__tail--1" aria-hidden="true"></div>
+            <div class="page-five__tail page-five__tail--2" aria-hidden="true"></div>
+            <div class="page-five__tail page-five__tail--3" aria-hidden="true"></div>
             <img class="page-five__panel page-five__panel--amplop"
                 src="./assets/assets_page5/Amplop Digital Judul.png" alt="" aria-hidden="true"
                 width="1527" height="933" data-reveal />
