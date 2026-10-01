@@ -193,25 +193,52 @@
                 src="./assets/assets_page1/Vector 2.png" alt="" aria-hidden="true" width="1126" height="278" />
         </section>
 
-        <!-- Page 3 — Akad & Resepsi (canvas 1689 x 3754). The center block is a
-             pre-composited artwork (arched photo + title + schedule), so its full
-             text doubles as alt text; the Lokasi pill is rebuilt as a real link
-             pinned exactly over the baked one. -->
+        <!-- Page 3 - Akad & Resepsi (canvas 1689 x 3754). Rebuilt from the
+             raw assets in assets_new_page3 - the arch frame (photo baked),
+             the monogram, the two schedule blocks, the address and the
+             pill are LIVE layers, each with its own reversible reveal.
+             The two schedule assets bake title + divider + date + time as
+             ONE image each, so each is shown as four horizontal bands -
+             the same image, background-position offsets - giving four
+             independent elements with zero new assets. Compose check of
+             all layers over the felt vs Page 3 Nih.png: mean diff 0.79,
+             99.6% of pixels identical. -->
         <section class="page-three" aria-labelledby="page-three-title">
             <h2 id="page-three-title" class="visually-hidden">
-                Akad &amp; Resepsi — Jum&#8217;at, 27 November 2026 — Jl. Sapen Raya, Penggaron Kidul,
+                Akad &amp; Resepsi - Jum&#8217;at, 27 November 2026 - Jl. Sapen Raya, Penggaron Kidul,
                 Pedurungan, Kota Semarang
             </h2>
 
-            <img class="page-three__judul" data-reveal
-                src="./assets/assets_page3/Judul Tengah Fix.png"
-                alt="Akad &amp; Resepsi. Akad Nikah: Jum&#8217;at, 27 November 2026, pukul 09.00&#8211;11.00 WIB. Resepsi: Jum&#8217;at, 27 November 2026, pukul 14.00 WIB&#8211;selesai. Tempat: Jl. Sapen Raya, Penggaron Kidul RT 7/RW 3, Pedurungan, Kota Semarang."
-                width="1380" height="3048" />
+            <img class="page-three__frame" data-reveal="frame"
+                src="./assets/assets_new_page3/Frame Outline.png" alt="" aria-hidden="true"
+                width="1410" height="3066" loading="lazy" />
 
-            <a class="page-three__lokasi" data-reveal="pop"
+            <img class="page-three__logo" data-reveal="logo"
+                src="./assets/assets_new_page3/Logo AI.png" alt="" aria-hidden="true"
+                width="330" height="330" loading="lazy" />
+
+            <!-- Akad Nikah.png shown as four bands (independent reveals).
+                 The line bands carry their crop on an inner <i> layer so the
+                 scaleX draw-in never collapses the observed element itself. -->
+            <div class="page-three__band page-three__akad-title" data-reveal></div>
+            <div class="page-three__band page-three__akad-line" data-reveal="line"><i aria-hidden="true"></i></div>
+            <div class="page-three__band page-three__akad-date" data-reveal></div>
+            <div class="page-three__band page-three__akad-time" data-reveal></div>
+
+            <!-- Resepsi.png shown as four bands (independent reveals). -->
+            <div class="page-three__band page-three__resepsi-title" data-reveal></div>
+            <div class="page-three__band page-three__resepsi-line" data-reveal="line"><i aria-hidden="true"></i></div>
+            <div class="page-three__band page-three__resepsi-date" data-reveal></div>
+            <div class="page-three__band page-three__resepsi-time" data-reveal></div>
+
+            <img class="page-three__alamat" data-reveal
+                src="./assets/assets_new_page3/Alamat.png" alt="" aria-hidden="true"
+                width="1242" height="144" loading="lazy" />
+
+            <a class="page-three__lokasi" data-reveal="soft"
                 href="https://www.google.com/maps/search/?api=1&amp;query=Jl.%20Sapen%20Raya%2C%20Penggaron%20Kidul%20RT%207%2FRW%203%2C%20Pedurungan%2C%20Kota%20Semarang"
-                target="_blank" rel="noopener" aria-label="Lokasi acara — buka di Google Maps">
-                <img src="./assets/assets_page3/Location.png" alt="" aria-hidden="true" width="537" height="120" />
+                target="_blank" rel="noopener" aria-label="Lokasi acara - buka di Google Maps">
+                <img src="./assets/assets_new_page3/Location.png" alt="" aria-hidden="true" width="607" height="141" loading="lazy" />
             </a>
         </section>
 

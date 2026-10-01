@@ -733,11 +733,12 @@ body[data-state='open'] .music-fab {
 }
 
 /* ------------------------------------------------------------
-   Page 3 — Akad & Resepsi (ref: Page 3 New.png, 1689 x 3754)
-   Same canvas pattern; BG Page 3.png matches the canvas ratio
-   exactly, so it fills the full scroll height 1:1. The center
-   block's arch measured 1378px in the design = its native ink
-   width, i.e. scale 1.0 at left 148 / top 498.
+   Page 3 - Akad & Resepsi (ref: Page 3 Nih.png, 1689 x 3754)
+   Rebuilt from the raw assets in assets_new_page3. Every layer's
+   box below comes from alpha-weighted template matching against the
+   flattened design, then verified by composing all layers over the
+   felt: mean diff 0.79, 99.6% of sampled pixels identical.
+   Positions are design px / 16.89 = cqw.
    ------------------------------------------------------------ */
 .page-three {
   position: relative;
@@ -749,30 +750,111 @@ body[data-state='open'] .music-fab {
   color: #faf6ea;
   font-family: var(--font-design);
   /* Solid colour is only a fallback while the PNG loads. */
-  background: #2d1511 url('/assets/assets_page3/BG Page 3.png') top center / 100% auto no-repeat;
+  background: #2d1511 url('/assets/assets_new_page3/BG Page 3.png') top center / 100% auto no-repeat;
 }
 
-.page-three__judul {
+/* The arch frame with the photo and its gradient baked in. */
+.page-three__frame {
   position: absolute;
-  display: block;
-  /* Correlation against Page 3 Fix.png locks this exact asset at
-     (153, 354) with a near-zero score — the sample's own placement.
-     Canvas centre is 154.5, so the sample is 1.5px off true centre. */
-  left: 9.06%;
-  top: 9.43%;
-  width: 81.7%;
+  left: 8.17cqw;   /* 138 */
+  top: 20.43cqw;   /* 345 */
+  width: 83.48cqw; /* 1410 */
   height: auto;
+  pointer-events: none;
+}
+
+/* The monogram, sitting on the frame. */
+.page-three__logo {
+  position: absolute;
+  left: 39.25cqw;  /* 663 */
+  top: 35.52cqw;   /* 600 */
+  width: 19.54cqw; /* 330 */
+  height: auto;
+  pointer-events: none;
+}
+
+/* Schedule blocks: each raw asset (Akad Nikah.png / Resepsi.png) bakes
+   title + divider + date + time as ONE image, so it is shown as FOUR
+   horizontal bands - the same image, background-position offsets -
+   giving four independent reveal elements per block with zero new
+   assets. Band boundaries sit at the empty gaps between the baked
+   rows (alpha row profile of each asset). */
+.page-three__band {
+  position: absolute;
+  left: 20.54cqw;   /* 347 */
+  width: 58.32cqw;  /* 985 */
+  background-repeat: no-repeat;
+  background-size: 58.32cqw auto;
+  pointer-events: none;
+}
+
+/* Akad Nikah.png at (347, 1713) = (20.54cqw, 101.42cqw). */
+.page-three__akad-title {
+  top: 101.42cqw; height: 7.16cqw;
+  background-image: url('/assets/assets_new_page3/Akad Nikah.png');
+  background-position: 0 0cqw;
+}
+.page-three__akad-line {
+  top: 108.58cqw; height: 4.38cqw;
+}
+.page-three__akad-line > i {
+  background-image: url('/assets/assets_new_page3/Akad Nikah.png');
+  background-size: 58.32cqw auto;
+  background-position: 0 -7.16cqw;
+}
+.page-three__akad-date {
+  top: 112.97cqw; height: 7.70cqw;
+  background-image: url('/assets/assets_new_page3/Akad Nikah.png');
+  background-position: 0 -11.55cqw;
+}
+.page-three__akad-time {
+  top: 120.66cqw; height: 6.16cqw;
+  background-image: url('/assets/assets_new_page3/Akad Nikah.png');
+  background-position: 0 -19.24cqw;
+}
+
+/* Resepsi.png at (347, 2226) = (20.54cqw, 131.79cqw). */
+.page-three__resepsi-title {
+  top: 131.79cqw; height: 7.22cqw;
+  background-image: url('/assets/assets_new_page3/Resepsi.png');
+  background-position: 0 0cqw;
+}
+.page-three__resepsi-line {
+  top: 139.01cqw; height: 4.32cqw;
+}
+.page-three__resepsi-line > i {
+  background-image: url('/assets/assets_new_page3/Resepsi.png');
+  background-size: 58.32cqw auto;
+  background-position: 0 -7.22cqw;
+}
+.page-three__resepsi-date {
+  top: 143.34cqw; height: 7.76cqw;
+  background-image: url('/assets/assets_new_page3/Resepsi.png');
+  background-position: 0 -11.55cqw;
+}
+.page-three__resepsi-time {
+  top: 151.09cqw; height: 6.28cqw;
+  background-image: url('/assets/assets_new_page3/Resepsi.png');
+  background-position: 0 -19.30cqw;
+}
+
+/* The address text. */
+.page-three__alamat {
+  position: absolute;
+  left: 13.50cqw;   /* 228 */
+  top: 163.59cqw;   /* 2763 */
+  width: 73.53cqw;  /* 1242 */
+  height: auto;
+  pointer-events: none;
 }
 
 /* Real link using the Location.png pill asset, pinned exactly over the
-   pill baked into Judul Tengah Fix.png: asset pill x429.5-966.5 renders
-   at canvas x582.5-1119.5 with the block at (153, 354) — centre x851,
-   exactly where Page 3 Fix.png puts it. */
+   pill in Page 3 Nih.png (matched at (540, 3090)). */
 .page-three__lokasi {
   position: absolute;
-  left: 34.49%;
-  top: 80.98%;
-  width: 31.79%;
+  left: 31.97cqw;   /* 540 */
+  top: 182.95cqw;   /* 3090 */
+  width: 35.94cqw;  /* 607 */
   -webkit-tap-highlight-color: transparent;
   text-decoration: none;
 }
@@ -1054,6 +1136,44 @@ body[data-state='open'] .opening-page {
    clean, so this can never out-rank `.is-visible { transform: none }`. */
 .has-motion .page-two__amp:not(.is-visible) {
   transform: translateY(4cqw) scale(0.85);
+}
+
+/* Page 3 variants - each element enters with motion that fits its role:
+   the photo frame lands (float + a whisper of scale), the monogram
+   blooms, the schedule dividers DRAW IN from the centre (scaleX reads
+   as a width expansion without any layout recalculation), and the
+   lokasi button settles from a gentle scale. All are cleared by the
+   generic `.is-visible { transform: none }` (higher specificity). */
+.has-motion [data-reveal='frame'] {
+  transform: translateY(4cqw) scale(0.97);
+}
+
+.has-motion [data-reveal='logo'] {
+  transform: translateY(3cqw) scale(0.94);
+}
+
+.has-motion [data-reveal='line'] {
+  /* The dividers DRAW IN from the centre. The scaleX lives on the band's
+     inner <i> layer - never on the observed element itself, whose box
+     must stay intact for IntersectionObserver to track it reliably. */
+  transform: none;
+}
+
+.has-motion [data-reveal='line'] > i {
+  position: absolute;
+  inset: 0;
+  display: block;
+  transform: scaleX(0);
+  transform-origin: 50% 50%;
+  transition: transform 900ms cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.has-motion [data-reveal='line'].is-visible > i {
+  transform: scaleX(1);
+}
+
+.has-motion [data-reveal='soft'] {
+  transform: translateY(2cqw) scale(0.96);
 }
 
 /* The ayah lands line by line, like it is being read. */
