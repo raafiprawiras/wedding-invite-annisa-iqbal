@@ -154,11 +154,11 @@ if (!reduceMotion.matches && 'IntersectionObserver' in window) {
   document.documentElement.classList.add('has-motion');
 }
 
-/* Single reveal observer for the whole invitation: the midline trigger.
-   An element only starts its float-in once it reaches ~55% of the viewport
-   height, never at the bottom edge - so with the scroll still near the top
-   of a page, nothing below the middle has appeared yet, and each element
-   enters as the guest carries it up to the middle of the screen. */
+/* Single reveal observer for the whole invitation: the midline trigger,
+   REVERSIBLE. An element only starts its float-in once it reaches ~55% of
+   the viewport height, never at the bottom edge - and it keeps being
+   observed for the whole session: leaving the viewport settles it back to
+   hidden, so every sequence replays on the next visit. */
 let centerObserver = null;
 
 /* Sequential entrance. Eligible elements never start together: every one
@@ -167,7 +167,7 @@ let centerObserver = null;
    section arriving at once still enters as a calm sequence of individual
    float-ins instead of a single simultaneous block. */
 const revealQueue = [];
-const REVEAL_CADENCE_MS = 220;
+const REVEAL_CADENCE_MS = 160;
 let revealTimer = null;
 let revealLastStart = 0;
 
@@ -175,8 +175,14 @@ const startReveal = (el) => {
   /* The old per-element inline delays are superseded by the queue's own
      cadence - drop them so each element starts the moment its turn comes. */
   el.style.removeProperty('--reveal-delay');
-  el.classList.add('is-revealed');
-  centerObserver?.unobserve(el);
+  el.classList.add('is-visible');
+  /* Deliberately NOT unobserved: the observer keeps watching so the element
+     hides again when it leaves the viewport and replays on the next visit. */
+};
+
+const dequeueReveal = (el) => {
+  const i = revealQueue.indexOf(el);
+  if (i !== -1) revealQueue.splice(i, 1);
 };
 
 const pumpReveals = () => {
@@ -211,21 +217,16 @@ const enqueueReveals = (els) => {
    invisible. Anything whose box is on screen is therefore also revealed by a
    cheap rect test, so a missed intersection can never hide content. */
 const sweepReveals = () => {
-  /* The reveal line is the midline for every page so nothing pops at the
-     screen edge; at the very end of the document anything still on screen
-     shows regardless, or it would strand below the midline with no scroll
-     left. */
+  /* Safety net only: elements at the very end of the document can sit where
+     the midline margin is never satisfied once the page runs out of scroll -
+     reveal those regardless. Everything else is fully handled by the
+     observer, which keeps watching for the whole session (reversible). */
   const atEnd = window.innerHeight + window.scrollY >=
     document.documentElement.scrollHeight - 2;
-  const line = window.innerHeight * 0.55;
+  if (!atEnd) return;
   const eligible = [];
-  document.querySelectorAll('[data-reveal]:not(.is-revealed)').forEach((el) => {
-    const rect = el.getBoundingClientRect();
-    /* At or above the reveal line - on screen, or already scrolled past. A
-       fast flick or anchor jump can carry an element from below the viewport
-       to above it between two observer ticks, so the deep-margin observer
-       never sees it intersect; anything that high up must be shown. */
-    if (rect.top < line || (atEnd && rect.top < window.innerHeight)) {
+  document.querySelectorAll('[data-reveal]:not(.is-visible)').forEach((el) => {
+    if (el.getBoundingClientRect().top < window.innerHeight) {
       eligible.push(el);
     }
   });
@@ -267,8 +268,15 @@ const observeReveals = () => {
   const onEntries = (entries) => {
     const eligible = [];
     entries.forEach((entry) => {
-      if (!entry.isIntersecting) return;
-      eligible.push(entry.target);
+      if (entry.isIntersecting) {
+        eligible.push(entry.target);
+      } else {
+        /* Leaving the viewport settles the element back to hidden - the
+           float-in replays every time it comes back. Also pull it out of
+           the queue so nothing plays for an element that is already gone. */
+        dequeueReveal(entry.target);
+        entry.target.classList.remove('is-visible');
+      }
     });
     enqueueReveals(eligible);
   };
@@ -284,10 +292,9 @@ const observeReveals = () => {
     threshold: 0.15,
   });
 
-  document.querySelectorAll('[data-reveal]:not(.is-revealed)').forEach((el) => {
+  document.querySelectorAll('[data-reveal]').forEach((el) => {
     centerObserver.observe(el);
   });
-  observeFloats();
   /* No synchronous sweep here: at click time the entrance zoom is mid-flight
      (canvas scaled 0.94), so element rects sit higher than at rest and the
      sweep would prematurely reveal below-the-fold elements. The observer
@@ -299,29 +306,6 @@ const observeReveals = () => {
 
 window.addEventListener('scroll', queueSweep, { passive: true });
 window.addEventListener('resize', queueSweep);
-
-/* The Bride & Groom section (Page 2) is REVERSIBLE: its elements get
-   `is-visible` while they are in the viewport and lose it when they leave,
-   so the float-in sequence replays on every visit instead of playing once.
-   The entrance needs the element to be genuinely arriving - a little past
-   the bottom edge and 15% of it on screen - never a sliver at the edge. */
-let floatObserver = null;
-
-const observeFloats = () => {
-  if (!document.documentElement.classList.contains('has-motion')) return;
-  floatObserver?.disconnect();
-  floatObserver = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      entry.target.classList.toggle('is-visible', entry.isIntersecting);
-    });
-  }, {
-    rootMargin: '0px 0px -12% 0px',
-    threshold: 0.15,
-  });
-  document.querySelectorAll('.page-two > img').forEach((el) => {
-    floatObserver.observe(el);
-  });
-};
 
 let primed = false;
 

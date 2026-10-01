@@ -875,21 +875,25 @@ body[data-state='open'] .music-fab {
   border-radius: 6px;
 }
 
-/* Keep the reveal's slow expo timing and its per-photo stagger delay
-   while adding the hover transitions above to the same list. */
+/* Keep the reveal's two-phase timing (quick settle away, slow float in)
+   and the queue-driven stagger while adding the hover transitions above
+   to the same lists. */
 .has-motion .page-four__ph {
+  transition:
+    opacity 620ms cubic-bezier(0.33, 1, 0.68, 1),
+    transform 700ms cubic-bezier(0.33, 1, 0.68, 1),
+    translate 450ms cubic-bezier(0.19, 1, 0.22, 1),
+    filter 350ms ease,
+    box-shadow 350ms ease;
+}
+
+.has-motion .page-four__ph.is-visible {
   transition:
     opacity 1250ms cubic-bezier(0.19, 1, 0.22, 1),
     transform 1650ms cubic-bezier(0.19, 1, 0.22, 1),
     translate 450ms cubic-bezier(0.19, 1, 0.22, 1),
     filter 350ms ease,
     box-shadow 350ms ease;
-  transition-delay:
-    var(--reveal-delay, 0ms),
-    var(--reveal-delay, 0ms),
-    0ms,
-    0ms,
-    0ms;
 }
 
 /* ------------------------------------------------------------
@@ -1006,63 +1010,29 @@ body[data-state='open'] .opening-page {
    IntersectionObserver missing, or under prefers-reduced-motion, every element
    simply renders in its final position. */
 
-/* Float-in entrance: every element drifts up from further below than a
-   plain fade-up, on the slow expo ease, so the entrance reads relaxed
-   and weightless - it floats in, then settles. */
+/* Float-in entrance, REVERSIBLE. Every element drifts up from below like
+   it is floating into place - a longer travel than a plain fade-up, on the
+   slow expo ease, so the entrance reads relaxed and weightless - and when
+   it leaves the viewport it settles back down to hidden, so the whole
+   sequence replays on every visit. Leaving is deliberately quicker and
+   delay-free; the entrance stagger comes from the reveal queue in main.js
+   (one element at a time), never from CSS delays. */
+
 .has-motion [data-reveal] {
   opacity: 0;
   transform: translateY(7.5cqw);
-  transition:
-    opacity 1250ms cubic-bezier(.19, 1, .22, 1),
-    transform 1650ms cubic-bezier(.19, 1, .22, 1);
-  transition-delay: var(--reveal-delay, 0ms);
-}
-
-.has-motion [data-reveal].is-revealed {
-  opacity: 1;
-  transform: none;
-}
-
-/* ------------------------------------------------------------
-   PAGE 2 MOTION - reversible float (Bride & Groom)
-   ------------------------------------------------------------
-
-   This section plays its own choreography, separate from the one-time
-   reveal system above: every element fades and floats up when it enters
-   the viewport, and fades back down to hidden when it leaves - so the
-   sequence replays every time the guest scrolls back to it. Stagger is
-   positional (title -> bride -> amp -> groom -> swoosh, 140ms apart)
-   and applies to the entrance only; leaving is delay-free so the
-   section settles quietly as soon as it is gone. Transform + opacity
-   only: no layout shift, no horizontal overflow, compositor-friendly. */
-
-.has-motion .page-two > img {
-  opacity: 0;
-  transform: translateY(6cqw);
   transition:
     opacity 620ms cubic-bezier(0.33, 1, 0.68, 1),
     transform 700ms cubic-bezier(0.33, 1, 0.68, 1);
 }
 
-.has-motion .page-two > img.is-visible {
+.has-motion [data-reveal].is-visible {
   opacity: 1;
   transform: none;
   transition:
-    opacity 1150ms cubic-bezier(0.19, 1, 0.22, 1),
-    transform 1350ms cubic-bezier(0.19, 1, 0.22, 1);
-  transition-delay: var(--float-delay, 0ms);
+    opacity 1250ms cubic-bezier(.19, 1, .22, 1),
+    transform 1650ms cubic-bezier(.19, 1, .22, 1);
 }
-
-/* Entrance order, top of the design first. The amp ornament also blooms
-   with a subtle scale - it is tiny, so a pure float reads as static. */
-.has-motion .page-two__judul { --float-delay: 0ms; }
-.has-motion .page-two__bride { --float-delay: 140ms; }
-.has-motion .page-two__amp {
-  --float-delay: 280ms;
-  transform: translateY(4cqw) scale(0.85);
-}
-.has-motion .page-two__groom { --float-delay: 420ms; }
-.has-motion .page-two__line  { --float-delay: 560ms; }
 
 /* Directional variants - choreography follows meaning, not a single vector:
    the arrow slides in from the right, the cite from the left, the couple icon
@@ -1079,6 +1049,13 @@ body[data-state='open'] .opening-page {
   transform: translateY(1.1cqw) scale(0.8);
 }
 
+/* The amp ornament on Page 2 is tiny, so a pure float reads as static -
+   it blooms from a subtle scale instead. :not() keeps the visible state
+   clean, so this can never out-rank `.is-visible { transform: none }`. */
+.has-motion .page-two__amp:not(.is-visible) {
+  transform: translateY(4cqw) scale(0.85);
+}
+
 /* The ayah lands line by line, like it is being read. */
 .has-motion .page-one__quote-line {
   opacity: 0;
@@ -1088,7 +1065,7 @@ body[data-state='open'] .opening-page {
     transform 1050ms cubic-bezier(.19, 1, .22, 1);
 }
 
-.has-motion .page-one__quote.is-revealed .page-one__quote-line {
+.has-motion .page-one__quote.is-visible .page-one__quote-line {
   opacity: 1;
   transform: none;
 }
@@ -1935,17 +1912,16 @@ body[data-state='closing'] .open-invitation {
 .page-five__panel--amplop { top: 14.8cqw; }
 .page-five__panel--ucapan { top: 74.13cqw; }
 
-/* Panels reveal big, so no blur here - rise + fade only, slow. */
+/* Panels reveal big, so no blur here - rise + fade only, slow. The
+   panel rules out-rank the generic base, so their exits also ease
+   slowly - big layers drifting back reads calmer than a quick fade. */
 .has-motion .page-five .page-five__panel[data-reveal] {
   transition:
     opacity 1200ms cubic-bezier(0.19, 1, 0.22, 1),
     transform 1200ms cubic-bezier(0.19, 1, 0.22, 1);
-  transition-delay:
-    var(--reveal-delay, 0ms),
-    var(--reveal-delay, 0ms);
 }
 
-.has-motion .page-five .page-five__panel[data-reveal]:not(.is-revealed) {
+.has-motion .page-five .page-five__panel[data-reveal]:not(.is-visible) {
   transform: translateY(5.5cqw);
   filter: none;
 }
@@ -2402,10 +2378,11 @@ body[data-state='closing'] .open-invitation {
 }
 
 /* --- Entrance choreography ------------------------------------ */
-/* Same data-reveal entrance as the pages above — hidden until the
-   guest scrolls the area into view — but tuned slower and with a
-   longer travel so Page 5's arrival reads long and smooth. The
-   stagger comes from each element's --reveal-delay as usual. */
+/* Same reversible data-reveal entrance as the pages above - hidden
+   until the guest scrolls the area to the middle of the screen, float-in
+   on entry, settle back to hidden on exit - tuned slower and with a
+   longer travel so Page 5's arrival reads long and smooth. The stagger
+   comes from the reveal queue in main.js, one element at a time. */
 
 /* Panels reveal individually now (see .page-five__panel rules) - the
    canvas itself stays a calm, static backdrop so the scroll stagger
@@ -2416,36 +2393,32 @@ body[data-state='closing'] .open-invitation {
     opacity 1150ms cubic-bezier(0.19, 1, 0.22, 1),
     transform 1200ms cubic-bezier(0.19, 1, 0.22, 1),
     filter 1150ms cubic-bezier(0.19, 1, 0.22, 1);
-  transition-delay:
-    var(--reveal-delay, 0ms),
-    var(--reveal-delay, 0ms),
-    var(--reveal-delay, 0ms);
 }
 
 /* Hidden state only — an unconditional transform here would out-rank
-   `.is-revealed { transform: none }` (same specificity, later in source)
+   `.is-visible { transform: none }` (same specificity, later in source)
    and strand every element 5.5cqw low. Text enters from a soft blur. */
-.has-motion .page-five [data-reveal]:not(.is-revealed) {
+.has-motion .page-five [data-reveal]:not(.is-visible) {
   transform: translateY(5.5cqw);
   filter: blur(7px);
 }
 
-.has-motion .page-five [data-reveal='pop']:not(.is-revealed) {
+.has-motion .page-five [data-reveal='pop']:not(.is-visible) {
   transform: translateY(2.4cqw) scale(0.82);
 }
 
 /* The cream card fields (Nama, Ucapan) and the attendance group settle
    from a slightly smaller card, so the "card" reads as landing. Scale the
    choice GROUP (which carries data-reveal), never the bare pills — a pill
-   has no data-reveal, so it would never gain .is-revealed and stay stuck.
+   has no data-reveal, so it would never gain .is-visible and stay stuck.
    Placed after the generic hidden rule (equal specificity, later wins). */
-.has-motion .page-five .page-five__input:not(.is-revealed),
-.has-motion .page-five .page-five__textarea:not(.is-revealed),
-.has-motion .page-five .page-five__choice:not(.is-revealed) {
+.has-motion .page-five .page-five__input:not(.is-visible),
+.has-motion .page-five .page-five__textarea:not(.is-visible),
+.has-motion .page-five .page-five__choice:not(.is-visible) {
   transform: translateY(5.5cqw) scale(0.96);
 }
 
-.has-motion .page-five [data-reveal].is-revealed {
+.has-motion .page-five [data-reveal].is-visible {
   filter: none;
 }
 
@@ -2461,12 +2434,6 @@ body[data-state='closing'] .open-invitation {
     filter 1150ms cubic-bezier(0.19, 1, 0.22, 1),
     left 950ms cubic-bezier(0.19, 1, 0.22, 1),
     top 950ms cubic-bezier(0.19, 1, 0.22, 1);
-  transition-delay:
-    var(--reveal-delay, 0ms),
-    var(--reveal-delay, 0ms),
-    var(--reveal-delay, 0ms),
-    0ms,
-    0ms;
 }
 
 /* Guest messages animate in as they land — both the initial list and
