@@ -1097,10 +1097,11 @@ body[data-state='open'] .opening-page {
    ============================================================
 
    Everything is driven off a single `data-reveal` attribute and an
-   IntersectionObserver with a midline trigger, so the opening entrance and
-   the scroll-down reveal are the same mechanism, and nothing pops at the
-   screen edge: an element stays hidden while the scroll is still above it
-   and starts drifting in once it reaches the middle of the screen. The
+   IntersectionObserver with a reveal line at ~88% of the viewport, so the
+   opening entrance and the scroll-down reveal are the same mechanism. An
+   element starts drifting in the moment it is properly on screen, and it
+   only settles back to hidden once it has LEFT the viewport entirely -
+   never while any part of it is still readable. The
    hidden start state is scoped to `.has-motion`, which
    main.js only adds when the browser allows motion - so with JS disabled, with
    IntersectionObserver missing, or under prefers-reduced-motion, every element
@@ -1188,6 +1189,20 @@ body[data-state='open'] .opening-page {
 
 .has-motion [data-reveal='soft'] {
   transform: translateY(2cqw) scale(0.96);
+}
+
+/* Page 6 closing variant - "Annisa & Iqbal" is the final cinematic beat:
+   it rises from a touch lower with a whisper of scale, and its visible
+   transition runs longer than the base (declared below on .is-visible).
+   Everything else about it is the plain reversible float-in. */
+.has-motion [data-reveal='name'] {
+  transform: translateY(2.5cqw) scale(0.96);
+}
+
+.has-motion [data-reveal='name'].is-visible {
+  transition:
+    opacity 1450ms cubic-bezier(.19, 1, .22, 1),
+    transform 1900ms cubic-bezier(.19, 1, .22, 1);
 }
 
 /* The ayah lands line by line, like it is being read. */
@@ -2762,6 +2777,78 @@ body[data-state='closing'] .open-invitation {
   }
 }
 
+/* ============================================================
+   PAGE 6 - CLOSING
+   Rebuilt from the raw assets in assets_page6. Every layer's
+   box comes from alpha-ink matching against the flattened
+   reference, then verified by composing all layers over the
+   felt (compose-verified; the residual diff is only the
+   reference's baked tone shift on the photo/text exports).
+   Positions are design px / 16.89 = cqw.
+   ------------------------------------------------------------ */
+.page-six {
+  position: relative;
+  width: min(100%, 540px);
+  margin-inline: auto;
+  aspect-ratio: 1689 / 3754;
+  overflow: hidden;
+  container-type: inline-size;
+  color: #faf6ea;
+  font-family: var(--font-design);
+  /* Solid colour is only a fallback while the PNG loads. */
+  background: #2d1511 url('/assets/assets_page6/Background Page 6.png') top center / 100% auto no-repeat;
+}
+
+/* The monogram, revealing first. */
+.page-six__logo {
+  position: absolute;
+  left: 42.31cqw;   /* 715 */
+  top: 27.8cqw;    /* 470 */
+  width: 13.25cqw;  /* 224 */
+  height: auto;
+  pointer-events: none;
+}
+
+/* The arch-framed couple photo. */
+.page-six__photo {
+  position: absolute;
+  left: 29.48cqw;   /* 498 */
+  top: 60.04cqw;   /* 1014 */
+  width: 40.85cqw;  /* 690 */
+  height: auto;
+  pointer-events: none;
+}
+
+/* The thank-you paragraph, as designed (baked text art). */
+.page-six__paragraph {
+  position: absolute;
+  left: 11.46cqw;   /* 194 */
+  top: 117.85cqw;  /* 1991 */
+  width: 77.18cqw;  /* 1304 */
+  height: auto;
+  pointer-events: none;
+}
+
+/* "Kami yang berbahagia," */
+.page-six__kami {
+  position: absolute;
+  left: 30.37cqw;   /* 513 */
+  top: 151.51cqw;  /* 2559 */
+  width: 38.96cqw;  /* 658 */
+  height: auto;
+  pointer-events: none;
+}
+
+/* The script names - the final reveal of the invitation. */
+.page-six__name {
+  position: absolute;
+  left: 17.5cqw;    /* 296 */
+  top: 157.38cqw;  /* 2658 */
+  width: 66.37cqw;  /* 1121 */
+  height: auto;
+  pointer-events: none;
+}
+
 /* ---------- Responsive ---------- */
 
 @media (min-width: 768px) {
@@ -2789,7 +2876,8 @@ body[data-state='closing'] .open-invitation {
   .page-two,
   .page-three,
   .page-four,
-  .page-five-frame {
+  .page-five-frame,
+  .page-six {
     width: min(100%, 620px);
     border-radius: 28px;
     box-shadow:
@@ -2820,7 +2908,8 @@ body[data-state='closing'] .open-invitation {
   .page-two,
   .page-three,
   .page-four,
-  .page-five-frame {
+  .page-five-frame,
+  .page-six {
     width: min(100%, 660px);
     border-radius: 32px;
     box-shadow:

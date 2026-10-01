@@ -154,11 +154,14 @@ if (!reduceMotion.matches && 'IntersectionObserver' in window) {
   document.documentElement.classList.add('has-motion');
 }
 
-/* Single reveal observer for the whole invitation: the midline trigger,
-   REVERSIBLE. An element only starts its float-in once it reaches ~55% of
-   the viewport height, never at the bottom edge - and it keeps being
-   observed for the whole session: leaving the viewport settles it back to
-   hidden, so every sequence replays on the next visit. */
+/* Single reveal observer for the whole invitation. An element starts its
+   float-in once it crosses ~88% of the viewport height - already comfortably
+   on screen, so the entrance plays right as the element arrives - and it
+   keeps being observed for the whole session: it only settles back to hidden
+   once it has LEFT the viewport entirely, never while any part of it is
+   still readable on screen. That wide band between the reveal line and the
+   viewport edge is also the hysteresis that keeps elements from flickering
+   at the boundary, and it makes every sequence replay on the next visit. */
 let centerObserver = null;
 
 /* Sequential entrance. Eligible elements never start together: every one
@@ -240,6 +243,28 @@ const sweepReveals = () => {
 
 let sweepQueued = false;
 
+/* Reversibility for end-of-page reveals. The safety net above reveals bottom
+   elements while they sit below the reveal line, and no observer crossing
+   ever fires for them there (they were never inside the observation box) -
+   without this fold they would linger visible on the way back up and never
+   replay. The fold uses the SAME boundary as the observer's hide side: an
+   element only settles back to hidden once it is FULLY outside the viewport,
+   never while it is still on screen - so nothing ever vanishes mid-read, and
+   there is a wide stable band where neither system changes its mind (no
+   flicker). Skipped AT the end so a freshly revealed bottom element is never
+   folded while there is no scroll left. */
+const foldBelowMidline = () => {
+  if (window.innerHeight + window.scrollY >=
+    document.documentElement.scrollHeight - 2) return;
+  document.querySelectorAll('[data-reveal].is-visible').forEach((el) => {
+    const r = el.getBoundingClientRect();
+    if (r.top >= window.innerHeight || r.bottom <= 0) {
+      dequeueReveal(el);
+      el.classList.remove('is-visible');
+    }
+  });
+};
+
 /* The paper plane's flight is bound to scroll progress, not a trigger: --fly
    goes 0 -> 1 while the doodle crosses the lower ~55% of the viewport, and CSS
    derives its transform/opacity from it, so the plane glides into its parked
@@ -263,6 +288,7 @@ const queueSweep = () => {
   window.requestAnimationFrame(() => {
     sweepQueued = false;
     sweepReveals();
+    foldBelowMidline();
     updateFly();
   });
 };
@@ -275,10 +301,14 @@ const observeReveals = () => {
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
         eligible.push(entry.target);
-      } else {
-        /* Leaving the viewport settles the element back to hidden - the
-           float-in replays every time it comes back. Also pull it out of
-           the queue so nothing plays for an element that is already gone. */
+      } else if (entry.boundingClientRect.bottom <= 0) {
+        /* Leaving through the TOP of the viewport means the element is fully
+           gone - settle it back to hidden so its entrance replays on the
+           next visit. Leaving through the bottom reveal line does NOT hide:
+           the element is still on screen down there, so it keeps its state
+           and foldBelowMidline settles it only once it is fully below the
+           viewport. That difference is what keeps every element stable and
+           readable for as long as any part of it is on screen. */
         dequeueReveal(entry.target);
         entry.target.classList.remove('is-visible');
       }
@@ -288,13 +318,13 @@ const observeReveals = () => {
 
   centerObserver?.disconnect();
   centerObserver = new IntersectionObserver(onEntries, {
-    /* Midline trigger for every page: the element only starts revealing
-       once it reaches ~55% of the viewport height, so it is already
-       sitting in the middle of the screen when its float-in begins - and
-       with the scroll still near the top of a page, nothing below the
-       middle has appeared yet. */
-    rootMargin: '0px 0px -45% 0px',
-    threshold: 0.15,
+    /* Reveal line at ~88% of the viewport (threshold 0 = the moment the
+       element's first pixel crosses it, so the entrance plays right as the
+       element arrives, however tall it is). The remaining 12% down to the
+       real viewport edge is a dead band: crossing it never changes state,
+       which is what keeps elements from flickering at the boundary. */
+    rootMargin: '0px 0px -12% 0px',
+    threshold: 0,
   });
 
   document.querySelectorAll('[data-reveal]').forEach((el) => {
