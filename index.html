@@ -307,11 +307,15 @@
                  moving parts are the panels, the wrapper and the pill. -->
             <div class="page-five__bg" aria-hidden="true"></div>
 
-            <!-- The open state's LONG card is shown as THREE tail bands -
-                 the same raw asset (Klik Amplop.png), background-position
-                 offsets - so each baked card (Iqbal, Nisa, Kirim Hadiah)
-                 is an independent element that can reveal on its own after
-                 the click. The top 933px face stays the short panel. -->
+            <!-- The open state's LONG card is shown as FOUR bands - the
+                 same raw asset (Klik Amplop.png), background-position
+                 offsets. Band 0 is the long card's OWN face (rows 0-933):
+                 on open it fades in under the short panel, whose rounded
+                 bottom corners would notch the seam, and the short panel
+                 then fades away - the seam into the tail is continuous
+                 because every band comes from the same image. Bands 1-3
+                 (Iqbal / Nisa / Kirim Hadiah) reveal one by one. -->
+            <div class="page-five__tail page-five__tail--0" aria-hidden="true"></div>
             <div class="page-five__tail page-five__tail--1" aria-hidden="true"></div>
             <div class="page-five__tail page-five__tail--2" aria-hidden="true"></div>
             <div class="page-five__tail page-five__tail--3" aria-hidden="true"></div>

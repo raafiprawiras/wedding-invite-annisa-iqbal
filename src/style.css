@@ -2093,6 +2093,17 @@ body[data-state='closing'] .open-invitation {
   transform: translateY(2.5cqw) scale(0.985);
 }
 
+/* Band 0: the long card's OWN face (asset rows 0-935, 2px overlap into
+   band 1). Hidden while closed - the short panel is the closed face -
+   and faded in UNDER it on open: the short panel's rounded bottom
+   corners leave cream notches at the seam, while the long card's face
+   runs straight into the tail, so once the swap completes the card is
+   one continuous surface again (same image above and below the seam). */
+.page-five__tail--0 {
+  top: 14.8cqw;
+  height: 55.36cqw;
+  background-position: 0 0cqw;
+}
 /* Band 1: asset rows 933-1702 (Card Iqbal). */
 .page-five__tail--1 {
   top: 70.04cqw;
@@ -2119,15 +2130,32 @@ body[data-state='closing'] .open-invitation {
 }
 
 /* Open: the cards appear in reading order, 180ms apart, after the
-   container has begun opening (canvas growth leads, cards follow). */
+   container has begun opening (canvas growth leads, cards follow).
+   Band 0 (the long face) leads with no delay - it must be fully up
+   before the short panel yields the seam to it. */
 .page-five.is-open .page-five__tail {
   opacity: 1;
   transform: none;
 }
 
+.has-motion .page-five.is-open .page-five__tail--0 { transition-delay: 0ms, 0ms; }
 .has-motion .page-five.is-open .page-five__tail--1 { transition-delay: 140ms, 140ms; }
 .has-motion .page-five.is-open .page-five__tail--2 { transition-delay: 320ms, 320ms; }
 .has-motion .page-five.is-open .page-five__tail--3 { transition-delay: 500ms, 500ms; }
+
+/* On open the short panel bows out AFTER band 0 is fully opaque beneath
+   it (fade starts at 380ms) - the swap is ghost-free because something
+   opaque is always on screen, and the seam ends up straight and
+   continuous. On close it simply fades back. The panel keeps its own
+   reveal transition (declared above); only the open-state handover
+   delay is added here. */
+.page-five.is-open .page-five__panel--amplop {
+  opacity: 0;
+}
+
+.has-motion .page-five.is-open .page-five__panel--amplop {
+  transition-delay: 380ms;
+}
 
 /* --- Klik Disini opener (real button riding the baked pill) -- */
 
