@@ -154,39 +154,82 @@ if (!reduceMotion.matches && 'IntersectionObserver' in window) {
   document.documentElement.classList.add('has-motion');
 }
 
-let revealObserver = null;
-/* Page 5 gets its own observer with a much deeper margin: its panels and
-   fields only start revealing once they reach the vertical middle of the
-   screen, never at the bottom edge (the staggered entrance would otherwise
-   pop while the card is still half out of view). */
+/* Single reveal observer for the whole invitation: the midline trigger.
+   An element only starts its float-in once it reaches ~55% of the viewport
+   height, never at the bottom edge - so with the scroll still near the top
+   of a page, nothing below the middle has appeared yet, and each element
+   enters as the guest carries it up to the middle of the screen. */
 let centerObserver = null;
+
+/* Sequential entrance. Eligible elements never start together: every one
+   that crosses the midline joins a queue, and the queue starts them ONE by
+   ONE, top of the screen first, on a fixed relaxed cadence - so a whole
+   section arriving at once still enters as a calm sequence of individual
+   float-ins instead of a single simultaneous block. */
+const revealQueue = [];
+const REVEAL_CADENCE_MS = 220;
+let revealTimer = null;
+let revealLastStart = 0;
+
+const startReveal = (el) => {
+  /* The old per-element inline delays are superseded by the queue's own
+     cadence - drop them so each element starts the moment its turn comes. */
+  el.style.removeProperty('--reveal-delay');
+  el.classList.add('is-revealed');
+  centerObserver?.unobserve(el);
+};
+
+const pumpReveals = () => {
+  revealTimer = null;
+  if (!revealQueue.length) return;
+  /* Keep an even heartbeat: if an element just started, wait out the rest
+     of the cadence before starting the next one. */
+  const wait = Math.max(0, REVEAL_CADENCE_MS - (performance.now() - revealLastStart));
+  if (wait > 0) {
+    revealTimer = window.setTimeout(pumpReveals, wait);
+    return;
+  }
+  const next = revealQueue.shift();
+  revealLastStart = performance.now();
+  startReveal(next);
+  if (revealQueue.length) revealTimer = window.setTimeout(pumpReveals, REVEAL_CADENCE_MS);
+};
+
+const enqueueReveals = (els) => {
+  if (!els.length) return;
+  els.forEach((el) => {
+    if (!revealQueue.includes(el)) revealQueue.push(el);
+  });
+  /* Highest element on screen enters first. */
+  revealQueue.sort((a, b) => a.getBoundingClientRect().top - b.getBoundingClientRect().top);
+  if (!revealTimer) pumpReveals();
+};
 
 /* Safety net. The observer alone once stranded `.page-one__music`: bottom-of-page
    elements can sit where a negative bottom root-margin is never satisfied once
-   the page is scrolled to its end — the element stays at opacity 0, i.e.
+   the page is scrolled to its end - the element stays at opacity 0, i.e.
    invisible. Anything whose box is on screen is therefore also revealed by a
    cheap rect test, so a missed intersection can never hide content. */
 const sweepReveals = () => {
-  /* Page 5 clears a higher bar (the midline) so its panels never pop at the
-     screen edge; at the very end of the page anything still on screen shows
-     regardless, or it would strand below the midline with no scroll left. */
+  /* The reveal line is the midline for every page so nothing pops at the
+     screen edge; at the very end of the document anything still on screen
+     shows regardless, or it would strand below the midline with no scroll
+     left. */
   const atEnd = window.innerHeight + window.scrollY >=
     document.documentElement.scrollHeight - 2;
+  const line = window.innerHeight * 0.55;
+  const eligible = [];
   document.querySelectorAll('[data-reveal]:not(.is-revealed)').forEach((el) => {
-    const line = el.closest('.page-five')
-      ? window.innerHeight * 0.55
-      : window.innerHeight;
     const rect = el.getBoundingClientRect();
-    /* At or above the reveal line — on screen, or already scrolled past. A
+    /* At or above the reveal line - on screen, or already scrolled past. A
        fast flick or anchor jump can carry an element from below the viewport
        to above it between two observer ticks, so the deep-margin observer
        never sees it intersect; anything that high up must be shown. */
     if (rect.top < line || (atEnd && rect.top < window.innerHeight)) {
-      el.classList.add('is-revealed');
-      revealObserver?.unobserve(el);
-      centerObserver?.unobserve(el);
+      eligible.push(el);
     }
   });
+  enqueueReveals(eligible);
 };
 
 let sweepQueued = false;
@@ -222,41 +265,34 @@ const observeReveals = () => {
   if (!document.documentElement.classList.contains('has-motion')) return;
 
   const onEntries = (entries) => {
+    const eligible = [];
     entries.forEach((entry) => {
       if (!entry.isIntersecting) return;
-      entry.target.classList.add('is-revealed');
-      revealObserver?.unobserve(entry.target);
-      centerObserver?.unobserve(entry.target);
+      eligible.push(entry.target);
     });
+    enqueueReveals(eligible);
   };
 
-  revealObserver?.disconnect();
   centerObserver?.disconnect();
-  revealObserver = new IntersectionObserver(onEntries, {
-    /* Deep trigger: the element must clear the bottom 12% of the viewport and
-       15% of it must be visible before its reveal starts, so the animation is
-       still in motion while the guest watches instead of finishing the moment
-       the element peeks in. The sweep above is the safety net for anything
-       this margin can never satisfy (bottom-of-page elements). */
-    rootMargin: '0px 0px -12% 0px',
-    threshold: 0.15,
-  });
   centerObserver = new IntersectionObserver(onEntries, {
-    /* Page 5 midline trigger: the element only starts revealing once it
-       reaches ~55% of the viewport height, so the amplop card is already
-       sitting in the middle of the screen when its entrance begins. */
+    /* Midline trigger for every page: the element only starts revealing
+       once it reaches ~55% of the viewport height, so it is already
+       sitting in the middle of the screen when its float-in begins - and
+       with the scroll still near the top of a page, nothing below the
+       middle has appeared yet. */
     rootMargin: '0px 0px -45% 0px',
     threshold: 0.15,
   });
 
   document.querySelectorAll('[data-reveal]:not(.is-revealed)').forEach((el) => {
-    (el.closest('.page-five') ? centerObserver : revealObserver).observe(el);
+    centerObserver.observe(el);
   });
   /* No synchronous sweep here: at click time the entrance zoom is mid-flight
      (canvas scaled 0.94), so element rects sit higher than at rest and the
      sweep would prematurely reveal below-the-fold elements. The observer
-     covers the first viewport; the 2600ms sweep in openPageOne catches
-     anything the deep margin can never satisfy. */
+     covers the first viewport (everything above the midline joins the
+     sequence right away, top first); the 2600ms sweep in openPageOne catches
+     anything the midline margin can never satisfy. */
   updateFly();
 };
 

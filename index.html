@@ -277,31 +277,17 @@
 
             <!-- Single stable felt - no crossfade: the two raw felt sheets are
                  near-identical, so one sheet serves both states and the only
-                 moving parts are the drawer, the wrapper and the pill. -->
+                 moving parts are the panels, the wrapper and the pill. -->
             <div class="page-five__bg" aria-hidden="true"></div>
 
-            <!-- The card stack descends as ONE block out of a clipping drawer
-                 that starts just under the panel edge - the short card reads
-                 as smoothly growing its long tail downward. -->
-            <div class="page-five__drawer" aria-hidden="true">
-                <div class="page-five__drawer-inner">
-                    <img class="page-five__card page-five__card--iqbal"
-                        src="./assets/assets_page5/Card Mas Iqbal.png" alt="" aria-hidden="true"
-                        width="1206" height="768" loading="lazy" />
-                    <img class="page-five__card page-five__card--nisa"
-                        src="./assets/assets_page5/Card Mba Nisa.png" alt="" aria-hidden="true"
-                        width="1206" height="768" loading="lazy" />
-                    <img class="page-five__card page-five__card--kado"
-                        src="./assets/assets_page5/Gift Card.png" alt="" aria-hidden="true"
-                        width="1206" height="768" loading="lazy" />
-                </div>
-            </div>
-
-            <!-- The two maroon panels are live copies of the raw assets in
-                 their exact measured boxes (design px, scale 1:1):
-                 amplop (78, 250) 1527x933 - ucapan (78, 1252) 1527x3444.
-                 They reveal separately on scroll (staggered, slow), and the
-                 ucapan one rides the sliding wrapper. -->
+            <!-- The open state's LONG card (raw asset, exact design):
+                 title + subtitle + pill + the three cards, all baked. It sits
+                 under the short face and grows downward on open via clip-path;
+                 its top 933px stays hidden behind the short card, whose art it
+                 continues. The baked Copy / Lihat Lokasi pills align with the
+                 transparent hit areas further down. -->
+            <img class="page-five__panel-long" src="./assets/assets_page5/Klik Amplop.png"
+                alt="" aria-hidden="true" width="1527" height="3390" loading="lazy" />
             <img class="page-five__panel page-five__panel--amplop"
                 src="./assets/assets_page5/Amplop Digital Judul.png" alt="" aria-hidden="true"
                 width="1527" height="933" data-reveal style="--reveal-delay: 0ms" />

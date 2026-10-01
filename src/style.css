@@ -879,8 +879,8 @@ body[data-state='open'] .music-fab {
    while adding the hover transitions above to the same list. */
 .has-motion .page-four__ph {
   transition:
-    opacity 1100ms cubic-bezier(0.19, 1, 0.22, 1),
-    transform 1350ms cubic-bezier(0.19, 1, 0.22, 1),
+    opacity 1250ms cubic-bezier(0.19, 1, 0.22, 1),
+    transform 1650ms cubic-bezier(0.19, 1, 0.22, 1),
     translate 450ms cubic-bezier(0.19, 1, 0.22, 1),
     filter 350ms ease,
     box-shadow 350ms ease;
@@ -997,18 +997,24 @@ body[data-state='open'] .opening-page {
    ============================================================
 
    Everything is driven off a single `data-reveal` attribute and an
-   IntersectionObserver, so the opening entrance and the scroll-down reveal are
-   the same mechanism. The hidden start state is scoped to `.has-motion`, which
-   main.js only adds when the browser allows motion — so with JS disabled, with
+   IntersectionObserver with a midline trigger, so the opening entrance and
+   the scroll-down reveal are the same mechanism, and nothing pops at the
+   screen edge: an element stays hidden while the scroll is still above it
+   and starts drifting in once it reaches the middle of the screen. The
+   hidden start state is scoped to `.has-motion`, which
+   main.js only adds when the browser allows motion - so with JS disabled, with
    IntersectionObserver missing, or under prefers-reduced-motion, every element
    simply renders in its final position. */
 
+/* Float-in entrance: every element drifts up from further below than a
+   plain fade-up, on the slow expo ease, so the entrance reads relaxed
+   and weightless - it floats in, then settles. */
 .has-motion [data-reveal] {
   opacity: 0;
-  transform: translateY(3.2cqw);
+  transform: translateY(7.5cqw);
   transition:
-    opacity 1100ms cubic-bezier(.19, 1, .22, 1),
-    transform 1350ms cubic-bezier(.19, 1, .22, 1);
+    opacity 1250ms cubic-bezier(.19, 1, .22, 1),
+    transform 1650ms cubic-bezier(.19, 1, .22, 1);
   transition-delay: var(--reveal-delay, 0ms);
 }
 
@@ -1017,7 +1023,7 @@ body[data-state='open'] .opening-page {
   transform: none;
 }
 
-/* Directional variants — choreography follows meaning, not a single vector:
+/* Directional variants - choreography follows meaning, not a single vector:
    the arrow slides in from the right, the cite from the left, the couple icon
    blooms, everything else rises. */
 .has-motion [data-reveal='left'] {
@@ -1927,53 +1933,31 @@ body[data-state='closing'] .open-invitation {
   transition: opacity 350ms cubic-bezier(0.19, 1, 0.22, 1);
 }
 
-/* --- Cards drawer: the stack descends as one smooth block ------ */
-/* The clipping drawer starts just under the panel edge (panel bottom
-   = 70.04cqw), so the three cards - the raw assets at the measured
-   open-design boxes (left 249.3; tops 1191.3 / 1961.3 / 2736.3
-   design px) - emerge from beneath the short card and ride down as
-   ONE block. One transform, one easing, synced with the canvas
-   max-height growth (950ms): the short card reads as smoothly growing
-   its long tail downward instead of parts flying separately. */
+/* --- The LONG card: the open state, grown from the short one ---- */
+/* Klik Amplop.png is the full open card (title + pill + the three
+   cards, all baked, 1527x3390 at the same anchor as the short face).
+   It always sits at full size under the short card - whose top 933px
+   it continues - and on open its clip expands downward, so the short
+   card reads as smoothly growing its long tail. Synced with the
+   canvas max-height and the wrapper slide (950ms, same easing). */
 
-.page-five__drawer {
+.page-five__panel-long {
   position: absolute;
-  left: 0;
-  top: 69.8cqw;
-  width: 100%;
-  height: 140cqw;
-  overflow: hidden;
+  left: 4.62cqw;
+  top: 14.8cqw;
+  width: 90.41cqw;
+  height: auto;
   pointer-events: none;
+  clip-path: inset(0 0 calc(100% - 55.24cqw) 0);
 }
 
-.page-five__drawer-inner {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  transform: translateY(-101%);
+.page-five.is-open .page-five__panel-long {
+  clip-path: inset(0 0 0 0);
 }
 
-.page-five.is-open .page-five__drawer-inner {
-  transform: translateY(0);
+.has-motion .page-five__panel-long {
+  transition: clip-path 950ms cubic-bezier(0.19, 1, 0.22, 1);
 }
-
-.has-motion .page-five__drawer-inner {
-  transition: transform 950ms cubic-bezier(0.19, 1, 0.22, 1);
-}
-
-.page-five__card {
-  position: absolute;
-  left: 14.76cqw;
-  width: 70.42cqw;
-  height: 44.84cqw;
-}
-
-/* Tops are drawer-relative: drawer starts at 69.8cqw. */
-.page-five__card--iqbal { top: 0.73cqw; }
-.page-five__card--nisa  { top: 46.33cqw; }
-.page-five__card--kado  { top: 92.2cqw; }
 
 /* --- Klik Disini opener (real button riding the baked pill) -- */
 
