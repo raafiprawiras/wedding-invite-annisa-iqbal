@@ -2152,22 +2152,6 @@ body[data-state='closing'] .open-invitation {
   background-position: 0 -146.24cqw;
 }
 
-/* The baked "Lihat Lokasi" pill on the Kirim Hadiah card, made tappable.
-   The pill is part of the band-3 artwork at asset px (583, 3078)-(943, 3170);
-   this invisible anchor is aligned exactly over it (with a touch of padding
-   for a friendlier tap target) and opens Google Maps directly. */
-.page-five__lokasi-hadiah {
-  position: absolute;
-  left: 38.9cqw;    /* 657 */
-  top: 196.6cqw;    /* 3321 */
-  width: 21.8cqw;   /* 368 */
-  height: 6.4cqw;   /* 108 */
-  border-radius: 999px;
-  z-index: 4;       /* above the tail bands and card covers */
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-}
-
 .has-motion .page-five__tail {
   transition:
     opacity 850ms cubic-bezier(0.19, 1, 0.22, 1),
