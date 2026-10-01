@@ -226,7 +226,12 @@ const sweepReveals = () => {
   if (!atEnd) return;
   const eligible = [];
   document.querySelectorAll('[data-reveal]:not(.is-visible)').forEach((el) => {
-    if (el.getBoundingClientRect().top < window.innerHeight) {
+    const r = el.getBoundingClientRect();
+    /* On screen means fully on screen: a negative top is an element that
+       has already scrolled PAST (above the viewport) - enqueuing those
+       made the queue start dozens of invisible elements one cadence apart
+       before an actually-visible element got its turn. */
+    if (r.top < window.innerHeight && r.bottom > 0) {
       eligible.push(el);
     }
   });

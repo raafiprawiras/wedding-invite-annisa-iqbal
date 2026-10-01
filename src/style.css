@@ -2330,6 +2330,50 @@ body[data-state='closing'] .open-invitation {
   background: #341717;
 }
 
+/* Masks the baked form art (Nama Tamu box, Ucapan box, Hadir pills) so
+   the live fields can reveal independently without their baked twins
+   showing through underneath mid-reveal. Same felt-sample colour as
+   the other patches; sits directly above the panel, below every live
+   field in DOM order. */
+.page-five__form-cover {
+  position: absolute;
+  left: 8.88cqw;
+  top: 106.3cqw;
+  width: 82.3cqw;
+  height: 71.3cqw;
+  border-radius: 1.2cqw;
+  background: #341717;
+}
+
+/* The patches mask BAKED art, so they may only exist while the panel
+   they belong to is on screen - otherwise they read as naked dark
+   rectangles floating on the felt (the panel hides long before they
+   would). Gated on the panel's reveal state via sibling order: the
+   panel is the wrapper's first child, every patch a later sibling.
+   Scoped under .has-motion: without motion the reveal system is off,
+   is-visible never appears, and the covers must stay plainly visible. */
+.page-five__label-cover,
+.page-five__form-cover,
+.page-five__cover {
+  pointer-events: none;
+}
+
+.has-motion .page-five__label-cover,
+.has-motion .page-five__form-cover,
+.has-motion .page-five__cover {
+  opacity: 0;
+  /* Exactly the panel's own enter/exit curve: the patches then track the
+     panel's alpha one-to-one, so a patch never reads as a darker box on a
+     half-faded card - the whole card and its masks arrive as one layer. */
+  transition: opacity 1200ms cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.has-motion .page-five__panel--ucapan.is-visible ~ .page-five__label-cover,
+.has-motion .page-five__panel--ucapan.is-visible ~ .page-five__form-cover,
+.has-motion .page-five__panel--ucapan.is-visible ~ .page-five__cover {
+  opacity: 1;
+}
+
 .page-five__choice {
   position: absolute;
   left: 9.83cqw;
