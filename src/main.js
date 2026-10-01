@@ -171,6 +171,11 @@ let centerObserver = null;
    float-ins instead of a single simultaneous block. */
 const revealQueue = [];
 const REVEAL_CADENCE_MS = 160;
+/* Grace margin past the viewport's top edge before an element counts as
+   "gone" (see onEntries). Must exceed the hidden state's own translateY
+   travel (7.5cqw, up to ~50px at the widest canvas) so an element that
+   straddles the top edge can never toggle reveal/hide against itself. */
+const REVEAL_HIDE_MARGIN = 60;
 let revealTimer = null;
 let revealLastStart = 0;
 
@@ -258,7 +263,7 @@ const foldBelowMidline = () => {
     document.documentElement.scrollHeight - 2) return;
   document.querySelectorAll('[data-reveal].is-visible').forEach((el) => {
     const r = el.getBoundingClientRect();
-    if (r.top >= window.innerHeight || r.bottom <= 0) {
+    if (r.top >= window.innerHeight || r.bottom <= -REVEAL_HIDE_MARGIN) {
       dequeueReveal(el);
       el.classList.remove('is-visible');
     }
@@ -301,14 +306,19 @@ const observeReveals = () => {
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
         eligible.push(entry.target);
-      } else if (entry.boundingClientRect.bottom <= 0) {
-        /* Leaving through the TOP of the viewport means the element is fully
-           gone - settle it back to hidden so its entrance replays on the
-           next visit. Leaving through the bottom reveal line does NOT hide:
-           the element is still on screen down there, so it keeps its state
-           and foldBelowMidline settles it only once it is fully below the
-           viewport. That difference is what keeps every element stable and
-           readable for as long as any part of it is on screen. */
+      } else if (entry.boundingClientRect.bottom <= -REVEAL_HIDE_MARGIN) {
+        /* Leaving through the TOP of the viewport - past a 60px grace
+           margin, not merely touching the edge - means the element is
+           genuinely gone: settle it back to hidden so its entrance replays
+           on the next visit. The grace is what kills the flicker: an
+           element straddling the viewport's top edge (bottom ~= 0) would
+           otherwise toggle forever, because revealing it moves it UP (out)
+           and hiding it moves it DOWN (back in). 60px exceeds the hidden
+           state's own 7.5cqw travel, so every cycle converges instead of
+           oscillating. Leaving through the bottom reveal line does NOT
+           hide: the element is still on screen down there, so it keeps its
+           state and foldBelowMidline settles it only once it is fully
+           below the viewport. */
         dequeueReveal(entry.target);
         entry.target.classList.remove('is-visible');
       }

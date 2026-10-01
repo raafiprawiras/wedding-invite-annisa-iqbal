@@ -945,10 +945,29 @@ body[data-state='open'] .music-fab {
    transition (and its stagger delay) stays untouched; the cursor stays
    the platform default per revision. */
 .page-four__ph {
-  /* role="button" would get cursor:pointer from Tailwind's preflight —
-     the revision asks for the platform default cursor instead. */
+  /* role="button" would get cursor:pointer from Tailwind's preflight - the
+     revision asks for the platform default cursor instead. */
   cursor: auto;
+}
+
+/* Under .has-motion the shared reveal rules own the transition list (higher
+   specificity), which would orphan the hover's translate/filter/shadow -
+   so the photo re-declares ALL of them at matching specificity, placed
+   after the base rules in source order. Reveal in/out keeps its expo
+   timing; the hover lift keeps its own shorter one. */
+.has-motion .page-four__ph {
   transition:
+    opacity 620ms cubic-bezier(0.33, 1, 0.68, 1),
+    transform 700ms cubic-bezier(0.33, 1, 0.68, 1),
+    translate 450ms cubic-bezier(0.19, 1, 0.22, 1),
+    filter 350ms ease,
+    box-shadow 350ms ease;
+}
+
+.has-motion .page-four__ph.is-visible {
+  transition:
+    opacity 1250ms cubic-bezier(.19, 1, .22, 1),
+    transform 1650ms cubic-bezier(.19, 1, .22, 1),
     translate 450ms cubic-bezier(0.19, 1, 0.22, 1),
     filter 350ms ease,
     box-shadow 350ms ease;
