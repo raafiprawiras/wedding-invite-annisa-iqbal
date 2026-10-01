@@ -287,6 +287,7 @@ const observeReveals = () => {
   document.querySelectorAll('[data-reveal]:not(.is-revealed)').forEach((el) => {
     centerObserver.observe(el);
   });
+  observeFloats();
   /* No synchronous sweep here: at click time the entrance zoom is mid-flight
      (canvas scaled 0.94), so element rects sit higher than at rest and the
      sweep would prematurely reveal below-the-fold elements. The observer
@@ -298,6 +299,29 @@ const observeReveals = () => {
 
 window.addEventListener('scroll', queueSweep, { passive: true });
 window.addEventListener('resize', queueSweep);
+
+/* The Bride & Groom section (Page 2) is REVERSIBLE: its elements get
+   `is-visible` while they are in the viewport and lose it when they leave,
+   so the float-in sequence replays on every visit instead of playing once.
+   The entrance needs the element to be genuinely arriving - a little past
+   the bottom edge and 15% of it on screen - never a sliver at the edge. */
+let floatObserver = null;
+
+const observeFloats = () => {
+  if (!document.documentElement.classList.contains('has-motion')) return;
+  floatObserver?.disconnect();
+  floatObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      entry.target.classList.toggle('is-visible', entry.isIntersecting);
+    });
+  }, {
+    rootMargin: '0px 0px -12% 0px',
+    threshold: 0.15,
+  });
+  document.querySelectorAll('.page-two > img').forEach((el) => {
+    floatObserver.observe(el);
+  });
+};
 
 let primed = false;
 

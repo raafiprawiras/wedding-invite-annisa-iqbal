@@ -1023,6 +1023,47 @@ body[data-state='open'] .opening-page {
   transform: none;
 }
 
+/* ------------------------------------------------------------
+   PAGE 2 MOTION - reversible float (Bride & Groom)
+   ------------------------------------------------------------
+
+   This section plays its own choreography, separate from the one-time
+   reveal system above: every element fades and floats up when it enters
+   the viewport, and fades back down to hidden when it leaves - so the
+   sequence replays every time the guest scrolls back to it. Stagger is
+   positional (title -> bride -> amp -> groom -> swoosh, 140ms apart)
+   and applies to the entrance only; leaving is delay-free so the
+   section settles quietly as soon as it is gone. Transform + opacity
+   only: no layout shift, no horizontal overflow, compositor-friendly. */
+
+.has-motion .page-two > img {
+  opacity: 0;
+  transform: translateY(6cqw);
+  transition:
+    opacity 620ms cubic-bezier(0.33, 1, 0.68, 1),
+    transform 700ms cubic-bezier(0.33, 1, 0.68, 1);
+}
+
+.has-motion .page-two > img.is-visible {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity 1150ms cubic-bezier(0.19, 1, 0.22, 1),
+    transform 1350ms cubic-bezier(0.19, 1, 0.22, 1);
+  transition-delay: var(--float-delay, 0ms);
+}
+
+/* Entrance order, top of the design first. The amp ornament also blooms
+   with a subtle scale - it is tiny, so a pure float reads as static. */
+.has-motion .page-two__judul { --float-delay: 0ms; }
+.has-motion .page-two__bride { --float-delay: 140ms; }
+.has-motion .page-two__amp {
+  --float-delay: 280ms;
+  transform: translateY(4cqw) scale(0.85);
+}
+.has-motion .page-two__groom { --float-delay: 420ms; }
+.has-motion .page-two__line  { --float-delay: 560ms; }
+
 /* Directional variants - choreography follows meaning, not a single vector:
    the arrow slides in from the right, the cite from the left, the couple icon
    blooms, everything else rises. */
