@@ -1012,6 +1012,75 @@ body[data-state='open'] .music-fab {
 }
 
 /* ------------------------------------------------------------
+   Session watermark
+   The one thing a screenshot genuinely cannot escape. Nothing on
+   the web can stop the OS from capturing pixels, but an overlay
+   lives in the page, so it is captured WITH the pixels - which
+   means any screenshot that travels identifies the session it
+   came from.
+
+   Two deliberate properties:
+   - It is a DOM layer, never baked into the PNGs, so the design
+     files stay clean and re-exportable.
+   - It covers the viewport, not each page, so it stays correct
+     while scrolling and inside the lightbox, and it sits UNDER
+     the lightbox dialog (z 55 vs 100) so the viewer still works.
+
+   Readability first: 4% ink, 0.055em tracking, three spread
+   copies. It reads as paper texture in a screenshot and is
+   effectively invisible while scrolling. Not toggleable - a
+   guest must not be able to remove the trail.
+   ------------------------------------------------------------ */
+
+.watermark {
+  position: fixed;
+  inset: 0;
+  z-index: 55;
+  display: grid;
+  grid-template-areas:
+    'a . . b'
+    '. . . .'
+    '. c . .'
+    'd . . .';
+  grid-template-rows: repeat(4, 1fr);
+  grid-template-columns: repeat(4, 1fr);
+  align-items: center;
+  justify-items: center;
+  padding: clamp(1rem, 6vw, 3rem);
+  pointer-events: none;
+  user-select: none;
+  overflow: hidden;
+  /* Difference blending is what makes one ink legible on BOTH the pale felt
+     and the dark photographs. A plain translucent colour works on one and
+     disappears on the other - measured: dark-brown ink over the photo band
+     (avg luminance 31) was mathematically invisible, while the same ink
+     read fine on cream. `difference` against white inverts whatever is
+     behind it, so the code is always the opposite tone of its background
+     and the alpha below sets how far it swings. */
+  color: rgb(255 255 255 / 0.15);
+  mix-blend-mode: difference;
+  font-family: var(--font-body, system-ui, sans-serif);
+  font-size: clamp(0.58rem, 2.5vw, 0.72rem);
+  font-weight: 500;
+  letter-spacing: 0.055em;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.watermark__mark {
+  white-space: nowrap;
+  writing-mode: horizontal-tb;
+}
+
+.watermark__mark--a { grid-area: a; transform: rotate(-24deg); }
+.watermark__mark--b { grid-area: b; transform: rotate(18deg); }
+.watermark__mark--c { grid-area: c; transform: rotate(-8deg); }
+.watermark__mark--d { grid-area: d; transform: rotate(12deg); }
+
+/* The lightbox is a viewer on top of the page; the watermark stays
+   behind it so nothing about the dialog's layout changes. */
+
+/* ------------------------------------------------------------
    Screen-capture protection
    Two small surfaces the JS in main.js drives: a quiet toast
    that explains a blocked gesture, and a neutral panel that

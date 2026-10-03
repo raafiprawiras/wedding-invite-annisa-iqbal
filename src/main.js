@@ -418,6 +418,60 @@ const openPageOne = () => {
 
 openButton?.addEventListener('click', openPageOne);
 
+/* ---------- Session watermark ---------- */
+/* The screenshot problem has no complete web-side answer: the OS owns
+   the screen, so the hardware button, the phone's built-in recorder and
+   a camera cannot be blocked by any code. What CAN be stopped is the
+   invitation travelling without a name on it. This overlay is the
+   deterrent that actually holds - a capture that reaches the world
+   carries the session code it was made in, so leaking it identifies
+   the link it came from.
+
+   The code is read from the URL when there is one (`?k=TOKEN` or
+   `/undangan/TOKEN`), otherwise minted per visit. It is a deterrent,
+   not cryptography: a determined guest can edit the DOM. Everything
+   here is built to stay out of the way - a DOM layer rather than a
+   baked-in PNG, pointer-transparent, unselectable, and beneath the
+   lightbox so the gallery viewer is untouched. */
+
+const WATERMARK_KEYS = ['k', 'key', 'token', 'u', 'guest', 'to', 'nama', 'name'];
+const watermarkCode = (() => {
+  const params = new URLSearchParams(window.location.search);
+  let code = '';
+  for (const key of WATERMARK_KEYS) {
+    const value = (params.get(key) || '').trim();
+    if (value) { code = value; break; }
+  }
+  /* Also honour the tidy /undangan/<code> shape. */
+  if (!code) {
+    const path = window.location.pathname.replace(/\/+$/, '');
+    const segment = path.split('/').filter(Boolean).pop();
+    if (segment && !/^(index|undangan|invitation|ai)$/i.test(segment) && /\w/.test(segment)) {
+      code = decodeURIComponent(segment);
+    }
+  }
+  if (!code) {
+    /* No link code: mint one per visit so screenshots are still
+       attributable to a session rather than to "the internet". */
+    const alphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    const bytes = window.crypto.getRandomValues(new Uint8Array(8));
+    code = Array.from(bytes, (b) => alphabet[b % alphabet.length]).join('');
+  }
+  /* Keep it short and printable - it is burned into every pixel. */
+  return code.replace(/[^\w .-]/g, '').slice(0, 24).toUpperCase() || 'TAMU';
+})();
+
+const watermark = document.createElement('div');
+watermark.className = 'watermark';
+watermark.setAttribute('aria-hidden', 'true');
+/* Repeated so a crop of any one corner still carries the code. */
+watermark.innerHTML = Array.from({ length: 4 }, () => '<span class="watermark__mark"></span>').join('');
+watermark.querySelectorAll('.watermark__mark').forEach((mark, i) => {
+  mark.classList.add(`watermark__mark--${'abcd'[i]}`);
+  mark.textContent = watermarkCode;
+});
+document.body.appendChild(watermark);
+
 /* ---------- Screen-capture protection ---------- */
 /* Honest scope, because it matters here: the OS owns the screen, so no web
    code can stop the hardware screenshot button, a phone's built-in recorder,

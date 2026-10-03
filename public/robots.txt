@@ -1,0 +1,4 @@
+# Undangan pernikahan pribadi - tidak untuk mesin pencari.
+# Halaman ini hanyaositories untuk tamu yang menerima link langsung.
+User-agent: *
+Disallow: /
