@@ -454,6 +454,33 @@ if (music && musicFab) {
       music.pause();
     }
   });
+
+  /* ---------- Stop the song when the visitor actually leaves ---------- */
+  /* Without these, closing the tab does not reliably silence the audio:
+     Chrome/Edge - and Android especially, when the page runs as an installed
+     app - keep the page process alive after the tab is gone, so the loop
+     keeps playing with nothing on screen. Clearing the browser cache does
+     not touch that; only the page does.
+     `pagehide` is the reliable "this page is going away" signal (it fires
+     for a normal close AND when the page enters the back/forward cache),
+     and `visibilitychange` -> hidden covers being backgrounded or
+     backgrounded by the OS task switcher. Both pause; neither touches
+     currentTime, so nothing is ever lost - the FAB simply shows the
+     paused state and a tap resumes from the same position.
+     Resuming is deliberately NOT automatic on restore: after a
+     back/forward-cache restore the original user gesture is no longer
+     guaranteed, so an unprompted play() could be blocked anyway, and a
+     song that starts by itself after the tab was closed is exactly what
+     we are fixing here. */
+  const stopMusic = () => {
+    if (music && !music.paused) music.pause();
+    syncMusicFab();
+  };
+
+  window.addEventListener('pagehide', stopMusic);
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) stopMusic();
+  });
 }
 
 updateCountdown();
