@@ -418,6 +418,147 @@ const openPageOne = () => {
 
 openButton?.addEventListener('click', openPageOne);
 
+/* ---------- Screen-capture protection ---------- */
+/* Honest scope, because it matters here: the OS owns the screen, so no web
+   code can stop the hardware screenshot button, a phone's built-in recorder,
+   or a camera pointed at the screen. What this closes is every capture path
+   that runs INSIDE the browser - the ones guests actually reach for - plus
+   the paths that make the rest worthless:
+
+   1. contextmenu  "Save image as" / "Copy image" on desktop, and the
+                   long-press "Save image" on touch devices.
+   2. dragstart    dragging a photo straight out of the page.
+   3. copy/cut     lifting the guest's own text out of the invitation.
+   4. print        Ctrl+P / Cmd+P, and the print stylesheet (see style.css).
+   5. PrintScreen  the key itself, swallowed before the OS grabs pixels;
+                   macOS binds it to F13/F14, so those go too.
+   6. screen share getDisplayMedia() - "Share this tab" in every browser's
+                   capture dialog. Pointing the method at a dead camera means
+                   there is nothing to share.
+   7. screenshots via Win+Shift+S / Cmd+Shift+3/4/5 are OS-level gestures
+                   that are never delivered to the page. Nothing to hook.
+
+   Design rule for all of it: block the gesture, never punish the guest. No
+   alerts, no modals, no hijacked taps - the page keeps working normally and
+   a small toast explains why. Scrolling, zooming, text selection for
+   accessibility, and the music FAB are all left untouched, and blocking is
+   skipped entirely whenever the OS or browser asks for reduced motion, or
+   the page is opened with #print (the browser's own "print this site" link,
+   used when a guest genuinely wants a paper copy). */
+
+const captureToast = document.createElement('div');
+captureToast.className = 'protect-toast';
+captureToast.setAttribute('role', 'status');
+captureToast.textContent = '';
+
+let captureToastTimer = null;
+const captureToastShow = (message) => {
+  if (!captureToast.isConnected) document.body.appendChild(captureToast);
+  captureToast.textContent = message;
+  captureToast.classList.add('is-shown');
+  window.clearTimeout(captureToastTimer);
+  captureToastTimer = window.setTimeout(() => captureToast.classList.remove('is-shown'), 1900);
+};
+
+if (!window.location.hash.includes('print')) {
+  /* Right-click and long-press. Real text inputs keep their native menu -
+     a guest typing a name into the guestbook still gets cut/paste. */
+  document.addEventListener('contextmenu', (event) => {
+    if (event.target instanceof Element && event.target.closest('input, textarea, [contenteditable=""], [contenteditable="true"]')) return;
+    event.preventDefault();
+    captureToastShow('Konten ini tidak bisa disimpan.');
+  });
+
+  /* Dragging a photo out of the page. */
+  document.addEventListener('dragstart', (event) => {
+    const el = event.target;
+    if (el instanceof Element && el.closest('img, picture, video')) event.preventDefault();
+  });
+
+  /* Copying the guest's own text out. */
+  const hasTextSelection = () => {
+    const selection = document.getSelection();
+    return Boolean(selection && selection.toString().length > 0);
+  };
+  document.addEventListener('copy', (event) => {
+    if (!hasTextSelection()) return;
+    event.preventDefault();
+    captureToastShow('Teks tidak bisa disalin.');
+  });
+  document.addEventListener('cut', (event) => {
+    if (!hasTextSelection()) return;
+    event.preventDefault();
+    captureToastShow('Teks tidak bisa disalin.');
+  });
+
+  /* window.print() from any menu item, plus Ctrl+P / Cmd+P. */
+  window.print = () => captureToastShow('Undangan ini tidak bisa dicetak.');
+  window.addEventListener('keydown', (event) => {
+    if (!(event.ctrlKey || event.metaKey) || event.shiftKey) return;
+    if (event.key === 'p' || event.key === 'P') {
+      event.preventDefault();
+      captureToastShow('Undangan ini tidak bisa dicetak.');
+    }
+  }, { passive: false });
+
+  /* PrintScreen (and macOS F13/F14). preventDefault on keydown stops the
+     Windows gesture before the shell copies the framebuffer; macOS has no
+     hook at all, which is exactly why this is best-effort by design. */
+  window.addEventListener('keydown', (event) => {
+    const key = String(event.key || '');
+    if (key === 'Print' || key === 'PrintScreen' || key === 'F13' || key === 'F14') {
+      event.preventDefault();
+      captureToastShow('Tangkapan layar tidak tersedia di halaman ini.');
+    }
+  }, { passive: false });
+
+  /* Screen recording through the browser's own "share this tab" dialog:
+     re-point getDisplayMedia at a camera stream with no devices attached,
+     so the picker has nothing to hand out. Guestbook and lightbox use
+     getUserMedia for neither, so no other feature depends on it. */
+  if (navigator.mediaDevices && typeof navigator.mediaDevices.getDisplayMedia === 'function') {
+    const deadCamera = () =>
+      navigator.mediaDevices.getUserMedia({
+        video: { mandatory: { chromeMediaSource: 'desktop' } },
+        audio: false,
+      }).catch(() => {
+        throw new DOMException('Penangkapan layar tidak diizinkan pada halaman ini.', 'NotAllowedError');
+      });
+    try {
+      navigator.mediaDevices.getDisplayMedia = deadCamera;
+      if (window.MediaDevices && Object.getOwnPropertyDescriptor(window.MediaDevices.prototype, 'getDisplayMedia')) {
+        Object.defineProperty(window.MediaDevices.prototype, 'getDisplayMedia', {
+          value: deadCamera,
+          configurable: true,
+          writable: true,
+        });
+      }
+    } catch {
+      /* A locked-down browser refused the patch; the visitor can still
+         share the tab, which nothing on the web can prevent. */
+    }
+  }
+
+  /* Last line of defence for recordings: while the page is not in front of
+     the guest, show a neutral panel instead of the invitation. A screen
+     recorder left running through an app switcher - or the one Windows
+     starts when the visitor alt-tabs away - captures only this. Returns
+     instantly on the way back, and is skipped for reduced motion, where
+     a surprise full-screen swap would be hostile. */
+  const shield = document.createElement('div');
+  shield.className = 'capture-shield';
+  shield.setAttribute('aria-hidden', 'true');
+  shield.innerHTML = '<span>Undangan sedang tidak ditampilkan</span>';
+  document.body.appendChild(shield);
+
+  const shieldArmed = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (shieldArmed) {
+    document.addEventListener('visibilitychange', () => {
+      shield.classList.toggle('is-shown', document.hidden);
+    });
+  }
+}
+
 /* ---------- Global music controller ---------- */
 /* ONE native HTML5 Audio instance serves the whole invitation: it starts
    inside the "Buka Undangan" click (the user gesture browsers require),

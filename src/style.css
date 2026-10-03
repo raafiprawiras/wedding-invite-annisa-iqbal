@@ -1012,6 +1012,86 @@ body[data-state='open'] .music-fab {
 }
 
 /* ------------------------------------------------------------
+   Screen-capture protection
+   Two small surfaces the JS in main.js drives: a quiet toast
+   that explains a blocked gesture, and a neutral panel that
+   replaces the invitation whenever the page is not in front of
+   the guest (recording, app switcher, second monitor).
+   ------------------------------------------------------------ */
+
+.protect-toast {
+  position: fixed;
+  left: 50%;
+  bottom: max(96px, calc(env(safe-area-inset-bottom, 24px) + 76px));
+  z-index: 60;
+  max-width: min(88vw, 320px);
+  padding: 0.68rem 1.1rem;
+  border-radius: 999px;
+  background: rgba(28, 14, 12, 0.9);
+  color: #f6e9df;
+  font-family: var(--font-body, system-ui, sans-serif);
+  font-size: clamp(0.72rem, 3.1vw, 0.8rem);
+  line-height: 1.35;
+  text-align: center;
+  letter-spacing: 0.01em;
+  box-shadow: 0 14px 34px rgba(20, 8, 8, 0.42);
+  backdrop-filter: blur(6px);
+  pointer-events: none;
+  opacity: 0;
+  translate: 0 10px;
+  transition:
+    opacity 220ms ease,
+    translate 220ms ease;
+}
+
+.protect-toast.is-shown {
+  opacity: 1;
+  translate: 0 0;
+}
+
+.capture-shield {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  display: grid;
+  place-items: center;
+  padding: 2rem;
+  background: #1d0f0d;
+  color: rgba(246, 233, 223, 0.82);
+  font-family: var(--font-body, system-ui, sans-serif);
+  font-size: clamp(0.8rem, 3.4vw, 0.95rem);
+  text-align: center;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 180ms ease,
+    visibility 180ms linear;
+}
+
+.capture-shield.is-shown {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Nothing about the invitation belongs on paper: the print stylesheet
+   empties every page instead of merely hiding the controls, so Ctrl+P
+   produces a blank sheet. */
+@media print {
+  body > * {
+    display: none !important;
+  }
+
+  body::after {
+    content: 'Undangan ini tidak tersedia untuk dicetak.';
+    display: block;
+    padding: 2rem;
+    color: #555;
+    font: 400 12pt/1.5 system-ui, sans-serif;
+    text-align: center;
+  }
+}
+
+/* ------------------------------------------------------------
    Lightbox — full-screen photo viewer for the Page 4 gallery.
    Sits above the music FAB (z 50) but below the opening overlay.
    ------------------------------------------------------------ */
