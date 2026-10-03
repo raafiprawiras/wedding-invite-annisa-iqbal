@@ -605,22 +605,45 @@ if (music && musicFab) {
      `pagehide` is the reliable "this page is going away" signal (it fires
      for a normal close AND when the page enters the back/forward cache),
      and `visibilitychange` -> hidden covers being backgrounded or
-     backgrounded by the OS task switcher. Both pause; neither touches
-     currentTime, so nothing is ever lost - the FAB simply shows the
-     paused state and a tap resumes from the same position.
-     Resuming is deliberately NOT automatic on restore: after a
-     back/forward-cache restore the original user gesture is no longer
-     guaranteed, so an unprompted play() could be blocked anyway, and a
-     song that starts by itself after the tab was closed is exactly what
-     we are fixing here. */
+     backgrounded by the OS task switcher.
+
+     ---------- ...and bring it back when they return ---------- */
+  /* A pause caused by LEAVING is an interruption, not a choice - so it is
+     undone the moment the guest comes back (tab re-selected, app
+     foregrounded, back/forward-cache restored). A pause caused by the FAB
+     is a choice - it is respected and nothing auto-plays. The flag is what
+     tells the two apart: it is only set when the song was actually sounding
+     while it got interrupted. No new gesture is needed for the resume:
+     the original "Buka Undangan" tap already unlocked this audio element,
+     and a document restored from the back/forward cache keeps that grant.
+     If a browser does refuse the resume, the rejection is swallowed and
+     the FAB simply shows the paused state. A page that was closed HARD
+     (process killed) comes back as a fresh load, and no web code can start
+     sound before a gesture there - the cover screen handles that case by
+     starting the song inside its "Buka Undangan" tap as always. */
+  let resumeOnReturn = false;
+
   const stopMusic = () => {
-    if (music && !music.paused) music.pause();
+    resumeOnReturn = !music.paused && !music.ended;
+    if (!music.paused) music.pause();
     syncMusicFab();
   };
 
+  const resumeMusic = () => {
+    if (!resumeOnReturn) return;
+    resumeOnReturn = false;
+    const p = music.play();
+    if (p && typeof p.catch === 'function') p.catch(() => syncMusicFab());
+  };
+
   window.addEventListener('pagehide', stopMusic);
+  /* Back/forward-cache restore: the same document comes back to life
+     without a reload, so the interruption is undone in place. On a first
+     load the flag is still false, so this listener is inert. */
+  window.addEventListener('pageshow', resumeMusic);
   document.addEventListener('visibilitychange', () => {
     if (document.hidden) stopMusic();
+    else resumeMusic();
   });
 }
 
