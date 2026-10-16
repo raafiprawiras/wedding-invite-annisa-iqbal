@@ -2895,52 +2895,76 @@ body[data-state='closing'] .open-invitation {
   background: #2d1511 url('/assets/assets_page6/Background Page 6.png') top center / 100% auto no-repeat;
 }
 
-/* The monogram, revealing first. */
+/* The monogram, revealing first. Alpha-ink matched against the Revisi
+   reference; the asset's transparent padding (ink starts at 16, 6 of the
+   225 square) is corrected so the art itself lands on the measured band. */
 .page-six__logo {
   position: absolute;
-  left: 42.31cqw;   /* 715 */
-  top: 27.8cqw;    /* 470 */
-  width: 13.25cqw;  /* 224 */
+  left: 42.3cqw;    /* 715 */
+  top: 26.11cqw;   /* 441 */
+  width: 13.32cqw;  /* 225 */
   height: auto;
   pointer-events: none;
 }
 
-/* The arch-framed couple photo. */
+/* The arch-framed couple photo (asset ink-tight, 1:1). */
 .page-six__photo {
   position: absolute;
   left: 29.48cqw;   /* 498 */
-  top: 60.04cqw;   /* 1014 */
+  top: 49.02cqw;   /* 828 */
   width: 40.85cqw;  /* 690 */
   height: auto;
   pointer-events: none;
 }
 
-/* The thank-you paragraph, as designed (baked text art). */
+/* The thank-you paragraph, as designed (baked text art; ink-tight). */
 .page-six__paragraph {
   position: absolute;
   left: 11.46cqw;   /* 194 */
-  top: 117.85cqw;  /* 1991 */
-  width: 77.18cqw;  /* 1304 */
+  top: 110.92cqw;  /* 1874 */
+  width: 77.2cqw;   /* 1304 */
   height: auto;
   pointer-events: none;
 }
 
-/* "Kami yang berbahagia," */
+/* "Kami yang berbahagia," (ink-tight). */
 .page-six__kami {
   position: absolute;
   left: 30.37cqw;   /* 513 */
-  top: 151.51cqw;  /* 2559 */
+  top: 138.69cqw;  /* 2342 */
   width: 38.96cqw;  /* 658 */
   height: auto;
   pointer-events: none;
 }
 
-/* The script names - the final reveal of the invitation. */
+/* The script names, scaled to the Revisi reference (0.795x of the export);
+   the asset's 96px transparent head is compensated. The art's own
+   side-bearings keep the "&" hanging past the right, as measured. */
 .page-six__name {
   position: absolute;
-  left: 17.5cqw;    /* 296 */
-  top: 157.38cqw;  /* 2658 */
-  width: 66.37cqw;  /* 1121 */
+  left: 23.8cqw;    /* 402 */
+  top: 141.02cqw;  /* 2381 */
+  width: 52.8cqw;   /* 892 */
+  height: auto;
+  pointer-events: none;
+}
+
+/* "Beserta Keluarga yang Berbahagia," (1:1, centred). */
+.page-six__beserta {
+  position: absolute;
+  left: 30.37cqw;   /* 513 */
+  top: 173.81cqw;  /* 2936 */
+  width: 39.26cqw;  /* 663 */
+  height: auto;
+  pointer-events: none;
+}
+
+/* Both parents' names, two columns with the baked divider. */
+.page-six__orangtua {
+  position: absolute;
+  left: 16.34cqw;   /* 276 */
+  top: 185.43cqw;  /* 3132 */
+  width: 68.54cqw;  /* 1158 */
   height: auto;
   pointer-events: none;
 }
