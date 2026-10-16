@@ -19,3 +19,6 @@ figma-tokens.json
 Thumbs.db
 .vercel
 .env*
+
+# backup foto original assets_page_slide (jangan di-deploy)
+_backup_assets_page_slide_original

@@ -2882,17 +2882,48 @@ body[data-state='closing'] .open-invitation {
    reference's baked tone shift on the photo/text exports).
    Positions are design px / 16.89 = cqw.
    ------------------------------------------------------------ */
-.page-six {
+/* The closing is ONE card: Page 6 and Page Bawah are its two halves, so
+   the felt that paints Page 6 runs on behind the marquee instead of
+   stopping at a divider. #361c15 is sampled straight off the felt's own
+   bottom edge, so the hand-off between the PNG and the flat tone below it
+   is invisible. This card carries the width/radius/shadow/outline the
+   other pages' cards carry. */
+.page-closing {
   position: relative;
   width: min(100%, 540px);
   margin-inline: auto;
+  container-type: inline-size; /* cqw basis for the Page Bawah frames */
+  overflow: hidden;            /* keeps the marquee inside the card */
+  background: #361c15;         /* the felt's bottom-edge tone, continued */
+}
+
+.page-six {
+  position: relative;
+  width: 100%; /* fills the shared closing card, so its cqw art lands 1:1 */
   aspect-ratio: 1689 / 3754;
   overflow: hidden;
   container-type: inline-size;
   color: #faf6ea;
   font-family: var(--font-design);
-  /* Solid colour is only a fallback while the PNG loads. */
+  /* Solid colour is only a fallback while the PNG loads. The felt is
+     painted at the card's own width, which is the width Page Bawah below
+     continues from. */
   background: #2d1511 url('/assets/assets_page6/Background Page 6.png') top center / 100% auto no-repeat;
+}
+
+/* The felt's own bottom edge cuts through the big baked ornament, so the
+   hand-off into the marquee is dissolved rather than guillotined: the last
+   stretch of Page 6 walks the ornament and the grain down into the felt's
+   own bottom-edge tone (#361c15) - the exact flat that .page-closing
+   carries on underneath, so the two halves meet on the same colour and no
+   line survives the hand-off. The band sits well below the parents' names. */
+.page-six::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  height: 22cqw;
+  background: linear-gradient(180deg, transparent, #361c15);
+  pointer-events: none;
 }
 
 /* The monogram, revealing first. Alpha-ink matched against the Revisi
@@ -2969,6 +3000,102 @@ body[data-state='closing'] .open-invitation {
   pointer-events: none;
 }
 
+/* ------------------------------------------------------------
+   Page Bawah - the lower half of the closing card: a 16-photo
+   cinematic marquee and nothing else. No heading, no copy, no
+   backdrop of its own - the felt from Page 6 (.page-closing)
+   is the only background behind it.
+   Frames are measured against the card (cqw) and oversized so the
+   gallery carries the page rather than sitting in it, and sized by
+   height so each original keeps its own frame - none of them is
+   cropped to fit a shared box.
+   ------------------------------------------------------------ */
+.page-bottom {
+  position: relative;
+  padding-block: clamp(1.25rem, 5vw, 2.75rem) clamp(1.75rem, 7vw, 3.5rem);
+  overflow: hidden;
+}
+
+.page-bottom__marquee {
+  display: grid;
+  gap: clamp(0.85rem, 2.4vw, 1.25rem);
+  padding-block: 0.5rem;
+  mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
+}
+
+.page-bottom__lane {
+  overflow: hidden;
+}
+
+.page-bottom__track,
+.page-bottom__set {
+  display: flex;
+  width: max-content;
+  gap: clamp(0.85rem, 2.4vw, 1.25rem);
+}
+
+.page-bottom__track {
+  gap: 0;
+  will-change: transform;
+  animation: page-bottom-marquee 110s linear infinite;
+}
+
+.page-bottom__track--reverse {
+  animation-direction: reverse;
+  animation-duration: 120s;
+}
+
+.page-bottom__set {
+  flex: none;
+  padding-right: clamp(0.85rem, 2.4vw, 1.25rem);
+}
+
+/* Oversized frames: every photo is as tall as the strip, so a landscape
+   original runs ~3/4 of the card wide and a portrait one is a narrower
+   beat between them. Sized by height (no crop, no object-fit) because the
+   originals mix orientations - a fixed frame would cut faces off either
+   the wide or the tall shots. */
+.page-bottom__set img {
+  display: block;
+  flex: none;
+  height: clamp(180px, 54cqw, 340px);
+  width: auto;
+  border: 1px solid rgb(247 241 227 / 0.28);
+  border-radius: 0.5rem;
+  box-shadow: 0 18px 46px rgb(10 3 4 / 0.45);
+}
+
+@keyframes page-bottom-marquee {
+  to { transform: translateX(-50%); }
+}
+
+@media (hover: hover) {
+  .page-bottom__marquee:hover .page-bottom__track {
+    animation-play-state: paused;
+  }
+}
+
+.page-bottom__marquee:focus-within .page-bottom__track {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-bottom__track {
+    animation: none;
+    transform: none;
+  }
+
+  .page-bottom__lane {
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .page-bottom__lane::-webkit-scrollbar {
+    display: none;
+  }
+}
+
 /* ---------- Responsive ---------- */
 
 @media (min-width: 768px) {
@@ -2997,7 +3124,7 @@ body[data-state='closing'] .open-invitation {
   .page-three,
   .page-four,
   .page-five-frame,
-  .page-six {
+  .page-closing {
     width: min(100%, 620px);
     border-radius: 28px;
     box-shadow:
@@ -3029,7 +3156,7 @@ body[data-state='closing'] .open-invitation {
   .page-three,
   .page-four,
   .page-five-frame,
-  .page-six {
+  .page-closing {
     width: min(100%, 660px);
     border-radius: 32px;
     box-shadow:
