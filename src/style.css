@@ -125,30 +125,30 @@
 /* ---------- Open invitation button ---------- */
 
 .open-invitation {
-  font-family: var(--font-mono);
-  font-size: var(--text-button);
-  font-weight: 400;
-  letter-spacing: var(--tracking-guest);
-  color: var(--color-ink);
-  background-color: var(--color-cream);
+  display: block;
+  width: min(68vw, 13rem);
+  max-width: 100%;
+  padding: 0;
+  background: transparent;
   border: none;
-  border-radius: var(--button-radius);
-  min-height: var(--button-height);
-  padding: 0 2rem;
   cursor: pointer;
-  transition: transform 0.15s ease, background-color 0.15s ease,
-    box-shadow 0.15s ease;
-  box-shadow: 0 4px 16px rgb(0 0 0 / 0.25);
+  transition: transform 180ms ease, filter 180ms ease;
+}
+
+.open-invitation img {
+  display: block;
+  width: 100%;
+  height: auto;
 }
 
 .open-invitation:hover {
-  background-color: #fffdf7;
   transform: translateY(-1px);
+  filter: brightness(1.04);
 }
 
 .open-invitation:active {
-  transform: translateY(0);
-  box-shadow: 0 2px 8px rgb(0 0 0 / 0.25);
+  transform: translateY(1px) scale(0.985);
+  filter: brightness(0.98);
 }
 
 .open-invitation:focus-visible {
@@ -327,6 +327,7 @@ body[data-state='open'] .music-fab {
 }
 
 @media (prefers-reduced-motion: reduce) {
+
   .music-fab,
   body[data-state='open'] .music-fab {
     transition: none;
@@ -352,7 +353,7 @@ body[data-state='open'] .music-fab {
   background: #e5ded4 url('/assets/assets_page1/BG 1 New.png') top center / 100% auto no-repeat;
 }
 
-.page-one > * {
+.page-one>* {
   position: absolute;
 }
 
@@ -398,10 +399,21 @@ body[data-state='open'] .music-fab {
   height: 73.542%;
 }
 
-.page-one__cd-item--1 { left: 0%; }
-.page-one__cd-item--2 { left: 26.151%; }
-.page-one__cd-item--3 { left: 53.138%; }
-.page-one__cd-item--4 { left: 80.753%; }
+.page-one__cd-item--1 {
+  left: 0%;
+}
+
+.page-one__cd-item--2 {
+  left: 26.151%;
+}
+
+.page-one__cd-item--3 {
+  left: 53.138%;
+}
+
+.page-one__cd-item--4 {
+  left: 80.753%;
+}
 
 /* Card fill sampled from the artwork: #fffaf6 at 92% alpha, which is what
    makes it read as a soft cream over the photo instead of a flat swatch.
@@ -513,8 +525,13 @@ body[data-state='open'] .music-fab {
   overflow: hidden;
 }
 
-.page-one__cd-half--top .page-one__cd-digit { top: 0; }
-.page-one__cd-half--bottom .page-one__cd-digit { bottom: 0; }
+.page-one__cd-half--top .page-one__cd-digit {
+  top: 0;
+}
+
+.page-one__cd-half--bottom .page-one__cd-digit {
+  bottom: 0;
+}
 
 /* The outgoing lower half, laid over the incoming one so the card reads as one
    complete old digit right up to the moment the falling leaf covers it.
@@ -530,7 +547,9 @@ body[data-state='open'] .music-fab {
     #eee8e4;
 }
 
-.page-one__cd-old-bottom .page-one__cd-digit { bottom: 0; }
+.page-one__cd-old-bottom .page-one__cd-digit {
+  bottom: 0;
+}
 
 /* The falling leaf. It swings a full 180° about the seam, so instead of merely
    collapsing at the middle line it sweeps down and closes over the lower half
@@ -553,7 +572,9 @@ body[data-state='open'] .music-fab {
   backface-visibility: hidden;
 }
 
-.page-one__cd-leaf-face--front .page-one__cd-digit { top: 0; }
+.page-one__cd-leaf-face--front .page-one__cd-digit {
+  top: 0;
+}
 
 /* The underside of the leaf: bare card, a touch deeper than the face. */
 .page-one__cd-leaf-face--back {
@@ -595,7 +616,7 @@ body[data-state='open'] .music-fab {
   inset: 0;
 }
 
-.page-one__story > * {
+.page-one__story>* {
   position: absolute;
 }
 
@@ -603,11 +624,15 @@ body[data-state='open'] .music-fab {
    left free to carry the slow idle drift, so the reveal transform and the
    ambient transform never fight over the same property. */
 
-/* Couple icon above the quote — ref ink x 565-1135, y 2017-2416 */
+/* Couple illustration above the quote — ref ink x 609-1083, y 1948-2478.
+   Vector_Page1.png (483x627) carries that ink 1:1 (its own ink box is 475x531,
+   the same size as the design's), so the image box needs no scaling: 483px =
+   28.60% of 1689, top 1881px = 41.44% of 4539 (the 67px of transparent padding
+   above the ink is what lifts 1881 above the 1948 ink line). */
 .page-one__drift--couple {
-  left: 32.38%;
-  top: 44.04%;
-  width: 35.41%;
+  left: 35.7%;
+  top: 41.44%;
+  width: 28.6%;
 }
 
 /* Top-right arrow (Fly 1) — ref ink x 1185-1539, y 1933-2513 */
@@ -705,7 +730,7 @@ body[data-state='open'] .music-fab {
   background: #321815 url('/assets/assets_page2/BG Mahogany.jpg') top center / 100% auto no-repeat;
 }
 
-.page-two > img {
+.page-two>img {
   position: absolute;
   display: block;
   height: auto;
@@ -770,9 +795,12 @@ body[data-state='open'] .music-fab {
 /* The arch frame with the photo and its gradient baked in. */
 .page-three__frame {
   position: absolute;
-  left: 8.17cqw;   /* 138 */
-  top: 20.43cqw;   /* 345 */
-  width: 83.48cqw; /* 1410 */
+  left: 8.17cqw;
+  /* 138 */
+  top: 20.43cqw;
+  /* 345 */
+  width: 83.48cqw;
+  /* 1410 */
   height: auto;
   pointer-events: none;
 }
@@ -780,9 +808,12 @@ body[data-state='open'] .music-fab {
 /* The monogram, sitting on the frame. */
 .page-three__logo {
   position: absolute;
-  left: 39.25cqw;  /* 663 */
-  top: 35.52cqw;   /* 600 */
-  width: 19.54cqw; /* 330 */
+  left: 39.25cqw;
+  /* 663 */
+  top: 35.52cqw;
+  /* 600 */
+  width: 19.54cqw;
+  /* 330 */
   height: auto;
   pointer-events: none;
 }
@@ -795,8 +826,10 @@ body[data-state='open'] .music-fab {
    rows (alpha row profile of each asset). */
 .page-three__band {
   position: absolute;
-  left: 20.54cqw;   /* 347 */
-  width: 58.32cqw;  /* 985 */
+  left: 20.54cqw;
+  /* 347 */
+  width: 58.32cqw;
+  /* 985 */
   background-repeat: no-repeat;
   background-size: 58.32cqw auto;
   pointer-events: none;
@@ -804,50 +837,66 @@ body[data-state='open'] .music-fab {
 
 /* Akad Nikah.png at (347, 1713) = (20.54cqw, 101.42cqw). */
 .page-three__akad-title {
-  top: 101.42cqw; height: 7.16cqw;
+  top: 101.42cqw;
+  height: 7.16cqw;
   background-image: url('/assets/assets_new_page3/Akad Nikah.png');
   background-position: 0 0cqw;
 }
+
 .page-three__akad-line {
-  top: 108.58cqw; height: 4.38cqw;
+  top: 108.58cqw;
+  height: 4.38cqw;
 }
-.page-three__akad-line > i {
+
+.page-three__akad-line>i {
   background-image: url('/assets/assets_new_page3/Akad Nikah.png');
   background-size: 58.32cqw auto;
   background-position: 0 -7.16cqw;
 }
+
 .page-three__akad-date {
-  top: 112.97cqw; height: 7.70cqw;
+  top: 112.97cqw;
+  height: 7.70cqw;
   background-image: url('/assets/assets_new_page3/Akad Nikah.png');
   background-position: 0 -11.55cqw;
 }
+
 .page-three__akad-time {
-  top: 120.66cqw; height: 6.16cqw;
+  top: 120.66cqw;
+  height: 6.16cqw;
   background-image: url('/assets/assets_new_page3/Akad Nikah.png');
   background-position: 0 -19.24cqw;
 }
 
 /* Resepsi.png at (347, 2226) = (20.54cqw, 131.79cqw). */
 .page-three__resepsi-title {
-  top: 131.79cqw; height: 7.22cqw;
+  top: 131.79cqw;
+  height: 7.22cqw;
   background-image: url('/assets/assets_new_page3/Resepsi.png');
   background-position: 0 0cqw;
 }
+
 .page-three__resepsi-line {
-  top: 139.01cqw; height: 4.32cqw;
+  top: 139.01cqw;
+  height: 4.32cqw;
 }
-.page-three__resepsi-line > i {
+
+.page-three__resepsi-line>i {
   background-image: url('/assets/assets_new_page3/Resepsi.png');
   background-size: 58.32cqw auto;
   background-position: 0 -7.22cqw;
 }
+
 .page-three__resepsi-date {
-  top: 143.34cqw; height: 7.76cqw;
+  top: 143.34cqw;
+  height: 7.76cqw;
   background-image: url('/assets/assets_new_page3/Resepsi.png');
   background-position: 0 -11.55cqw;
 }
+
 .page-three__resepsi-time {
-  top: 151.09cqw; height: 6.28cqw;
+  top: 151.09cqw;
+  height: 6.28cqw;
   background-image: url('/assets/assets_new_page3/Resepsi.png');
   background-position: 0 -19.30cqw;
 }
@@ -855,9 +904,12 @@ body[data-state='open'] .music-fab {
 /* The address text. */
 .page-three__alamat {
   position: absolute;
-  left: 13.50cqw;   /* 228 */
-  top: 163.59cqw;   /* 2763 */
-  width: 73.53cqw;  /* 1242 */
+  left: 13.50cqw;
+  /* 228 */
+  top: 163.59cqw;
+  /* 2763 */
+  width: 73.53cqw;
+  /* 1242 */
   height: auto;
   pointer-events: none;
 }
@@ -866,9 +918,12 @@ body[data-state='open'] .music-fab {
    pill in Page 3 Nih.png (matched at (540, 3090)). */
 .page-three__lokasi {
   position: absolute;
-  left: 31.97cqw;   /* 540 */
-  top: 182.95cqw;   /* 3090 */
-  width: 35.94cqw;  /* 607 */
+  left: 31.97cqw;
+  /* 540 */
+  top: 182.95cqw;
+  /* 3090 */
+  width: 35.94cqw;
+  /* 607 */
   -webkit-tap-highlight-color: transparent;
   text-decoration: none;
 }
@@ -914,14 +969,53 @@ body[data-state='open'] .music-fab {
 }
 
 /* slot rects, in % of the 1689 x 3754 canvas */
-.page-four__ph--4 { left: 24.69%; top: 14.64%; width: 49.2%; }
-.page-four__ph--2 { left: 13.79%; top: 27.66%; width: 31.73%; }
-.page-four__ph--3 { left: 46.6%;  top: 27.63%; width: 37.06%; }
-.page-four__ph--6 { left: 46.54%; top: 42.12%; width: 32.33%; }
-.page-four__ph--7 { left: 7.46%;  top: 51.56%; width: 38.07%; }
-.page-four__ph--1 { left: 46.54%; top: 54.64%; width: 46%; }
-.page-four__ph--8 { left: 12.67%; top: 62.11%; width: 32.86%; }
-.page-four__ph--5 { left: 46.54%; top: 67.73%; width: 32.92%; }
+.page-four__ph--4 {
+  left: 24.69%;
+  top: 14.64%;
+  width: 49.2%;
+}
+
+.page-four__ph--2 {
+  left: 13.79%;
+  top: 27.66%;
+  width: 31.73%;
+}
+
+.page-four__ph--3 {
+  left: 46.6%;
+  top: 27.63%;
+  width: 37.06%;
+}
+
+.page-four__ph--6 {
+  left: 46.54%;
+  top: 42.12%;
+  width: 32.33%;
+}
+
+.page-four__ph--7 {
+  left: 7.46%;
+  top: 51.56%;
+  width: 38.07%;
+}
+
+.page-four__ph--1 {
+  left: 46.54%;
+  top: 54.64%;
+  width: 46%;
+}
+
+.page-four__ph--8 {
+  left: 12.67%;
+  top: 62.11%;
+  width: 32.86%;
+}
+
+.page-four__ph--5 {
+  left: 46.54%;
+  top: 67.73%;
+  width: 32.92%;
+}
 
 /* Caption — enlarged per revision, pulled closer to the photo above
    (Foto 5 ends at y3078; caption starts y3165 — ~86px design gap).
@@ -974,6 +1068,7 @@ body[data-state='open'] .music-fab {
 }
 
 @media (hover: hover) {
+
   .page-four__ph:hover,
   .page-four__ph:focus-visible {
     translate: 0 -8px;
@@ -1077,7 +1172,7 @@ body[data-state='open'] .music-fab {
    empties every page instead of merely hiding the controls, so Ctrl+P
    produces a blank sheet. */
 @media print {
-  body > * {
+  body>* {
     display: none !important;
   }
 
@@ -1273,7 +1368,7 @@ body[data-state='open'] .opening-page {
   transform: none;
 }
 
-.has-motion [data-reveal='line'] > i {
+.has-motion [data-reveal='line']>i {
   position: absolute;
   inset: 0;
   display: block;
@@ -1282,7 +1377,7 @@ body[data-state='open'] .opening-page {
   transition: transform 900ms cubic-bezier(0.19, 1, 0.22, 1);
 }
 
-.has-motion [data-reveal='line'].is-visible > i {
+.has-motion [data-reveal='line'].is-visible>i {
   transform: scaleX(1);
 }
 
@@ -1318,14 +1413,37 @@ body[data-state='open'] .opening-page {
   transform: none;
 }
 
-.has-motion .page-one__quote-line:nth-child(1) { transition-delay: 0ms; }
-.has-motion .page-one__quote-line:nth-child(2) { transition-delay: 80ms; }
-.has-motion .page-one__quote-line:nth-child(3) { transition-delay: 160ms; }
-.has-motion .page-one__quote-line:nth-child(4) { transition-delay: 240ms; }
-.has-motion .page-one__quote-line:nth-child(5) { transition-delay: 320ms; }
-.has-motion .page-one__quote-line:nth-child(6) { transition-delay: 400ms; }
-.has-motion .page-one__quote-line:nth-child(7) { transition-delay: 480ms; }
-.has-motion .page-one__quote-line:nth-child(8) { transition-delay: 560ms; }
+.has-motion .page-one__quote-line:nth-child(1) {
+  transition-delay: 0ms;
+}
+
+.has-motion .page-one__quote-line:nth-child(2) {
+  transition-delay: 80ms;
+}
+
+.has-motion .page-one__quote-line:nth-child(3) {
+  transition-delay: 160ms;
+}
+
+.has-motion .page-one__quote-line:nth-child(4) {
+  transition-delay: 240ms;
+}
+
+.has-motion .page-one__quote-line:nth-child(5) {
+  transition-delay: 320ms;
+}
+
+.has-motion .page-one__quote-line:nth-child(6) {
+  transition-delay: 400ms;
+}
+
+.has-motion .page-one__quote-line:nth-child(7) {
+  transition-delay: 480ms;
+}
+
+.has-motion .page-one__quote-line:nth-child(8) {
+  transition-delay: 560ms;
+}
 
 /* Signature scroll moment: the paper plane is NOT trigger-revealed like the
    rest — its flight is bound to scroll progress. main.js writes --fly (0..1)
@@ -1337,12 +1455,11 @@ body[data-state='open'] .opening-page {
   --fly: 0;
   opacity: calc(0.12 + var(--fly) * 0.88);
   transform:
-    translate(calc(-7cqw * (1 - var(--fly))), calc(9cqw * (1 - var(--fly))))
-    rotate(calc(-10deg * (1 - var(--fly))))
-    scale(calc(0.9 + 0.1 * var(--fly)));
+    translate(calc(-7cqw * (1 - var(--fly))), calc(9cqw * (1 - var(--fly)))) rotate(calc(-10deg * (1 - var(--fly)))) scale(calc(0.9 + 0.1 * var(--fly)));
 }
 
 @media (prefers-reduced-motion: no-preference) {
+
   /* A very slow, very small drift on the two illustrations. Amplitude is under
      half a percent of the canvas, so it reads as the page breathing rather
      than as something moving. */
@@ -1388,12 +1505,12 @@ body[data-state='open'] .opening-page {
   }
 
   .invitation:not([hidden]) .page-one {
-    animation: zoom-in-slow 2400ms cubic-bezier(.22,.61,.36,1) both;
+    animation: zoom-in-slow 2400ms cubic-bezier(.22, .61, .36, 1) both;
     transform-origin: 50% 0%;
   }
 
   .animate-zoom-in-slow {
-    animation: zoom-in-slow 2400ms cubic-bezier(.22,.61,.36,1) both;
+    animation: zoom-in-slow 2400ms cubic-bezier(.22, .61, .36, 1) both;
   }
 }
 
@@ -1411,13 +1528,13 @@ body[data-state='closing'] .opening-page {
   opacity: 0;
   transform: scale(1.05);
   transition:
-    opacity 520ms cubic-bezier(.4,0,.2,1),
-    transform 780ms cubic-bezier(.4,0,.2,1);
+    opacity 520ms cubic-bezier(.4, 0, .2, 1),
+    transform 780ms cubic-bezier(.4, 0, .2, 1);
 }
 
 body[data-state='closing'] .opening-background {
   transform: scale(1.06);
-  transition: transform 900ms cubic-bezier(.4,0,.2,1);
+  transition: transform 900ms cubic-bezier(.4, 0, .2, 1);
 }
 
 body[data-state='closing'] .opening-content {
@@ -1425,7 +1542,7 @@ body[data-state='closing'] .opening-content {
   transform: translateY(-3vh) scale(0.98);
   transition:
     opacity 360ms ease-in,
-    transform 560ms cubic-bezier(.4,0,.2,1);
+    transform 560ms cubic-bezier(.4, 0, .2, 1);
 }
 
 body[data-state='closing'] .open-invitation {
@@ -2119,7 +2236,8 @@ body[data-state='closing'] .open-invitation {
   position: relative;
   width: 100%;
   aspect-ratio: 1689 / 7431;
-  max-height: 295.2cqw; /* closed design height: 4986/1689 */
+  max-height: 295.2cqw;
+  /* closed design height: 4986/1689 */
   overflow: hidden;
   container-type: inline-size;
   background: #cfc5bc;
@@ -2127,7 +2245,8 @@ body[data-state='closing'] .open-invitation {
 }
 
 .page-five.is-open {
-  max-height: 440cqw; /* open design height: 7431/1689 */
+  max-height: 440cqw;
+  /* open design height: 7431/1689 */
 }
 
 /* --- Background: one stable felt, no crossfade ----------------- */
@@ -2157,8 +2276,13 @@ body[data-state='closing'] .open-invitation {
   pointer-events: none;
 }
 
-.page-five__panel--amplop { top: 14.8cqw; }
-.page-five__panel--ucapan { top: 74.13cqw; }
+.page-five__panel--amplop {
+  top: 14.8cqw;
+}
+
+.page-five__panel--ucapan {
+  top: 74.13cqw;
+}
 
 /* Panels reveal big, so no blur here - rise + fade only, slow. The
    panel rules out-rank the generic base, so their exits also ease
@@ -2210,8 +2334,10 @@ body[data-state='closing'] .open-invitation {
 
 .page-five__tail {
   position: absolute;
-  left: 4.62cqw;   /* 78 */
-  width: 90.41cqw; /* 1527 */
+  left: 4.62cqw;
+  /* 78 */
+  width: 90.41cqw;
+  /* 1527 */
   background-image: url('/assets/assets_page5/Klik Amplop.png');
   background-repeat: no-repeat;
   background-size: 90.41cqw auto;
@@ -2232,18 +2358,21 @@ body[data-state='closing'] .open-invitation {
   height: 55.36cqw;
   background-position: 0 0cqw;
 }
+
 /* Band 1: asset rows 933-1702 (Card Iqbal). */
 .page-five__tail--1 {
   top: 70.04cqw;
   height: 45.53cqw;
   background-position: 0 -55.24cqw;
 }
+
 /* Band 2: asset rows 1700-2472 (Card Nisa). */
 .page-five__tail--2 {
   top: 115.45cqw;
   height: 45.71cqw;
   background-position: 0 -100.65cqw;
 }
+
 /* Band 3: asset rows 2470-3390 (Kirim Hadiah + Lihat Lokasi). */
 .page-five__tail--3 {
   top: 161.04cqw;
@@ -2266,10 +2395,21 @@ body[data-state='closing'] .open-invitation {
   transform: none;
 }
 
-.has-motion .page-five.is-open .page-five__tail--0 { transition-delay: 0ms, 0ms; }
-.has-motion .page-five.is-open .page-five__tail--1 { transition-delay: 140ms, 140ms; }
-.has-motion .page-five.is-open .page-five__tail--2 { transition-delay: 320ms, 320ms; }
-.has-motion .page-five.is-open .page-five__tail--3 { transition-delay: 500ms, 500ms; }
+.has-motion .page-five.is-open .page-five__tail--0 {
+  transition-delay: 0ms, 0ms;
+}
+
+.has-motion .page-five.is-open .page-five__tail--1 {
+  transition-delay: 140ms, 140ms;
+}
+
+.has-motion .page-five.is-open .page-five__tail--2 {
+  transition-delay: 320ms, 320ms;
+}
+
+.has-motion .page-five.is-open .page-five__tail--3 {
+  transition-delay: 500ms, 500ms;
+}
 
 /* On open the short panel bows out AFTER band 0 is fully opaque beneath
    it (fade starts at 380ms) - the swap is ghost-free because something
@@ -2496,9 +2636,9 @@ body[data-state='closing'] .open-invitation {
   transition: opacity 1200ms cubic-bezier(0.19, 1, 0.22, 1);
 }
 
-.has-motion .page-five__panel--ucapan.is-visible ~ .page-five__label-cover,
-.has-motion .page-five__panel--ucapan.is-visible ~ .page-five__form-cover,
-.has-motion .page-five__panel--ucapan.is-visible ~ .page-five__cover {
+.has-motion .page-five__panel--ucapan.is-visible~.page-five__label-cover,
+.has-motion .page-five__panel--ucapan.is-visible~.page-five__form-cover,
+.has-motion .page-five__panel--ucapan.is-visible~.page-five__cover {
   opacity: 1;
 }
 
@@ -2540,6 +2680,7 @@ body[data-state='closing'] .open-invitation {
 }
 
 @media (hover: hover) {
+
   .page-five__pill:not(.is-sent):hover,
   .page-five__pill:not(.is-sent):focus-visible {
     /* A quiet lift + a whisper of gradient - never neon, never bouncy. */
@@ -2567,10 +2708,21 @@ body[data-state='closing'] .open-invitation {
 }
 
 @keyframes page5-shake {
-  20% { translate: -1.2cqw 0; }
-  40% { translate: 1.2cqw 0; }
-  60% { translate: -0.8cqw 0; }
-  80% { translate: 0.8cqw 0; }
+  20% {
+    translate: -1.2cqw 0;
+  }
+
+  40% {
+    translate: 1.2cqw 0;
+  }
+
+  60% {
+    translate: -0.8cqw 0;
+  }
+
+  80% {
+    translate: 0.8cqw 0;
+  }
 }
 
 /* --- Message list cover + live list ---------------------------- */
@@ -2849,6 +3001,7 @@ body[data-state='closing'] .open-invitation {
     transform: translateY(3cqw);
     filter: blur(4px);
   }
+
   to {
     opacity: 1;
     transform: none;
@@ -2863,6 +3016,7 @@ body[data-state='closing'] .open-invitation {
 /* --- Reduced motion: states snap instead of animating ---------- */
 
 @media (prefers-reduced-motion: reduce) {
+
   .page-five,
   .page-five__bg,
   .page-five__ucapan,
@@ -2892,14 +3046,18 @@ body[data-state='closing'] .open-invitation {
   position: relative;
   width: min(100%, 540px);
   margin-inline: auto;
-  container-type: inline-size; /* cqw basis for the Page Bawah frames */
-  overflow: hidden;            /* keeps the marquee inside the card */
-  background: #361c15;         /* the felt's bottom-edge tone, continued */
+  container-type: inline-size;
+  /* cqw basis for the Page Bawah frames */
+  overflow: hidden;
+  /* keeps the marquee inside the card */
+  background: #361c15;
+  /* the felt's bottom-edge tone, continued */
 }
 
 .page-six {
   position: relative;
-  width: 100%; /* fills the shared closing card, so its cqw art lands 1:1 */
+  width: 100%;
+  /* fills the shared closing card, so its cqw art lands 1:1 */
   aspect-ratio: 1689 / 3754;
   overflow: hidden;
   container-type: inline-size;
@@ -2931,9 +3089,12 @@ body[data-state='closing'] .open-invitation {
    225 square) is corrected so the art itself lands on the measured band. */
 .page-six__logo {
   position: absolute;
-  left: 42.3cqw;    /* 715 */
-  top: 26.11cqw;   /* 441 */
-  width: 13.32cqw;  /* 225 */
+  left: 42.3cqw;
+  /* 715 */
+  top: 26.11cqw;
+  /* 441 */
+  width: 13.32cqw;
+  /* 225 */
   height: auto;
   pointer-events: none;
 }
@@ -2941,9 +3102,12 @@ body[data-state='closing'] .open-invitation {
 /* The arch-framed couple photo (asset ink-tight, 1:1). */
 .page-six__photo {
   position: absolute;
-  left: 29.48cqw;   /* 498 */
-  top: 49.02cqw;   /* 828 */
-  width: 40.85cqw;  /* 690 */
+  left: 29.48cqw;
+  /* 498 */
+  top: 49.02cqw;
+  /* 828 */
+  width: 40.85cqw;
+  /* 690 */
   height: auto;
   pointer-events: none;
 }
@@ -2951,9 +3115,12 @@ body[data-state='closing'] .open-invitation {
 /* The thank-you paragraph, as designed (baked text art; ink-tight). */
 .page-six__paragraph {
   position: absolute;
-  left: 11.46cqw;   /* 194 */
-  top: 110.92cqw;  /* 1874 */
-  width: 77.2cqw;   /* 1304 */
+  left: 11.46cqw;
+  /* 194 */
+  top: 110.92cqw;
+  /* 1874 */
+  width: 77.2cqw;
+  /* 1304 */
   height: auto;
   pointer-events: none;
 }
@@ -2961,9 +3128,12 @@ body[data-state='closing'] .open-invitation {
 /* "Kami yang berbahagia," (ink-tight). */
 .page-six__kami {
   position: absolute;
-  left: 30.37cqw;   /* 513 */
-  top: 138.69cqw;  /* 2342 */
-  width: 38.96cqw;  /* 658 */
+  left: 30.37cqw;
+  /* 513 */
+  top: 138.69cqw;
+  /* 2342 */
+  width: 38.96cqw;
+  /* 658 */
   height: auto;
   pointer-events: none;
 }
@@ -2973,9 +3143,12 @@ body[data-state='closing'] .open-invitation {
    side-bearings keep the "&" hanging past the right, as measured. */
 .page-six__name {
   position: absolute;
-  left: 23.8cqw;    /* 402 */
-  top: 141.02cqw;  /* 2381 */
-  width: 52.8cqw;   /* 892 */
+  left: 23.8cqw;
+  /* 402 */
+  top: 141.02cqw;
+  /* 2381 */
+  width: 52.8cqw;
+  /* 892 */
   height: auto;
   pointer-events: none;
 }
@@ -2983,9 +3156,12 @@ body[data-state='closing'] .open-invitation {
 /* "Beserta Keluarga yang Berbahagia," (1:1, centred). */
 .page-six__beserta {
   position: absolute;
-  left: 30.37cqw;   /* 513 */
-  top: 173.81cqw;  /* 2936 */
-  width: 39.26cqw;  /* 663 */
+  left: 30.37cqw;
+  /* 513 */
+  top: 173.81cqw;
+  /* 2936 */
+  width: 39.26cqw;
+  /* 663 */
   height: auto;
   pointer-events: none;
 }
@@ -2993,9 +3169,12 @@ body[data-state='closing'] .open-invitation {
 /* Both parents' names, two columns with the baked divider. */
 .page-six__orangtua {
   position: absolute;
-  left: 16.34cqw;   /* 276 */
-  top: 185.43cqw;  /* 3132 */
-  width: 68.54cqw;  /* 1158 */
+  left: 16.34cqw;
+  /* 276 */
+  top: 185.43cqw;
+  /* 3132 */
+  width: 68.54cqw;
+  /* 1158 */
   height: auto;
   pointer-events: none;
 }
@@ -3067,7 +3246,9 @@ body[data-state='closing'] .open-invitation {
 }
 
 @keyframes page-bottom-marquee {
-  to { transform: translateX(-50%); }
+  to {
+    transform: translateX(-50%);
+  }
 }
 
 @media (hover: hover) {
