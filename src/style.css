@@ -54,7 +54,7 @@
   position: absolute;
   inset: 0;
   background-color: var(--color-burgundy);
-  background-image: url('/assets/backgrounds/background-page-awal.png');
+  background-image: url('/assets/backgrounds/background-page-awal.webp');
   background-size: cover;
   background-position: center top;
   background-repeat: no-repeat;
@@ -3215,10 +3215,11 @@ body[data-state='closing'] .open-invitation {
    cinematic marquee and nothing else. No heading, no copy, no
    backdrop of its own - the felt from Page 6 (.page-closing)
    is the only background behind it.
-   Frames are measured against the card (cqw) and oversized so the
-   gallery carries the page rather than sitting in it, and sized by
-   height so each original keeps its own frame - none of them is
-   cropped to fit a shared box.
+   Frames are uniform 3:2 landscape boxes sized in cqw so the recap
+   reads as one rhythm and stays slim on phones; the three portrait
+   originals (2:3) are covered into the same box with their faces'
+   upper band kept (object-position below). The marquee still
+   carries the page.
    ------------------------------------------------------------ */
 .page-bottom {
   position: relative;
@@ -3261,16 +3262,20 @@ body[data-state='closing'] .open-invitation {
   padding-right: clamp(0.85rem, 2.4vw, 1.25rem);
 }
 
-/* Oversized frames: every photo is as tall as the strip, so a landscape
-   original runs ~3/4 of the card wide and a portrait one is a narrower
-   beat between them. Sized by height (no crop, no object-fit) because the
-   originals mix orientations - a fixed frame would cut faces off either
-   the wide or the tall shots. */
+/* Uniform landscape frames: every photo sits in the same 3:2 box, and the
+   strip is slim enough on a phone (was height 54cqw ≈ 210px tall at 390 -
+   now ~115px). Landscape originals fill the box 1:1; the three portrait
+   shots (foto13/15/16, 2:3) are covered into the same box, positioned at
+   18% from the top so their faces - measured in the 10-60% band of each
+   art - stay in frame. Marquee animation is untouched. */
 .page-bottom__set img {
   display: block;
   flex: none;
-  height: clamp(180px, 54cqw, 340px);
-  width: auto;
+  width: clamp(170px, 44cqw, 280px);
+  height: auto;
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+  object-position: 50% 18%;
   border: 1px solid rgb(247 241 227 / 0.28);
   border-radius: 0.5rem;
   box-shadow: 0 18px 46px rgb(10 3 4 / 0.45);
