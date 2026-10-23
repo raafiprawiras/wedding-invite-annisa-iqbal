@@ -179,19 +179,24 @@
                 width="1492" height="561" />
 
             <img class="page-two__bride" data-reveal src="./assets/assets_page2/Annisa Name.png"
-                alt="Annisa Setianingsih, S.T.P - Putri pertama Bapak Agus Setiawan dan Ibu Komsatun" width="1143"
-                height="1108" />
+                alt="Annisa Setianingsih, S.T.P" width="1143" height="1108" />
 
             <img class="page-two__amp" data-reveal src="./assets/assets_page2/&.png" alt="dan" width="65" height="82" />
 
             <img class="page-two__groom" data-reveal src="./assets/assets_page2/Iqbal Name.png"
-                alt="Muhammad Iqbal Fachrezi, S.Kom - Putra pertama Bapak M Hasim As'ari dan Ibu Turah Wijayanti"
-                width="1317" height="1116" />
+                alt="Muhammad Iqbal Fachrezi, S.Kom" width="1317" height="1116" />
 
             <!-- Swoosh divider. The asset lives in assets_page1/ but belongs to
                  this page (1126px = exact canvas width, placed 1:1). -->
             <img class="page-two__line" data-reveal src="./assets/assets_page1/Vector 2.png" alt="" aria-hidden="true"
                 width="1126" height="278" />
+
+            <!-- Parent titles. The baked parent lines in the two name blocks
+                 are masked out of the PNGs; these live lines replace them at
+                 the exact canvas rows the artwork used (baked line-1 centre
+                 y 1249 = 49.12% bride, 2261 = 89.65% groom, font 3cqw). -->
+            <p class="page-two__parents page-two__parents--bride" data-reveal>Binti Bapak Agus Setiawan</p>
+            <p class="page-two__parents page-two__parents--groom" data-reveal>Bin Bapak M Hasim As&#8217;ari</p>
         </section>
 
         <!-- Page 3 - Akad & Resepsi (canvas 1689 x 3754). Rebuilt from the
@@ -279,10 +284,14 @@
                 tabindex="0" aria-label="Perbesar foto galeri" alt="Galeri foto Annisa &amp; Iqbal — momen bersama"
                 width="556" height="535" />
 
-            <!-- Caption matches the design's placeholder copy; swap the real
-                  caption text in when it is available. -->
-            <p class="page-four__caption" data-reveal>Lorem ipsum dolor
-                sit amet, consectetur adipiscing elit.</p>
+            <!-- Verse caption: baked artwork (Kata Kata.png) pinned in the
+                 lorem placeholder's slot, scaled so its line pitch matches
+                 the reference (7/6x: native 36px pitch -> 42px reference
+                 pitch). The block ends y3363, clear of both baked swoosh
+                 strokes and the fixed music FAB's screen band. -->
+            <img class="page-four__caption" data-reveal src="./assets/assets_page4/Kata Kata.png"
+                alt="Cinta adalah pondasi utama — tanpanya musik adalah bunyi tanpa nada, tari adalah gerak tanpa wirasa, lawak adalah gelak tanpa tawa, dan manusia adalah hati tanpa cahaya"
+                width="715" height="208" />
         </section>
 
         <!-- Page 5 — Amplop Digital & Ucapan dan Do'a. Two states share one

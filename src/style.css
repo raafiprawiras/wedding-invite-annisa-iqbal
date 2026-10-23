@@ -771,6 +771,29 @@ body[data-state='open'] .music-fab {
   width: 100%;
 }
 
+/* Parent titles — live text over the masked artwork rows. Colour is the
+   measured baked text colour (#faf6ea); size 3cqw = 33.8px at the 1126
+   canvas, matching the artwork's 50.7px glyph size at its 0.665 scale. */
+.page-two__parents {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  margin: 0;
+  line-height: 1;
+  text-align: center;
+  font-size: 3cqw;
+  font-weight: 400;
+  color: #faf6ea;
+}
+
+.page-two__parents--bride {
+  top: 49.12%;
+}
+
+.page-two__parents--groom {
+  top: 89.65%;
+}
+
 /* ------------------------------------------------------------
    Page 3 - Akad & Resepsi (ref: Page 3 Nih.png, 1689 x 3754)
    Rebuilt from the raw assets in assets_new_page3. Every layer's
@@ -1017,21 +1040,20 @@ body[data-state='open'] .music-fab {
   width: 32.92%;
 }
 
-/* Caption — enlarged per revision, pulled closer to the photo above
-   (Foto 5 ends at y3078; caption starts y3165 — ~86px design gap).
-   Font is decoupled from the canvas scale: 1.9cqw would be ~7px on a
-   390px phone, so this clamps to a real, readable size instead. */
+/* Verse caption — baked Kata Kata.png in the reference's own slot.
+   Measured: the lorem placeholder sits at glyph top y3121 / glyph left
+   x805 with a 42px line pitch (Page 4 New.png, 1689x3754); the artwork
+   has a 36px pitch, so the design scale is exactly 42/36 = 7/6 — image
+   box 834.2px wide. At that scale the verse ends y3363, leaving ~130px
+   above the diagonal swoosh (starts y3492) and fully right of the
+   bottom-left loop (ends x~500). */
 .page-four__caption {
   position: absolute;
-  left: 47.72%;
-  top: 84.31%;
-  /* Right edge stops at ~81.7% so the last lines clear the fixed
-     music FAB that hovers over the page's bottom-right corner. */
-  width: 34%;
+  left: 47.66%;
+  top: 83.06%;
+  width: 49.39%;
+  height: auto;
   margin: 0;
-  font-size: clamp(12.5px, 3.2cqw, 22px);
-  line-height: 1.5;
-  letter-spacing: 0.01em;
 }
 
 /* Photos respond to hover with a soft lift + warm glow. The effect uses
