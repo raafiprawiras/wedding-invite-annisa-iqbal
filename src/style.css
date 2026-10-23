@@ -3088,7 +3088,7 @@ body[data-state='closing'] .open-invitation {
   /* Solid colour is only a fallback while the PNG loads. The felt is
      painted at the card's own width, which is the width Page Bawah below
      continues from. */
-  background: #2d1511 url('/assets/assets_page6/Background Page 6.png') top center / 100% auto no-repeat;
+  background: #4e2722 url('/assets/assets_page6/Background6.png') top center / 100% auto no-repeat;
 }
 
 /* The felt's own bottom edge cuts through the big baked ornament, so the
@@ -3106,97 +3106,106 @@ body[data-state='closing'] .open-invitation {
   pointer-events: none;
 }
 
-/* The monogram, revealing first. Alpha-ink matched against the Revisi
-   reference; the asset's transparent padding (ink starts at 16, 6 of the
-   225 square) is corrected so the art itself lands on the measured band. */
+/* The monogram (ai_logo.png), revealing first. Matched to Page Enam.png:
+   its ink lands at x487..634 / y193..344 of the 1126x2503 art, scaled
+   148/223 = 0.664 from the asset's 223x229 ink box (image box 240x240). */
 .page-six__logo {
   position: absolute;
-  left: 42.3cqw;
-  /* 715 */
-  top: 26.11cqw;
-  /* 441 */
-  width: 13.32cqw;
-  /* 225 */
+  left: 42.84cqw;
+  /* 724 */
+  top: 16.9cqw;
+  /* 286 */
+  width: 14.15cqw;
+  /* 239 */
   height: auto;
   pointer-events: none;
 }
 
-/* The arch-framed couple photo (asset ink-tight, 1:1). */
+/* The arch-framed couple photo. Page Enam ink: x332..791 / y612..1211 -
+   the ink-tight 690x900 asset at exactly 2/3, i.e. 460x600, moved down
+   from the old Revisi slot. */
 .page-six__photo {
   position: absolute;
   left: 29.48cqw;
   /* 498 */
-  top: 49.02cqw;
-  /* 828 */
+  top: 54.38cqw;
+  /* 918 */
   width: 40.85cqw;
   /* 690 */
   height: auto;
   pointer-events: none;
 }
 
-/* The thank-you paragraph, as designed (baked text art; ink-tight). */
+/* The thank-you paragraph, as designed (baked text art; ink-tight).
+   Page Enam ink: widest line x130..997, first cap row y1286. */
 .page-six__paragraph {
   position: absolute;
-  left: 11.46cqw;
-  /* 194 */
-  top: 110.92cqw;
-  /* 1874 */
-  width: 77.2cqw;
-  /* 1304 */
+  left: 11.55cqw;
+  /* 195 */
+  top: 114.21cqw;
+  /* 1929 */
+  width: 77.09cqw;
+  /* 1302 */
   height: auto;
   pointer-events: none;
 }
 
-/* "Kami yang berbahagia," (ink-tight). */
+/* "Kami yang berbahagia," (ink-tight). Page Enam ink: x342..778 /
+   y1585..1617 at the same 2/3 block scale (437/658). */
 .page-six__kami {
   position: absolute;
   left: 30.37cqw;
   /* 513 */
-  top: 138.69cqw;
-  /* 2342 */
-  width: 38.96cqw;
-  /* 658 */
+  top: 140.79cqw;
+  /* 2378 */
+  width: 38.79cqw;
+  /* 655 */
   height: auto;
   pointer-events: none;
 }
 
-/* The script names, scaled to the Revisi reference (0.795x of the export);
-   the asset's 96px transparent head is compensated. The art's own
-   side-bearings keep the "&" hanging past the right, as measured. */
+/* The script names - the one block the new design shrinks: its ink
+   (1045x478 of the 1122x627 asset, 96px transparent head) lands at
+   x314..808 / y1662..1886 of Page Enam, a 0.472 scale vs the other
+   blocks' 0.664. The asset's transparent head is compensated. */
 .page-six__name {
   position: absolute;
-  left: 23.8cqw;
-  /* 402 */
-  top: 141.02cqw;
-  /* 2381 */
-  width: 52.8cqw;
-  /* 892 */
+  left: 27.88cqw;
+  /* 471 */
+  top: 143.64cqw;
+  /* 2425 */
+  width: 47.03cqw;
+  /* 794 */
   height: auto;
   pointer-events: none;
 }
 
-/* "Beserta Keluarga yang Berbahagia," (1:1, centred). */
+/* "Beserta Keluarga yang Berbahagia,". Page Enam ink: x342..783 /
+   y1938..2017, 442/663 = exactly 2/3. */
 .page-six__beserta {
   position: absolute;
   left: 30.37cqw;
   /* 513 */
-  top: 173.81cqw;
-  /* 2936 */
-  width: 39.26cqw;
+  top: 172.23cqw;
+  /* 2907 */
+  width: 39.25cqw;
   /* 663 */
   height: auto;
   pointer-events: none;
 }
 
-/* Both parents' names, two columns with the baked divider. */
+/* Both parents' names (NamaOrtu.png): 2 rows x 2 columns. Its ink
+   (x15..1313 / y1..242 of the 1320x243 asset) lands at x143..1005 /
+   y2082..2240 of Page Enam - 863/1299 = 0.664 scale, image box starts
+   ~133, ~2081. The ::after hand-off band starts y2255 - clear. */
 .page-six__orangtua {
   position: absolute;
-  left: 16.34cqw;
-  /* 276 */
-  top: 185.43cqw;
-  /* 3132 */
-  width: 68.54cqw;
-  /* 1158 */
+  left: 11.81cqw;
+  /* 200 */
+  top: 184.85cqw;
+  /* 3122 */
+  width: 77.88cqw;
+  /* 1316 */
   height: auto;
   pointer-events: none;
 }
