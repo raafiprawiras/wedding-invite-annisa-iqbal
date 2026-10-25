@@ -2348,7 +2348,7 @@ body[data-state='closing'] .open-invitation {
   background-repeat: no-repeat;
   background-position: top center;
   background-size: 100% auto;
-  background-image: url('/assets/assets_page5/BG Page 5.png');
+  background-image: url('/assets/assets_page5/BG Page 5.webp');
 }
 
 /* --- Panels: the two maroon panels as live layers -------------- */
@@ -2400,7 +2400,12 @@ body[data-state='closing'] .open-invitation {
   top: 53.3cqw;
   width: 27.4cqw;
   height: 9.2cqw;
-  background: #321815;
+  /* Flat colour read as an alien box on the mottled maroon. Sample the
+     asset's own clean texture (design px 530..993 x 490..645 instead,
+     same mottle) so the patch melts into the card. */
+  background-image: url('/assets/assets_page5/Amplop Digital Judul.webp');
+  background-size: 90.41cqw auto;
+  background-position: -31.38cqw -29.01cqw;
   opacity: 0;
   pointer-events: none;
 }
@@ -2429,7 +2434,7 @@ body[data-state='closing'] .open-invitation {
   /* 78 */
   width: 90.41cqw;
   /* 1527 */
-  background-image: url('/assets/assets_page5/Klik Amplop.png');
+  background-image: url('/assets/assets_page5/Klik Amplop.webp');
   background-repeat: no-repeat;
   background-size: 90.41cqw auto;
   opacity: 0;
@@ -2473,33 +2478,15 @@ body[data-state='closing'] .open-invitation {
 
 .has-motion .page-five__tail {
   transition:
-    opacity 850ms cubic-bezier(0.19, 1, 0.22, 1),
-    transform 950ms cubic-bezier(0.19, 1, 0.22, 1);
+    opacity 520ms cubic-bezier(0.19, 1, 0.22, 1),
+    transform 560ms cubic-bezier(0.19, 1, 0.22, 1);
 }
 
-/* Open: the cards appear in reading order, 180ms apart, after the
-   container has begun opening (canvas growth leads, cards follow).
-   Band 0 (the long face) leads with no delay - it must be fully up
-   before the short panel yields the seam to it. */
+/* Open: the whole tail comes up as ONE continuous card (no stagger) -
+   the stagger read as the card being cut at the seams mid-open. */
 .page-five.is-open .page-five__tail {
   opacity: 1;
   transform: none;
-}
-
-.has-motion .page-five.is-open .page-five__tail--0 {
-  transition-delay: 0ms, 0ms;
-}
-
-.has-motion .page-five.is-open .page-five__tail--1 {
-  transition-delay: 140ms, 140ms;
-}
-
-.has-motion .page-five.is-open .page-five__tail--2 {
-  transition-delay: 320ms, 320ms;
-}
-
-.has-motion .page-five.is-open .page-five__tail--3 {
-  transition-delay: 500ms, 500ms;
 }
 
 /* On open the short panel bows out AFTER band 0 is fully opaque beneath
@@ -2513,7 +2500,7 @@ body[data-state='closing'] .open-invitation {
 }
 
 .has-motion .page-five.is-open .page-five__panel--amplop {
-  transition-delay: 380ms;
+  transition-delay: 560ms;
 }
 
 /* --- Klik Disini opener (real button riding the baked pill) -- */
