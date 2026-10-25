@@ -350,7 +350,7 @@ body[data-state='open'] .music-fab {
   container-type: inline-size;
   color: #331304;
   font-family: var(--font-design);
-  background: #e5ded4 url('/assets/assets_page1/BG 1 New.png') top center / 100% auto no-repeat;
+  background: #e5ded4 url('/assets/assets_page1/BG 1 New.webp') top center / 100% auto no-repeat;
 }
 
 .page-one>* {
@@ -1844,7 +1844,7 @@ body[data-state='closing'] .open-invitation {
   position: absolute;
   inset: 0;
   background-color: var(--color-burgundy-deep);
-  background-image: url('/assets/backgrounds/bg-countdown.png');
+  background-image: url('/assets/backgrounds/bg-countdown.webp');
   background-size: cover;
   background-position: center;
   z-index: 0;
