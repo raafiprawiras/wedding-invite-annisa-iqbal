@@ -1,6 +1,6 @@
 import './style.css';
 
-const pageOneDate = new Date('2026-11-27T00:00:00+07:00');
+const pageOneDate = new Date('2026-11-27T09:00:00+07:00');
 const openButton = document.querySelector('.open-invitation');
 const invitation = document.querySelector('#invitation');
 const guestName = document.querySelector('.guest-name');
