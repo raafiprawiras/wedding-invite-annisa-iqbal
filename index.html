@@ -209,38 +209,61 @@
              independent elements with zero new assets. Compose check of
              all layers over the felt vs Page 3 Nih.png: mean diff 0.79,
              99.6% of pixels identical. -->
+        <!-- Page 3 - Akad, Resepsi & Ngunduh Mantu. New art
+             (aset_baru_page3/Page Tiga.png, 1689 x 4224): one baked capsule
+             (Frame Tengah.png) carries the photo collage, and all copy +
+             link pills reveal over it: date -> two-column block (three
+             bands, one asset each) -> address -> Lokasi pill, then the
+             NGUNDUH MANTU trio the same way, second pill last.
+             Band boxes are matched against the flat art at 1.0 design
+             scale (maps in style.css). -->
         <section class="page-three" aria-labelledby="page-three-title">
             <h2 id="page-three-title" class="visually-hidden">
-                Akad &amp; Resepsi - Jum&#8217;at, 27 November 2026 - Jl. Sapen Raya, Penggaron Kidul,
-                Pedurungan, Kota Semarang
+                Akad, Resepsi & Ngunduh Mantu - Jum&#8217;at, 27 November 2026 - Jl. Sapen Raya,
+                Pedurungan, Kota Semarang - Selasa, 1 Desember 2026 - Ds. Pagergunung, Kab. Pemalang
             </h2>
 
-            <img class="page-three__frame" data-reveal="frame" src="./assets/assets_new_page3/Frame Outline.png" alt=""
-                aria-hidden="true" width="1410" height="3066" loading="lazy" />
+            <img class="page-three__frame" data-reveal="frame" src="./assets/aset_baru_page3/Frame Tengah.webp" alt=""
+                aria-hidden="true" width="1410" height="3882" loading="lazy" />
 
-            <img class="page-three__logo" data-reveal="logo" src="./assets/assets_new_page3/Logo AI.png" alt=""
-                aria-hidden="true" width="330" height="330" loading="lazy" />
+            <img class="page-three__logo" data-reveal="logo" src="./assets/aset_baru_page3/ai_logo.webp" alt=""
+                aria-hidden="true" width="240" height="240" loading="lazy" />
 
-            <!-- Akad Nikah.png shown as four bands (independent reveals).
-                 The line bands carry their crop on an inner <i> layer so the
-                 scaleX draw-in never collapses the observed element itself. -->
-            <div class="page-three__band page-three__akad-title" data-reveal></div>
-            <div class="page-three__band page-three__akad-line" data-reveal="line"><i aria-hidden="true"></i></div>
-            <div class="page-three__band page-three__akad-date" data-reveal></div>
+            <img class="page-three__tgl-akad" data-reveal src="./assets/aset_baru_page3/TGL Akad.webp" alt=""
+                aria-hidden="true" width="903" height="235" loading="lazy" />
+
+            <!-- "Akad - Resepsi.png" as three bands (independent reveals). -->
+            <div class="page-three__band page-three__akad-head" data-reveal></div>
+            <div class="page-three__band page-three__akad-pukul" data-reveal></div>
             <div class="page-three__band page-three__akad-time" data-reveal></div>
 
-            <!-- Resepsi.png shown as four bands (independent reveals). -->
-            <div class="page-three__band page-three__resepsi-title" data-reveal></div>
-            <div class="page-three__band page-three__resepsi-line" data-reveal="line"><i aria-hidden="true"></i></div>
-            <div class="page-three__band page-three__resepsi-date" data-reveal></div>
-            <div class="page-three__band page-three__resepsi-time" data-reveal></div>
+            <img class="page-three__alamat page-three__alamat--akad" data-reveal
+                src="./assets/aset_baru_page3/AlamatAkad.webp" alt="" aria-hidden="true" width="1242" height="144"
+                loading="lazy" />
 
-            <img class="page-three__alamat" data-reveal src="./assets/assets_new_page3/Alamat.png" alt=""
-                aria-hidden="true" width="1242" height="144" loading="lazy" />
+            <a class="page-three__lokasi page-three__lokasi--akad" data-reveal="soft"
+                href="https://maps.app.goo.gl/mpmK2B7v9aSFfBeB8" target="_blank" rel="noopener"
+                aria-label="Lokasi Akad & Resepsi - buka di Google Maps">
+                <img src="./assets/aset_baru_page3/Location.webp" alt="" aria-hidden="true" width="607" height="141"
+                    loading="lazy" />
+            </a>
 
-            <a class="page-three__lokasi" data-reveal="soft" href="https://maps.app.goo.gl/mpmK2B7v9aSFfBeB8"
-                target="_blank" rel="noopener" aria-label="Lokasi acara - buka di Google Maps">
-                <img src="./assets/assets_new_page3/Location.png" alt="" aria-hidden="true" width="607" height="141"
+            <img class="page-three__tgl-ngunduh" data-reveal src="./assets/aset_baru_page3/TGL Ngunduh.webp" alt=""
+                aria-hidden="true" width="795" height="237" loading="lazy" />
+
+            <!-- "NgunduhMantu.png" as three bands (independent reveals). -->
+            <div class="page-three__band page-three__ngunduh-title" data-reveal></div>
+            <div class="page-three__band page-three__ngunduh-pukul" data-reveal></div>
+            <div class="page-three__band page-three__ngunduh-time" data-reveal></div>
+
+            <img class="page-three__alamat page-three__alamat--mantu" data-reveal
+                src="./assets/aset_baru_page3/AlamatMantu.webp" alt="" aria-hidden="true" width="1242" height="144"
+                loading="lazy" />
+
+            <a class="page-three__lokasi page-three__lokasi--mantu" data-reveal="soft"
+                href="https://www.google.com/maps/search/?api=1&query=Ds.+Pagergunung+RT+005%2FRW+002%2C+Kec.+Ulujami%2C+Kab.+Pemalang"
+                target="_blank" rel="noopener" aria-label="Lokasi Ngunduh Mantu - buka di Google Maps">
+                <img src="./assets/aset_baru_page3/Location.webp" alt="" aria-hidden="true" width="607" height="141"
                     loading="lazy" />
             </a>
         </section>

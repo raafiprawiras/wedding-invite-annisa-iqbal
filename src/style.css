@@ -802,153 +802,222 @@ body[data-state='open'] .music-fab {
    felt: mean diff 0.79, 99.6% of sampled pixels identical.
    Positions are design px / 16.89 = cqw.
    ------------------------------------------------------------ */
+/* ------------------------------------------------------------
+   Page 3 — Akad, Resepsi & Ngunduh Mantu
+   (new art: aset_baru_page3/Page Tiga.png, 1689 x 4224)
+   One capsule (Frame Tengah.png) carries the photo collage; all event
+   copy sits over it as tinted assets. Each box below is band-matched
+   against the flat art: block assets map 1:1 design px (verified via
+   per-row ink extents), the pill runs at 0.767x and the logo at
+   1.303x. Positions: design px / 16.89 = cqw.
+   ------------------------------------------------------------ */
 .page-three {
   position: relative;
   width: min(100%, 540px);
   margin-inline: auto;
-  aspect-ratio: 1689 / 3754;
+  aspect-ratio: 1689 / 4224;
   overflow: hidden;
   container-type: inline-size;
   color: #faf6ea;
   font-family: var(--font-design);
-  /* Solid colour is only a fallback while the PNG loads. */
-  background: #2d1511 url('/assets/assets_new_page3/BG Page 3.png') top center / 100% auto no-repeat;
+  /* Solid colour is only a fallback while the PNG loads (Bg.png mean). */
+  background: #391e1b url('/assets/aset_baru_page3/Bg.webp') top center / 100% auto no-repeat;
 }
 
-/* The arch frame with the photo and its gradient baked in. */
+/* The capsule with the baked collage and its faded ring. */
 .page-three__frame {
   position: absolute;
   left: 8.17cqw;
   /* 138 */
-  top: 20.43cqw;
-  /* 345 */
+  top: 10.01cqw;
+  /* 169 */
   width: 83.48cqw;
   /* 1410 */
   height: auto;
   pointer-events: none;
 }
 
-/* The monogram, sitting on the frame. */
+/* The monogram, over the collage (ink 673..963 / 612..909 in the art). */
 .page-three__logo {
   position: absolute;
-  left: 39.25cqw;
-  /* 663 */
-  top: 35.52cqw;
-  /* 600 */
-  width: 19.54cqw;
-  /* 330 */
+  left: 39.31cqw;
+  /* 664 */
+  top: 35.94cqw;
+  /* 607 */
+  width: 18.52cqw;
+  /* 313 */
   height: auto;
   pointer-events: none;
 }
 
-/* Schedule blocks: each raw asset (Akad Nikah.png / Resepsi.png) bakes
-   title + divider + date + time as ONE image, so it is shown as FOUR
-   horizontal bands - the same image, background-position offsets -
-   giving four independent reveal elements per block with zero new
-   assets. Band boundaries sit at the empty gaps between the baked
-   rows (alpha row profile of each asset). */
-.page-three__band {
+/* Date headings ("JUM'AT / 27 NOVEMBER 2026" and its ngunduh twin). */
+.page-three__tgl-akad {
   position: absolute;
-  left: 20.54cqw;
-  /* 347 */
-  width: 58.32cqw;
-  /* 985 */
-  background-repeat: no-repeat;
-  background-size: 58.32cqw auto;
+  left: 23.86cqw;
+  /* 403 */
+  top: 98.40cqw;
+  /* 1662 */
+  width: 53.46cqw;
+  /* 903 */
+  height: auto;
   pointer-events: none;
 }
 
-/* Akad Nikah.png at (347, 1713) = (20.54cqw, 101.42cqw). */
-.page-three__akad-title {
-  top: 101.42cqw;
-  height: 7.16cqw;
-  background-image: url('/assets/assets_new_page3/Akad Nikah.png');
-  background-position: 0 0cqw;
+.page-three__tgl-ngunduh {
+  position: absolute;
+  left: 26.35cqw;
+  /* 445 */
+  top: 159.39cqw;
+  /* 2692 */
+  width: 47.07cqw;
+  /* 795 */
+  height: auto;
+  pointer-events: none;
 }
 
-.page-three__akad-line {
-  top: 108.58cqw;
-  height: 4.38cqw;
+/* The two-column blocks are each ONE asset ("Akad - Resepsi.png" /
+   "NgunduhMantu.png") shown as three horizontal crops - the same image,
+   background-position offsets - so each row reveals independently with
+   zero new assets. Their row profiles put quiet gaps at design rows 90 /
+   162 (akad block) and 109 / 186 (ngunduh block); the baked divider of
+   the akad block runs through the gaps, so each crop carries its own
+   divider span and no <i> draw-in layer is needed. */
+.page-three__band {
+  position: absolute;
+  background-repeat: no-repeat;
+  pointer-events: none;
 }
 
-.page-three__akad-line>i {
-  background-image: url('/assets/assets_new_page3/Akad Nikah.png');
-  background-size: 58.32cqw auto;
-  background-position: 0 -7.16cqw;
+/* Head crop of Akad - Resepsi.png at (178, 1924). */
+.page-three__akad-head {
+  left: 10.54cqw;
+  /* 178 */
+  top: 113.91cqw;
+  /* 1924 */
+  width: 79.04cqw;
+  /* 1335 */
+  height: 3.55cqw;
+  /* 60 */
+  background-image: url('/assets/aset_baru_page3/Akad - Resepsi.webp');
+  background-size: 79.04cqw auto;
+  background-position: 0 -1.78cqw;
 }
 
-.page-three__akad-date {
-  top: 112.97cqw;
-  height: 7.70cqw;
-  background-image: url('/assets/assets_new_page3/Akad Nikah.png');
-  background-position: 0 -11.55cqw;
+/* Shared paint + geometry for the lower crops of each block asset. */
+.page-three__akad-pukul,
+.page-three__akad-time {
+  left: 10.54cqw;
+  /* 178 */
+  width: 79.04cqw;
+  /* 1335 */
+  background-image: url('/assets/aset_baru_page3/Akad - Resepsi.webp');
+  background-size: 79.04cqw auto;
+}
+
+.page-three__ngunduh-pukul,
+.page-three__ngunduh-time {
+  left: 28.83cqw;
+  /* 487 */
+  width: 41.92cqw;
+  /* 708 */
+  background-image: url('/assets/aset_baru_page3/NgunduhMantu.webp');
+  background-size: 41.92cqw auto;
+}
+
+/* Akad - Resepsi.png at (178, 1894), 1335 design px wide. */
+.page-three__akad-pukul {
+  top: 117.47cqw;
+  /* 1984 */
+  height: 4.26cqw;
+  /* 72 */
+  background-position: 0 -5.33cqw;
+  /* -90 */
 }
 
 .page-three__akad-time {
-  top: 120.66cqw;
-  height: 6.16cqw;
-  background-image: url('/assets/assets_new_page3/Akad Nikah.png');
-  background-position: 0 -19.24cqw;
+  top: 121.73cqw;
+  /* 2056 */
+  height: 5.21cqw;
+  /* 88 */
+  background-position: 0 -9.59cqw;
+  /* -162 */
 }
 
-/* Resepsi.png at (347, 2226) = (20.54cqw, 131.79cqw). */
-.page-three__resepsi-title {
-  top: 131.79cqw;
-  height: 7.22cqw;
-  background-image: url('/assets/assets_new_page3/Resepsi.png');
+/* NgunduhMantu.png at (487, 2944), 708 design px wide. */
+.page-three__ngunduh-title {
+  left: 28.83cqw;
+  top: 174.37cqw;
+  /* 2944 */
+  width: 41.92cqw;
+  /* 708 */
+  height: 6.45cqw;
+  /* 109 */
+  background-image: url('/assets/aset_baru_page3/NgunduhMantu.webp');
+  background-size: 41.92cqw auto;
   background-position: 0 0cqw;
 }
 
-.page-three__resepsi-line {
-  top: 139.01cqw;
-  height: 4.32cqw;
+.page-three__ngunduh-pukul {
+  top: 180.78cqw;
+  /* 3053 */
+  height: 4.56cqw;
+  /* 77 */
+  background-position: 0 -6.45cqw;
+  /* -109 */
 }
 
-.page-three__resepsi-line>i {
-  background-image: url('/assets/assets_new_page3/Resepsi.png');
-  background-size: 58.32cqw auto;
-  background-position: 0 -7.22cqw;
+.page-three__ngunduh-time {
+  top: 185.20cqw;
+  /* 3130 */
+  height: 4.14cqw;
+  /* 70 */
+  background-position: 0 -11.02cqw;
+  /* -186 */
 }
 
-.page-three__resepsi-date {
-  top: 143.34cqw;
-  height: 7.76cqw;
-  background-image: url('/assets/assets_new_page3/Resepsi.png');
-  background-position: 0 -11.55cqw;
-}
-
-.page-three__resepsi-time {
-  top: 151.09cqw;
-  height: 6.28cqw;
-  background-image: url('/assets/assets_new_page3/Resepsi.png');
-  background-position: 0 -19.30cqw;
-}
-
-/* The address text. */
+/* The address texts (assets ink-tight at 1:1). */
 .page-three__alamat {
   position: absolute;
-  left: 13.50cqw;
-  /* 228 */
-  top: 163.59cqw;
-  /* 2763 */
+  left: 13.14cqw;
+  /* 222 */
   width: 73.53cqw;
   /* 1242 */
   height: auto;
   pointer-events: none;
 }
 
-/* Real link using the Location.png pill asset, pinned exactly over the
-   pill in Page 3 Nih.png (matched at (540, 3090)). */
+.page-three__alamat--akad {
+  top: 130.85cqw;
+  /* 2211 */
+}
+
+.page-three__alamat--mantu {
+  top: 193.34cqw;
+  /* 3266 */
+}
+
+/* Real links using the Location.png pill at the art's 0.767 scale
+   (displayed 466x108 design px, centre-aligned at x845). */
 .page-three__lokasi {
   position: absolute;
-  left: 31.97cqw;
-  /* 540 */
-  top: 182.95cqw;
-  /* 3090 */
-  width: 35.94cqw;
-  /* 607 */
+  width: 27.56cqw;
+  /* 466 */
   -webkit-tap-highlight-color: transparent;
   text-decoration: none;
+}
+
+.page-three__lokasi--akad {
+  left: 35.76cqw;
+  /* 604 */
+  top: 142.81cqw;
+  /* 2412 */
+}
+
+.page-three__lokasi--mantu {
+  left: 35.88cqw;
+  /* 606 */
+  top: 207.45cqw;
+  /* 3502 */
 }
 
 .page-three__lokasi img {
