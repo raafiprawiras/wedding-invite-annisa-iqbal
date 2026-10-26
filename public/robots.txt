@@ -1,4 +1,11 @@
 # Undangan pernikahan pribadi - tidak untuk mesin pencari.
-# Halaman ini hanyaositories untuk tamu yang menerima link langsung.
+# Halaman ini hanya untuk tamu yang menerima link langsung.
+# WhatsApp & social crawlers di-exempt agar thumbnail muncul saat link dibagikan.
+User-agent: WhatsApp
+Allow: /
+
+User-agent: facebookexternalhit
+Allow: /
+
 User-agent: *
 Disallow: /
