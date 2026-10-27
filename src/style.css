@@ -2624,8 +2624,9 @@ body[data-state='closing'] .open-invitation {
 }
 
 .page-five__input::placeholder {
-  color: #2b2018;
-  font-weight: 700;
+  /* Same muted style as the textarea placeholder. */
+  color: #b3ada2;
+  font-weight: 400;
   opacity: 1;
 }
 
@@ -2755,6 +2756,13 @@ body[data-state='closing'] .open-invitation {
 .page-five__pill:focus-visible {
   outline: 0.35cqw solid #96693f;
   outline-offset: 0.3cqw;
+}
+
+/* Required-fields gate: pills sit quietly until name + message are filled. */
+.page-five__pill:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  filter: grayscale(1);
 }
 
 @media (hover: hover) {

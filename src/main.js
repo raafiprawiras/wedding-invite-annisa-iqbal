@@ -744,8 +744,8 @@ if (pageFive) {
   const p5CounterTidak = pageFive.querySelector('[data-counter="tidak"]');
   const p5Toast = pageFive.querySelector('.page-five__toast');
 
-  /* Sync the guest name with the Page Awal greeting (?nama= link param). */
-  if (p5Input && rawName) p5Input.value = rawName;
+  /* Name is no longer pre-filled from the ?nama= link param: the
+     guest types their own. */
 
   /* --- state toggle ------------------------------------------ */
 
@@ -923,7 +923,19 @@ if (pageFive) {
 
   /* --- submit on attendance click -------------------------------- */
 
+  /* Both name and message are required: the pills stay disabled until
+     each field has content. */
   const p5Pills = pageFive.querySelectorAll('.page-five__pill');
+  const p5Validate = () => {
+    const ready = Boolean(p5Input.value.trim()) && Boolean(p5Textarea.value.trim());
+    p5Pills.forEach((pill) => { pill.disabled = !ready; });
+  };
+  if (p5Input && p5Textarea) {
+    p5Input.addEventListener('input', p5Validate);
+    p5Textarea.addEventListener('input', p5Validate);
+    p5Validate();
+  }
+
   let p5Busy = false;
 
   p5Pills.forEach((pill) => {
