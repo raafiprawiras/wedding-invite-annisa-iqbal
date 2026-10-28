@@ -112,7 +112,7 @@
   font-size: var(--text-greeting);
   font-weight: 400;
   letter-spacing: var(--tracking-guest);
-  word-spacing: -0.25em;
+  word-spacing: -0.35em;
   line-height: var(--leading-guest);
 }
 
@@ -120,7 +120,7 @@
   font-size: var(--text-guest-name);
   font-weight: 700;
   letter-spacing: var(--tracking-guest);
-  word-spacing: -0.25em;
+  word-spacing: -0.35em;
   line-height: var(--leading-guest);
 }
 
