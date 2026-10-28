@@ -11,7 +11,7 @@
   --text-greeting: clamp(0.8125rem, 3.4vw, 1.0625rem);
   --text-guest-name: clamp(1rem, 4.2vw, 1.375rem);
   --text-button: clamp(0.9375rem, 3.8vw, 1.125rem);
-  --tracking-guest: 0.08em;
+  --tracking-guest: 0.04em;
   --leading-guest: 1.6;
 
   /* Layout */
