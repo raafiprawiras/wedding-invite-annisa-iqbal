@@ -105,13 +105,14 @@
 .guest-information {
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: 0.10rem;
 }
 
 .guest-greeting {
   font-size: var(--text-greeting);
   font-weight: 400;
   letter-spacing: var(--tracking-guest);
+  word-spacing: -0.25em;
   line-height: var(--leading-guest);
 }
 
@@ -119,6 +120,7 @@
   font-size: var(--text-guest-name);
   font-weight: 700;
   letter-spacing: var(--tracking-guest);
+  word-spacing: -0.25em;
   line-height: var(--leading-guest);
 }
 
